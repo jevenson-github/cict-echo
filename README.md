@@ -2,6 +2,17 @@
 
 CICT-ECHO is a web-based management system that aims to streamline the extension programs of the college, facilitate collaboration, and improve communication between the faculty and admin. It provides different user levels, including an admin (Extension Head) and faculty, to manage different aspects of the extension office.
 
+## Why CICT-ECHO?
+
+The name CICT-ECHO was carefully chosen to represent the reverberating impact of the college's extension services, particularly those of the CICT. The system symbolizes the amplification and reflection of these services to partners, stakeholders, and communities.
+
+At the heart of CICT-ECHO is the goal of enhancing communication and collaboration among faculty, admin, and extension partners. We understand the challenges of managing extension programs and projects, and we believe that CICT-ECHO will be an effective solution that streamlines processes, saves time, and delivers meaningful impact.
+
+By using CICT-ECHO, the CICT community can easily create different extension programs, update their profiles, manage their accounts, generate reports, and manage website content. The system's user-friendly features and data visualization tools will streamline the management of extension programs, allowing users to focus on creating meaningful impact.
+
+We are confident that CICT-ECHO will be a valuable tool for the CICT community, and we are committed to continually improving the system to meet their needs.
+
+
 ## Features
 
 - **Registration and Login System:** The faculty can register and log in to the system, and the admin can reset the password and recover a forgotten password.
