@@ -10,13 +10,13 @@ By using CICT-ECHO, the CICT community can easily create different extension pro
 
 We are confident that CICT-ECHO will be a valuable tool for the CICT community, and we are committed to continually improving the system to meet their needs.
 
-
 ## Features
 
 - **Registration and Login System:** The faculty can register and log in to the system, and the admin can reset the password and recover a forgotten password.
 - **Profile Management:** Users can provide their information and update it easily.
 - **Account Management (Admin):** Users can change their account information and login credentials through the system.
 - **Program Management:** The admin can create different extension programs, provide program details, and manage the members and participants.
+- **Partner Organization Management:** The admin can add different extension partners, provide partner details, upload and manage MOA files, set the start and expiration dates of partnerships, and renew partnerships.
 - **Report Generation:** The admin and faculty can generate different types of reports, including terminal reports and accomplishment reports, with filters for date and section. The reports can be downloaded or printed.
 - **Dashboard and Visualization:** The admin can access a dashboard that provides an overview of the data within the system, including different graphs that represent historical data.
 - **Content Management:** The admin can manage and update website content, including text, images, and themes.
