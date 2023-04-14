@@ -1,18 +1,66 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthComponent } from './auth/auth.component';
-import { ForgotComponent } from './auth/forgot/forgot.component';
-import { SignInComponent } from './auth/sign-in/sign-in.component';
-import { SignUpComponent } from './auth/sign-up/sign-up.component';
+import { AppComponent } from './app.component';
 
-const routes: Routes = [{
-  path: 'auth',
+// Import components for AUTH
+import { AuthComponent } from './management/auth/auth.component';
+import { SignInComponent } from './management/auth/sign-in/sign-in.component';
+import { ForgotPasswordComponent } from './management/auth/forgot-password/forgot-password.component';
+import { SignUpComponent } from './management/auth/sign-up/sign-up.component';
+
+// Import components for ADMIN
+import { AdminComponent } from './management/admin/admin.component';
+
+// Import components for FACULTY
+import { FacultyComponent } from './management/faculty/faculty.component';
+import { DashboardAdminComponent } from './management/admin/dashboard-admin/dashboard-admin.component';
+import { ResetPasswordComponent } from './management/auth/wizard/reset-password/reset-password.component';
+
+const routes: Routes = [
+  {
+    path: 'admin',
+    component: AdminComponent,
+    children: [
+      { path: '', component: DashboardAdminComponent },
+      { path: 'dashboard', component: DashboardAdminComponent },
+    ],
+  },
+
+  {
+    path: 'auth',
     component: AuthComponent,
     children: [
-      { path: 'forgot', component: ForgotComponent },
-      { path : 'sign-up', component: SignUpComponent},
       { path: '', component: SignInComponent },
+      { path: 'forgot-password', component: ForgotPasswordComponent },
+      { path: 'sign-up', component: SignUpComponent },
+      { path: 'reset-password', component: ResetPasswordComponent}
     ],
+  },
+
+  {
+    path: 'faculty',
+    component: FacultyComponent,
+    children: [{ path: '', component: FacultyComponent }],
+  },
+
+  // {
+  //   path: 'auth',
+  //   component: AuthComponent,
+  //   children: [
+  //     { path: '', component: SignInComponent },
+  //     { path: 'forgot', component: ForgotComponent },
+  //     { path: 'sign-up', component: StepOneComponent },
+  //     { path: 'sign-up/step-two', component: StepTwoComponent },
+  //     { path: 'sign-up/step-three', component: StepThreeComponent},
+  //     { path: 'sign-up/step-four', component: StepFourComponent},
+  //     { path: 'sign-up/step-five', component: StepFiveComponent},
+  //     { path: 'sign-up/setup-complete', component: SetupCompleteComponent},
+  //   ],
+  // },
+
+  {
+    path: '',
+    component: AppComponent,
   },
 ];
 
@@ -20,5 +68,4 @@ const routes: Routes = [{
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-
 export class AppRoutingModule {}
