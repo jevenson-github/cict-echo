@@ -10,10 +10,11 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('moa:check-status')->daily();
     }
+
 
     /**
      * Register the commands for the application.
@@ -23,5 +24,7 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
+
+        CheckMoaStatusCommand::class;
     }
 }

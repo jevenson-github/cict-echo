@@ -12,17 +12,16 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email_address')->unique();
+            $table->string('email')->unique();
             $table->string('password');
-            $table->string('department')->nullable();
-            $table->string('designation')->nullable();
-            $table->string('profile_image')->nullable();
-            $table->enum('user_level', ['admin', 'faculty'])->default('faculty')->nullable();
+            $table->string('department');
+            $table->string('designation');
+            $table->string('profile_image')->default('default.webp');
+            $table->enum('user_level', ['admin', 'faculty'])->default('faculty');
             $table->enum('status', ['verified', 'pending', 'rejected', 'resigned'])->default('pending');
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
