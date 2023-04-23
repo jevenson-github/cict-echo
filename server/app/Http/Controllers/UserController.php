@@ -45,8 +45,6 @@ class UserController extends Controller
                 'department' => 'required|string',
                 'designation' => 'required|string',
                 'profile_image' => 'image',
-                'user_level' => 'required|in:admin,faculty',
-                'status' => 'required|in:verified,pending,rejected,resigned',
             ]);
         } catch (ValidationException $e) {
             return response()->json([
@@ -64,8 +62,8 @@ class UserController extends Controller
         $user->password = bcrypt($validatedData['password']);
         $user->department = $validatedData['department'];
         $user->designation = $validatedData['designation'];
-        $user->user_level = $validatedData['user_level'];
-        $user->status = $validatedData['status'];
+        $user->user_level = 'faculty';
+        $user->status = 'pending';
         $user->profile_image = 'default.webp'; // Default profile image
 
         if ($request->hasFile('profile_image')) {

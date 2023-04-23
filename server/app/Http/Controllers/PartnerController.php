@@ -7,6 +7,8 @@ use App\Models\Partner;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
+
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -40,8 +42,6 @@ class PartnerController extends Controller
         $id = substr("CICT-EXT-PARTNER-{$currentYear}{$companyInitials}{$randomString}", 0, 27);
 
         $partner->id = $id;
-        $partner->start_date = $request->input('start_date');
-        $partner->end_date = $request->input('end_date');
 
         // Create folder for partner
         $partnerFolderPath = storage_path('app/public/partners/' . $id);
@@ -105,7 +105,7 @@ class PartnerController extends Controller
             $logoFile = $request->file('logo');
             $logoFileName = 'logo.webp';
             $logoQuality = 100;
-            $logoFilePath = storage_path('app/public/partners/' . $partner->id . '/' . $logoFileName);
+            $logoFilePath = 'partners/' . $partner->id . '/' . $logoFileName;
             Image::make($logoFile)
                 ->encode('webp', $logoQuality)
                 ->save($logoFilePath);
@@ -134,7 +134,7 @@ class PartnerController extends Controller
             $moaStartDate = date('ymd', strtotime($request->input('start_date')));
             $moaEndDate = date('ymd', strtotime($request->input('end_date')));
             $moaFileName = "CICT-EXT-MOA-{$moaFileId}-{$moaStartDate}-{$moaEndDate}.{$moaFile->getClientOriginalExtension()}";
-            $partnerFolderPath = 'storage/partners/' . $id;
+            $partnerFolderPath = 'partners/' . $id;
             $moaFilePath = $partnerFolderPath . '/moa/';
             $moaFile->move($moaFilePath, $moaFileName);
             $partner->moa_file = $moaFileName;
@@ -228,5 +228,28 @@ class PartnerController extends Controller
         }
 
         return response()->json(['partner' => $partner]);
+    }
+
+    public function fileData()
+    {
+        $files = File::files('users');
+
+
+        $fileData = [];
+
+        foreach ($files as $file) {
+            $filePath = $file->getPathname();
+            $fileType = $file->getExtension();
+            $fileUrl = URL::to('/' . $filePath);
+
+            $fileData[] = [
+                'filename' => $filePath,
+                'filetype' => $fileType,
+                'fileurl' => $fileUrl
+
+            ];
+        }
+
+        return response()->json(['files' => $fileData]);
     }
 }

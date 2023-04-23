@@ -64,3 +64,5 @@ Route::prefix('program')->group(function () {
     Route::get('/get-program/{id}', 'App\Http\Controllers\ProgramController@getProgram');
     Route::get('/index-program', 'App\Http\Controllers\ProgramController@indexProgram');
 });
+
+Route::get('/get-files', 'App\Http\Controllers\PartnerController@fileData');

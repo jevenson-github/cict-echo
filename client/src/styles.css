@@ -5,25 +5,63 @@
 
 @layer base {
   body {
-    @apply overflow-hidden bg-neutral-50
+    @apply bg-neutral-50
   }
 
   label {
     @apply block mb-2 text-sm font-medium text-neutral-900
   }
 
-  input[type="text"], input[type="email"], input[type="password"] {
-    @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5
+  input[type="text"], input[type="email"], input[type="password"], input[type="number"], select {
+    @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5;
+  }
+
+  input[type="search"] {
+    @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full pl-10 p-2.5;
   }
 
   input[type="submit"] {
     @apply text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:ring-orange-400 font-medium rounded-lg text-sm px-5 py-2.5
   }
 
+  select {
 
+  }
 }
 
 @layer components {
+  .btn-base {
+    @apply font-medium rounded-lg px-5 py-2.5 text-sm
+  }
+
+  .btn-small {
+    @apply text-xs px-3 py-2 font-medium
+  }
+
+  .btn-primary {
+    @apply text-white bg-orange-500 hover:bg-orange-600 
+  }
+
+  .btn-secondary {
+    @apply text-neutral-950 border-neutral-200 hover:text-orange-700 hover:bg-neutral-100 border
+  }
+
+  .btn-positive {
+    @apply text-green-700 bg-green-50 border border-green-100 hover:bg-green-100 hover:text-green-700 hover:border-green-500
+  }
+
+  .btn-action {
+    @apply text-blue-700 bg-blue-50 border border-blue-100 hover:bg-blue-100 hover:text-blue-700 hover:border-blue-500
+  }
+
+  .btn-negative {
+    @apply text-red-700 bg-red-50 border border-red-100 hover:bg-red-100 hover:text-red-700 hover:border-red-500
+  }
+
+  .btn-secondary-outline {
+    @apply text-neutral-950 border border-neutral-200 hover:bg-neutral-100
+  }
+
   .sidebar {
     @apply flex h-screen w-72 flex-col border-r p-6 bg-orange-50 bg-opacity-5
   }
@@ -33,11 +71,27 @@
   }
 
   .nav-link {
-    @apply flex items-center gap-x-3 px-3 py-2 text-neutral-900 font-medium rounded-lg hover:bg-neutral-100
+    @apply text-neutral-700 rounded-md px-3 py-2 font-medium hover:bg-neutral-100
   }
 
   .nav-link-active {
-    @apply bg-orange-100 text-orange-500
+    @apply bg-orange-100 text-orange-500 hover:bg-orange-100
+  }
+
+  .tab-link {
+    @apply text-neutral-700 rounded-md px-3 py-2 w-full justify-between flex font-medium hover:bg-neutral-100
+  }
+
+  .tab-link-active {
+    @apply bg-orange-100 text-orange-500 hover:bg-orange-100
+  }
+
+  .tab-link-badge {
+    @apply bg-orange-100 text-orange-700 text-xs font-medium my-auto px-2.5 py-0.5 h-fit rounded-full
+  }
+
+  .tab-link-badge-active {
+    @apply bg-orange-700 text-orange-100
   }
 
   .header-search {
@@ -50,5 +104,17 @@
 
   .link-secondary {
     @apply text-neutral-500 hover:text-neutral-600 font-medium hover:underline underline-offset-2
+  }
+
+  .helper-text-error {
+    @apply text-xs mt-1 text-red-700
+  }
+
+  .modal-bg {
+    @apply fixed top-0 left-0 right-0 z-50 h-screen w-screen bg-neutral-500 backdrop-blur-sm bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0
+  }
+
+  .modal {
+    @apply inline-block align-middle h-fit m-auto w-full bg-white rounded-lg shadow
   }
 }

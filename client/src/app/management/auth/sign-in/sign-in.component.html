@@ -1,7 +1,7 @@
 <!-- HEADER -->
 <div class="mb-8 flex flex-col gap-y-1">
   <h3 class="text-2xl font-semibold">Sign in</h3>
-  <p class="text-sm text-neutral-700">New to ECHO? <a class="link-primary" href="auth/sign-up">Sign up for an account</a>.</p>
+  <p class="text-sm text-neutral-700">New to ECHO? <a class="link-primary" routerLink="./sign-up">Sign up for an account</a>.</p>
 </div>
 
 <!-- ALERTS -->
@@ -29,7 +29,6 @@
     <path d="M13.0594 12.0001L15.3594 9.70011C15.6494 9.41011 15.6494 8.93011 15.3594 8.64011C15.0694 8.35011 14.5894 8.35011 14.2994 8.64011L11.9994 10.9401L9.69937 8.64011C9.40937 8.35011 8.92937 8.35011 8.63938 8.64011C8.34938 8.93011 8.34938 9.41011 8.63938 9.70011L10.9394 12.0001L8.63938 14.3001C8.34938 14.5901 8.34938 15.0701 8.63938 15.3601C8.78938 15.5101 8.97937 15.5801 9.16937 15.5801C9.35937 15.5801 9.54937 15.5101 9.69937 15.3601L11.9994 13.0601L14.2994 15.3601C14.4494 15.5101 14.6394 15.5801 14.8294 15.5801C15.0194 15.5801 15.2094 15.5101 15.3594 15.3601C15.6494 15.0701 15.6494 14.5901 15.3594 14.3001L13.0594 12.0001Z" fill="currentColor" />
   </svg>
   <p><span class="font-medium">The email or password is incorrect. </span>  Please verify your credentials and attempt again.
-
   </p>
 </div>
 
@@ -50,7 +49,7 @@
   <div>
     <div class="flex flex-row justify-between">
       <label for="">Password</label>
-      <a class="link-secondary text-sm" href="auth/forgot-password">Forgot password?</a>
+      <a class="link-secondary text-sm" routerLink="./forgot-password">Forgot password?</a>
     </div>
     <input id="" type="password" required />
   </div>

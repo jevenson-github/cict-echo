@@ -1,0 +1,37 @@
+<!-- HEADER-->
+<div class="mb-8 flex flex-col gap-y-1">
+  <span class="text-xs text-neutral-500 ">Step 5 of 5</span>
+  <h3 class="text-2xl font-semibold">Getting started</h3>
+  <p class="text-sm text-neutral-700">Sign up and access our high-quality services and support.</p>
+</div>
+
+<div class="mb-4 flex rounded-lg bg-red-50 p-4 text-sm text-red-700">
+  <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M13.0594 12.0001L15.3594 9.70011C15.6494 9.41011 15.6494 8.93011 15.3594 8.64011C15.0694 8.35011 14.5894 8.35011 14.2994 8.64011L11.9994 10.9401L9.69937 8.64011C9.40937 8.35011 8.92937 8.35011 8.63938 8.64011C8.34938 8.93011 8.34938 9.41011 8.63938 9.70011L10.9394 12.0001L8.63938 14.3001C8.34938 14.5901 8.34938 15.0701 8.63938 15.3601C8.78938 15.5101 8.97937 15.5801 9.16937 15.5801C9.35937 15.5801 9.54937 15.5101 9.69937 15.3601L11.9994 13.0601L14.2994 15.3601C14.4494 15.5101 14.6394 15.5801 14.8294 15.5801C15.0194 15.5801 15.2094 15.5101 15.3594 15.3601C15.6494 15.0701 15.6494 14.5901 15.3594 14.3001L13.0594 12.0001Z"
+      fill="currentColor" />
+  </svg>
+  <p><span class="font-medium">There appears to be an issue with your details. </span> Please ensure that you have met
+    the requirements outlined in the helper text provided below each field.</p>
+</div>
+
+<!-- FORM -->
+<form class="flex flex-col gap-y-4">
+  <div>
+    <label for="">Password</label>
+    <input id="" type="password" required />
+    <p class="helper-text-error">Password must be complex.</p>
+  </div>
+  <div>
+    <label for="">Confirm password</label>
+    <input id="" type="password" required />
+    <p class="helper-text-error">Password must match.
+    <p>
+  </div>
+
+  <button class="mt-2 btn-base btn-primary" routerLink="./step-three">Next step</button>
+  <a class="link-secondary text-sm mx-auto" routerLink="./..">Back to sign in</a>
+</form>
