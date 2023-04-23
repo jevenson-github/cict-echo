@@ -16,11 +16,6 @@ import { FacultyAdminComponent } from './management/admin/faculty-admin/faculty-
 import { FacultyComponent } from './management/faculty/faculty.component';
 import { DashboardAdminComponent } from './management/admin/dashboard-admin/dashboard-admin.component';
 import { ResetPasswordComponent } from './management/auth/wizard/reset-password/reset-password.component';
-import { StepOneComponent } from './management/auth/sign-up/step-one/step-one.component';
-import { StepTwoComponent } from './management/auth/sign-up/step-two/step-two.component';
-import { StepThreeComponent } from './management/auth/sign-up/step-three/step-three.component';
-import { StepFourComponent } from './management/auth/sign-up/step-four/step-four.component';
-import { StepFiveComponent } from './management/auth/sign-up/step-five/step-five.component';
 
 
 
@@ -42,11 +37,7 @@ const routes: Routes = [
     children: [
       { path: '', component: SignInComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
-      { path: 'sign-up', component: StepOneComponent },
-      { path: 'sign-up/step-two', component: StepTwoComponent },
-      { path: 'sign-up/step-three', component: StepThreeComponent },
-      { path: 'sign-up/step-four', component: StepFourComponent },
-      { path: 'sign-up/step-five', component: StepFiveComponent},
+      { path: 'sign-up', component: SignUpComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
     ],
   },
