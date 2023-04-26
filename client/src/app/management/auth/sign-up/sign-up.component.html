@@ -1,119 +1,91 @@
-<form class="flex flex-col gap-y-4">
+<div class="flex flex-col gap-y-4">
 
     <!-- STEP ONE -->
-    <section *ngIf="stepOne">
+    <section *ngIf="step === 1">
         <div class="mb-8 flex flex-col gap-y-1">
-            <span class="text-xs text-neutral-500 ">Step 1 of 5</span>
-            <h3 class="text-2xl font-semibold">Getting started</h3>
-            <p class="text-sm text-neutral-700">Sign up and access our high-quality services and support.</p>
-        </div>
-
-        <div class="mb-4 flex rounded-lg bg-red-50 p-4 text-sm text-red-700">
-            <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4"
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                    fill="currentColor" />
-                <path
-                    d="M13.0594 12.0001L15.3594 9.70011C15.6494 9.41011 15.6494 8.93011 15.3594 8.64011C15.0694 8.35011 14.5894 8.35011 14.2994 8.64011L11.9994 10.9401L9.69937 8.64011C9.40937 8.35011 8.92937 8.35011 8.63938 8.64011C8.34938 8.93011 8.34938 9.41011 8.63938 9.70011L10.9394 12.0001L8.63938 14.3001C8.34938 14.5901 8.34938 15.0701 8.63938 15.3601C8.78938 15.5101 8.97937 15.5801 9.16937 15.5801C9.35937 15.5801 9.54937 15.5101 9.69937 15.3601L11.9994 13.0601L14.2994 15.3601C14.4494 15.5101 14.6394 15.5801 14.8294 15.5801C15.0194 15.5801 15.2094 15.5101 15.3594 15.3601C15.6494 15.0701 15.6494 14.5901 15.3594 14.3001L13.0594 12.0001Z"
-                    fill="currentColor" />
-            </svg>
-            <p><span class="font-medium">There appears to be an issue with your details. </span> Please ensure that you
-                have met
-                the requirements outlined in the helper text provided below each field.</p>
+            <caption class="">Step 1 of 5</caption>
+            <h3 class="text-2xl font-semibold">Let's get started</h3>
+            <p class="text-sm text-neutral-700">To sign up, please enter your employee ID and email address. We’ll
+                verify them in a
+                snap and take you to the next step.</p>
         </div>
 
         <!-- FORM -->
         <div class="flex flex-col gap-y-4">
             <div>
                 <label for="">Employee ID</label>
-                <input id="" type="number" required />
-                <p class="helper-text-error">Employee ID already exists.</p>
+                <input id="" type="number" [(ngModel)]="id" required />
+                <p class="helper-text-error">ID must not blank</p>
             </div>
             <div>
                 <label for="">Email address</label>
-                <input id="" type="email" required />
-                <p class="helper-text-error">Email address already exists.</p>
+                <input id="" type="email" [(ngModel)]="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
+                <p class="helper-text-error">Email must not blank</p>
             </div>
 
-            <button (click)="goToStepTwo()" class="mt-2 btn-base btn-primary" routerLink="./step-two">Next step</button>
+            <button (click)="gotoStepTwo()" class="mt-2 btn-base btn-primary" [disabled]="stepOneloading">
+                <ng-container *ngIf="!stepOneloading">Next step</ng-container>
+                <ng-container *ngIf="stepOneloading">
+                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin" viewBox="0 0 100 101"
+                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4"
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor" />
+                        <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentColor" />
+                    </svg>
+                    Loading...
+                </ng-container>
+            </button>
             <a class="link-secondary text-sm mx-auto" routerLink="./..">Back to sign in</a>
         </div>
+
     </section>
 
     <!-- STEP TWO -->
-    <section *ngIf="stepTwo">
+    <section *ngIf="step === 2">
         <div class="mb-8 flex flex-col gap-y-1">
-            <span class="text-xs text-neutral-500 ">Step 2 of 5</span>
-            <h3 class="text-2xl font-semibold">Getting started</h3>
-            <p class="text-sm text-neutral-700">Sign up and access our high-quality services and support.</p>
-        </div>
-
-        <div class="mb-4 flex rounded-lg bg-red-50 p-4 text-sm text-red-700">
-            <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4"
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                    fill="currentColor" />
-                <path
-                    d="M13.0594 12.0001L15.3594 9.70011C15.6494 9.41011 15.6494 8.93011 15.3594 8.64011C15.0694 8.35011 14.5894 8.35011 14.2994 8.64011L11.9994 10.9401L9.69937 8.64011C9.40937 8.35011 8.92937 8.35011 8.63938 8.64011C8.34938 8.93011 8.34938 9.41011 8.63938 9.70011L10.9394 12.0001L8.63938 14.3001C8.34938 14.5901 8.34938 15.0701 8.63938 15.3601C8.78938 15.5101 8.97937 15.5801 9.16937 15.5801C9.35937 15.5801 9.54937 15.5101 9.69937 15.3601L11.9994 13.0601L14.2994 15.3601C14.4494 15.5101 14.6394 15.5801 14.8294 15.5801C15.0194 15.5801 15.2094 15.5101 15.3594 15.3601C15.6494 15.0701 15.6494 14.5901 15.3594 14.3001L13.0594 12.0001Z"
-                    fill="currentColor" />
-            </svg>
-            <p><span class="font-medium">There appears to be an issue with your details. </span> Please ensure that you
-                have met
-                the requirements outlined in the helper text provided below each field.</p>
+            <caption>Step 2 of 5</caption>
+            <h3 class="text-2xl font-semibold">Let’s get to know you better</h3>
+            <p class="text-sm text-neutral-700">Enter your first and last name so we can personalize your experience and
+                connect you
+                with others.</p>
         </div>
 
         <!-- FORM -->
         <div class="flex flex-col gap-y-4">
             <div>
                 <label for="firstName">First name</label>
-                <input id="firstName" type="text" [formControl]="firstNameControl" (blur)="firstNameTouched = true" />
-                <p class="helper-text-error" *ngIf="firstNameControl.invalid && firstNameTouched">First name cannot be
-                    empty.</p>
+                <input id="firstName" type="text" [(ngModel)]="firstName" />
+                <p class="helper-text-error">First name cannot be empty.</p>
             </div>
             <div>
                 <label for="lastName">Last name</label>
-                <input id="lastName" type="text" [formControl]="lastNameControl" (blur)="lastNameTouched = true" />
-                <p class="helper-text-error" *ngIf="lastNameControl.invalid && lastNameTouched">Last name cannot be
-                    empty.</p>
+                <input id="lastName" type="text" [(ngModel)]="lastName" />
+                <p class="helper-text-error">Last name cannot be empty.</p>
             </div>
 
-            <button (click)="goToStepThree()" class="mt-2 btn-base btn-primary" routerLink="./step-three">Next
-                step</button>
-            <a (click)="goToStepOne()" class="link-secondary text-sm mx-auto" routerLink="./..">Go back</a>
+            <button (click)="gotoStepThree()" class="mt-2 btn-base btn-primary">Next step</button>
+            <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
         </div>
     </section>
 
     <!-- STEP THREE -->
-    <section *ngIf="stepThree">
+    <section *ngIf="step === 3">
         <div class="mb-8 flex flex-col gap-y-1">
-            <span class="text-xs text-neutral-500">Step 3 of 5</span>
-            <h3 class="text-2xl font-semibold">Getting started</h3>
-            <p class="text-sm text-neutral-700">Sign up and access our high-quality services and support.</p>
-        </div>
-
-        <div class="mb-4 flex rounded-lg bg-red-50 p-4 text-sm text-red-700">
-            <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4"
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                    fill="currentColor" />
-                <path
-                    d="M13.0594 12.0001L15.3594 9.70011C15.6494 9.41011 15.6494 8.93011 15.3594 8.64011C15.0694 8.35011 14.5894 8.35011 14.2994 8.64011L11.9994 10.9401L9.69937 8.64011C9.40937 8.35011 8.92937 8.35011 8.63938 8.64011C8.34938 8.93011 8.34938 9.41011 8.63938 9.70011L10.9394 12.0001L8.63938 14.3001C8.34938 14.5901 8.34938 15.0701 8.63938 15.3601C8.78938 15.5101 8.97937 15.5801 9.16937 15.5801C9.35937 15.5801 9.54937 15.5101 9.69937 15.3601L11.9994 13.0601L14.2994 15.3601C14.4494 15.5101 14.6394 15.5801 14.8294 15.5801C15.0194 15.5801 15.2094 15.5101 15.3594 15.3601C15.6494 15.0701 15.6494 14.5901 15.3594 14.3001L13.0594 12.0001Z"
-                    fill="currentColor" />
-            </svg>
-            <p><span class="font-medium">There appears to be an issue with your details. </span> Please ensure that you
-                have
-                met
-                the requirements outlined in the helper text provided below each field.</p>
+            <caption>Step 3 of 5</caption>
+            <h3 class="text-2xl font-semibold">Nice to meet you, {{ firstName }}!</h3>
+            <p class="text-sm text-neutral-700">Tell us your designation and department so we can customize your
+                dashboard and show
+                you relevant content and opportunities.</p>
         </div>
 
         <!-- FORM -->
         <div class="flex flex-col gap-y-4">
             <div>
                 <label for="">Department</label>
-                <select id="" name="department" required>
+                <select id="" name="department" [(ngModel)]="department" required>
                     <option value="">Please select your department</option>
                     <option value="Allied">Allied</option>
                     <option value="BLIS">BLIS</option>
@@ -123,12 +95,12 @@
             </div>
             <div>
                 <label for="">Designation</label>
-                <select id="" name="designation" required>
+                <select id="" name="designation" [(ngModel)]="designation" required>
                     <option value="">Please select your designation</option>
                     <option value="Alumni Coordinator">Alumni Coordinator</option>
-                    <option value="BSIT Area Chair - Business Analytics">BSIT Area Chair - Business Analytics</option>
-                    <option value="BSIT Area Chair - Service Management">BSIT Area Chair - Service Management</option>
-                    <option value="BSIT Area Chair - Web and Mobile Application Development">BSIT Area Chair - Web and
+                    <option value="BSIT Area Chair - Business Analytics">Area Chair: Business Analytics</option>
+                    <option value="BSIT Area Chair - Service Management">Area Chair: Service Management</option>
+                    <option value="BSIT Area Chair - Web and Mobile Application Development">Area Chair: Web and
                         Mobile
                         Application Development</option>
                     <option value="College Extension and Services Unit Head">College Extension and Services Unit Head
@@ -138,9 +110,7 @@
                         Head
                     </option>
                     <option value="Communication and Planning Unit Head">Communication and Planning Unit Head</option>
-                    <option value="Department Head - Allied Courses">Department Head - Allied Courses</option>
-                    <option value="Department Head - BLIS">Department Head - BLIS</option>
-                    <option value="Department Head - BSIT">Department Head - BSIT</option>
+                    <option value="Department Head">Department Head</option>
                     <option value="Dean">Dean</option>
                     <option value="Facility Manager">Facility Manager</option>
                     <option value="Faculty">Faculty</option>
@@ -153,33 +123,21 @@
                 <p class="helper-text-error">Please select your designation.</p>
             </div>
 
-            <button (click)="goToStepFour()" class="mt-2 btn-base btn-primary" routerLink="./step-three">Next
+            <button (click)="gotoStepFour()" class="mt-2 btn-base btn-primary">Next
                 step</button>
-            <a (click)="goToStepThree()" class="link-secondary text-sm mx-auto" routerLink="./..">Go back</a>
+            <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
         </div>
     </section>
 
     <!-- STEP FOUR -->
-    <section *ngIf="stepFour">
+    <section *ngIf="step === 4">
         <div class="mb-8 flex flex-col gap-y-1">
-            <span class="text-xs text-neutral-500 ">Step 4 of 5</span>
-            <h3 class="text-2xl font-semibold">Getting started</h3>
-            <p class="text-sm text-neutral-700">Sign up and access our high-quality services and support.</p>
-        </div>
-
-        <div class="mb-4 flex rounded-lg bg-red-50 p-4 text-sm text-red-700">
-            <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4"
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                    fill="currentColor" />
-                <path
-                    d="M13.0594 12.0001L15.3594 9.70011C15.6494 9.41011 15.6494 8.93011 15.3594 8.64011C15.0694 8.35011 14.5894 8.35011 14.2994 8.64011L11.9994 10.9401L9.69937 8.64011C9.40937 8.35011 8.92937 8.35011 8.63938 8.64011C8.34938 8.93011 8.34938 9.41011 8.63938 9.70011L10.9394 12.0001L8.63938 14.3001C8.34938 14.5901 8.34938 15.0701 8.63938 15.3601C8.78938 15.5101 8.97937 15.5801 9.16937 15.5801C9.35937 15.5801 9.54937 15.5101 9.69937 15.3601L11.9994 13.0601L14.2994 15.3601C14.4494 15.5101 14.6394 15.5801 14.8294 15.5801C15.0194 15.5801 15.2094 15.5101 15.3594 15.3601C15.6494 15.0701 15.6494 14.5901 15.3594 14.3001L13.0594 12.0001Z"
-                    fill="currentColor" />
-            </svg>
-            <p><span class="font-medium">There appears to be an issue with your details. </span> Please ensure that you
-                have met
-                the requirements outlined in the helper text provided below each field.</p>
+            <caption>Step 4 of 5</caption>
+            <h3 class="text-2xl font-semibold">Set up your password</h3>
+            <p class="text-sm text-neutral-700"> Your password must be at least 8 characters long and include at least
+                one upper and
+                lower case letter, a number and a special character. Make sure your password matches the confirm
+                password field.</p>
         </div>
 
         <!-- FORM -->
@@ -196,34 +154,19 @@
                 <p>
             </div>
 
-
-            <button (click)="goToStepFive()" class="mt-2 btn-base btn-primary">Next
-                step</button>
-            <a (click)="goToStepFour()" class="link-secondary text-sm mx-auto">Go back</a>
+            <button (click)="gotoStepFive()" class="mt-2 btn-base btn-primary">Next step</button>
+            <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
         </div>
     </section>
 
     <!-- STEP FIVE -->
-    <section *ngIf="stepFive">
+    <section *ngIf="step === 5">
         <div class="mb-8 flex flex-col gap-y-1">
             <span class="text-xs text-neutral-500 ">Step 5 of 5</span>
-            <h3 class="text-2xl font-semibold">Getting started</h3>
-            <p class="text-sm text-neutral-700">Sign up and access our high-quality services and support.</p>
-        </div>
-
-        <div class="mb-4 flex rounded-lg bg-red-50 p-4 text-sm text-red-700">
-            <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4"
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                    fill="currentColor" />
-                <path
-                    d="M13.0594 12.0001L15.3594 9.70011C15.6494 9.41011 15.6494 8.93011 15.3594 8.64011C15.0694 8.35011 14.5894 8.35011 14.2994 8.64011L11.9994 10.9401L9.69937 8.64011C9.40937 8.35011 8.92937 8.35011 8.63938 8.64011C8.34938 8.93011 8.34938 9.41011 8.63938 9.70011L10.9394 12.0001L8.63938 14.3001C8.34938 14.5901 8.34938 15.0701 8.63938 15.3601C8.78938 15.5101 8.97937 15.5801 9.16937 15.5801C9.35937 15.5801 9.54937 15.5101 9.69937 15.3601L11.9994 13.0601L14.2994 15.3601C14.4494 15.5101 14.6394 15.5801 14.8294 15.5801C15.0194 15.5801 15.2094 15.5101 15.3594 15.3601C15.6494 15.0701 15.6494 14.5901 15.3594 14.3001L13.0594 12.0001Z"
-                    fill="currentColor" />
-            </svg>
-            <p><span class="font-medium">There appears to be an issue with your details. </span> Please ensure that you
-                have met
-                the requirements outlined in the helper text provided below each field.</p>
+            <h3 class="text-2xl font-semibold">Upload a photo of yourself</h3>
+            <p class="text-sm text-neutral-700"> Upload a photo of yourself that shows your face clearly and looks
+                professional. You
+                can skip this step if you don't have a photo ready.</p>
         </div>
 
         <!-- FORM -->
@@ -240,10 +183,43 @@
                 <p>
             </div>
 
-            <button (click)="goToStepFive()" class="mt-2 btn-base btn-primary">Next
-                step</button>
-            <a (click)="goToStepFour()" class="link-secondary text-sm mx-auto">Go back</a>
+            <button (click)="gotoStepSix()" class="mt-2 btn-base btn-primary">Review</button>
+            <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
+            </div>
+            </section>
+            
+            <!-- STEP SIX -->
+            <section *ngIf="step === 6">
+                <div class="mb-8 flex flex-col gap-y-1">
+                    <caption>Step 6 of 6</caption>
+                    <h3 class="text-2xl font-semibold">Review your details before submitting</h3>
+                    <p class="text-sm text-neutral-700"> You're almost done with the sign up form. Please review your details
+                        carefully and make sure everything is correct before you submit.</p>
+                </div>
+            
+                <!-- FORM -->
+                <div class="flex flex-col gap-y-4 text-neutral-950">
+            
+                    <div>
+                        <label class="mb-0.5">Name:</label>
+                        <p>{{firstName}} {{lastName}}</p>
+                    </div>
+                    <div>
+                        <label class="mb-0.5">Position:</label>
+                        <p>{{department + ' - ' + designation}}</p>
+                    </div>
+                    <div>
+                        <label class="mb-0.5">Employee ID:</label>
+                        <p>{{id}}</p>
+                    </div>
+                    <div>
+                        <label class="mb-0.5">Email address:</label>
+                        <p>{{email}}</p>
+                    </div>
+            
+                    <button (click)="submitRegistration()" class="mt-2 btn-base btn-primary">Submit</button>
+                    <a (click)="reviewAgain()" class="link-secondary text-sm mx-auto">Review again</a>
         </div>
     </section>
 
-</form>
+</div>

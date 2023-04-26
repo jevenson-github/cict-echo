@@ -8,6 +8,10 @@ import { AbstractControl } from '@angular/forms';
 import { NgxPaginationModule, PaginationInstance, PaginationService } from 'ngx-pagination';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { Modal } from 'flowbite'
+import { HttpClientModule } from '@angular/common/http';
+import { environment } from './../environments/environment';
+
+
 
 // Import components for ADMIN
 import { AdminComponent } from './management/admin/admin.component';
@@ -28,7 +32,7 @@ import { PartnersAdminComponent } from './management/admin/partners-admin/partne
 
 @NgModule({
   declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, ResetPasswordComponent, AccountWizardComponent, FacultyAdminComponent, PartnersAdminComponent],
-  imports: [BrowserModule, AppRoutingModule, AppRoutingModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([])],
+  imports: [BrowserModule, AppRoutingModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([])],
   providers: [],
   bootstrap: [AppComponent],
 })

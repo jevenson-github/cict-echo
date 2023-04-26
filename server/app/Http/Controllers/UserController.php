@@ -83,7 +83,8 @@ class UserController extends Controller
 
         $user->save();
 
-        return response()->json(['message' => 'User created successfully',
+        return response()->json([
+            'message' => 'User created successfully',
         ], 201);
     }
 
@@ -442,7 +443,7 @@ class UserController extends Controller
     public function getUser($id)
     {
         $user = User::select('id', 'first_name', 'last_name', 'email', 'department', 'designation', 'profile_image', 'user_level', 'status')
-        ->where('id', $id)
+            ->where('id', $id)
             ->first();
 
         if (!$user) {
@@ -458,4 +459,33 @@ class UserController extends Controller
         return response()->json($users, 200);
     }
 
+    public function validateEmail(Request $request)
+    {
+        $validator = Validator::make($request->only('email'), [
+            'email' => 'unique:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            if ($validator->errors()->has('email')) {
+                return response()->json(['email' => 'existing'], 200);
+            }
+        } else {
+            return response()->json(['email' => 'unique'], 200);
+        }
+    }
+
+    public function validateId(Request $request)
+    {
+        $validator = Validator::make($request->only('id'), [
+            'id' => 'unique:users,id',
+        ]);
+
+        if ($validator->fails()) {
+            if ($validator->errors()->has('id')) {
+                return response()->json(['id' => 'existing'], 200);
+            }
+        } else {
+            return response()->json(['id' => 'unique'], 200);
+        }
+    }
 }

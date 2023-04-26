@@ -27,6 +27,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/sign-up', 'App\Http\Controllers\UserController@signUp');
     Route::post('/sign-in', 'App\Http\Controllers\UserController@signIn');
     Route::post('/reset-password', 'App\Http\Controllers\UserController@resetPassword');
+    Route::post('/validate-email', 'App\Http\Controllers\UserController@validateEmail');
+    Route::post('/validate-id', 'App\Http\Controllers\UserController@validateId');
 });
 
 // User routes for user management
