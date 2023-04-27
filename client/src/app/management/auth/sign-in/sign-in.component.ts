@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-sign-in',
@@ -14,7 +15,9 @@ export class SignInComponent implements OnInit {
   email: string | undefined;
   emailForgot: string | undefined;
 
-  constructor(private route: ActivatedRoute) { }
+  signInLoading: boolean = false;
+
+  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -25,6 +28,53 @@ export class SignInComponent implements OnInit {
       this.signUpResponse = params['signUpResponse'];
       this.email = params['email'];
     });
-
+    this.formSignIn = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    })
   }
+
+  formSignIn!: FormGroup;
+  submitted = false;
+  dataHolder: any;
+  tokenHolder: any;
+  errorMessage = false;
+
+  get f() {
+    return this.formSignIn.controls;
+  }
+
+  submitSignIn() {
+    this.submitted = true;
+    this.signInLoading = true;
+
+    if (this.formSignIn.invalid) {
+      this.signInLoading = false;
+      return;
+    }
+
+    this.http.post('http://127.0.0.1:8000/api/auth/sign-in', this.formSignIn.value).subscribe(response => {
+      this.signInLoading = false;
+      this.dataHolder = response;
+
+      if (this.dataHolder.status == 'Invalid') {
+        this.errorMessage = true;
+      }
+      else if (this.dataHolder.status == 'Valid') {
+        this.tokenHolder = this.dataHolder.data;
+        localStorage.setItem('token', this.tokenHolder);
+
+        if (this.dataHolder.role == 'admin') {
+          this.router.navigate(['management/']);
+        }
+        else if (this.dataHolder.role == 'faculty') {
+          this.router.navigate(['faculty/']);
+        }
+      }
+
+    });
+
+    this.errorMessage = false;
+  }
+
 }

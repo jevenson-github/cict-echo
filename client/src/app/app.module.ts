@@ -25,13 +25,12 @@ import { AuthComponent } from './management/auth/auth.component';
 import { SignInComponent } from './management/auth/sign-in/sign-in.component';
 import { ForgotPasswordComponent } from './management/auth/forgot-password/forgot-password.component';
 import { SignUpComponent } from './management/auth/sign-up/sign-up.component';
-import { ResetPasswordComponent } from './management/auth/wizard/reset-password/reset-password.component';
-import { AccountWizardComponent } from './management/auth/wizard/account-wizard/account-wizard.component';
+
 import { FacultyAdminComponent } from './management/admin/faculty-admin/faculty-admin.component';
 import { PartnersAdminComponent } from './management/admin/partners-admin/partners-admin.component';
 
 @NgModule({
-  declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, ResetPasswordComponent, AccountWizardComponent, FacultyAdminComponent, PartnersAdminComponent],
+  declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, FacultyAdminComponent, PartnersAdminComponent],
   imports: [BrowserModule, AppRoutingModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([])],
   providers: [],
   bootstrap: [AppComponent],

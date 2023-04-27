@@ -414,10 +414,17 @@ class UserController extends Controller
 
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+                $response['status'] = 'Invalid';
+                $response['message'] = 'Invalid credentials';
+                return response()->json($response);
+                // return response()->json(['error' => 'Invalid credentials'], 401);
+
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            $response['status'] = 'Invalid';
+            $response['message'] = 'Invalid credentials';
+            return response()->json($response);
+            // return response()->json(['error' => 'Could not create token'], 500);
         }
 
         $user = auth()->user();
@@ -433,13 +440,17 @@ class UserController extends Controller
             'status' => $user->status,
         ])->attempt($credentials);
 
-        $response['data'] = [
-            'token' => $token,
-        ];
+        // $response['data'] = [
+        //     'token' => $token,
+        // ];
+
+        $response['data'] = $token;
+        $response['status'] = 'Valid';
+        $response['message'] = 'Login Successful';
+        $response['role'] = $user->user_level;
 
         return response()->json($response);
     }
-
     public function getUser($id)
     {
         $user = User::select('id', 'first_name', 'last_name', 'email', 'department', 'designation', 'profile_image', 'user_level', 'status')

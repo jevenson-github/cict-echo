@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { AuthGuard } from './auth.guard';
 
 // Import components for AUTH
 import { AuthComponent } from './management/auth/auth.component';
@@ -15,7 +16,7 @@ import { FacultyAdminComponent } from './management/admin/faculty-admin/faculty-
 // Import components for FACULTY
 import { FacultyComponent } from './management/faculty/faculty.component';
 import { DashboardAdminComponent } from './management/admin/dashboard-admin/dashboard-admin.component';
-import { ResetPasswordComponent } from './management/auth/wizard/reset-password/reset-password.component';
+import { ResetPasswordComponent } from './management/auth/reset-password/reset-password.component';
 
 
 
@@ -24,6 +25,7 @@ const routes: Routes = [
   {
     path: 'management',
     component: AdminComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', component: DashboardAdminComponent },
       { path: 'dashboard', component: DashboardAdminComponent },
@@ -45,6 +47,7 @@ const routes: Routes = [
   {
     path: 'faculty',
     component: FacultyComponent,
+    canActivate: [AuthGuard],
     children: [{ path: '', component: FacultyComponent }],
   },
 
