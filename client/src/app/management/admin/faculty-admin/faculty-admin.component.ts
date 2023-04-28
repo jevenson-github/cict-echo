@@ -1,6 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Modal } from 'flowbite'
 import type { ModalOptions, ModalInterface } from 'flowbite'
+import { HttpClient } from '@angular/common/http';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
+import { MustMatch } from './confirmed.validator';
 
 @Component({
   selector: 'app-faculty-admin',
@@ -8,9 +11,16 @@ import type { ModalOptions, ModalInterface } from 'flowbite'
   styleUrls: ['./faculty-admin.component.css']
 })
 
-export class FacultyAdminComponent {
+export class FacultyAdminComponent implements OnInit {
 
-  constructor() { }
+  resignLoading: boolean = false;
+
+  constructor(private http: HttpClient,
+    private fb: FormBuilder) { }
+
+  get f() {
+    return this.passwordForm.controls;
+  }
 
   updateModal: boolean = false;
   resignModal: boolean = false;
@@ -20,69 +30,159 @@ export class FacultyAdminComponent {
   deleteModal: boolean = false;
   undoModal: boolean = false;
   removeModal: boolean = false;
+  addAdminModal: boolean = false;
 
   updateSelection: boolean = true;
   updateEmail: boolean = false;
   updateInfo: boolean = false;
+  updatePassword: boolean = false;
 
-  openRemoveModal() {
+  verifiedFaculty: any[] = [];
+  resignedFaculty: any[] = [];
+  pendingFaculty: any[] = [];
+  rejectedFaculty: any[] = [];
+  administrators: any[] = [];
+  noneAdminFaculty: any[] = [];
+
+  // id parameter
+  resignVerifiedParam: any;
+  updateModalParam: any;
+  undoRejectedParam: any;
+  deleteRejectedParam: any;
+  rejectPendingParam: any;
+  acceptPendingParam: any;
+  reactivateResignedParam: any
+  removeAdminParam: any;
+
+  // password form
+  passwordForm!: FormGroup;
+  submitted = false;
+
+  // password form edit data container
+  editFirstName: any;
+  editLastName: any;
+  editDepartment: any;
+  editDesignation: any;
+  editEmail: any;
+
+  // modal data
+  modalId: any;
+  modalFirstName: any;
+  modalLastName: any;
+
+  openAddAdminModal() {
+    this.addAdminModal = true;
+  }
+
+  closeAddAdminModal() {
+    this.addAdminModal = false;
+  }
+
+  openRemoveModal(data: any) {
     this.removeModal = true;
+
+    this.removeAdminParam = data.id;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeRemoveModal() {
     this.removeModal = false;
   }
 
-  openDeleteModal() {
+  openDeleteModal(data: any) {
     this.deleteModal = true;
+    this.deleteRejectedParam = data.id;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeDeleteModal() {
     this.deleteModal = false;
   }
 
-  openUndoModal() {
+  openUndoModal(data: any) {
     this.undoModal = true;
+    this.undoRejectedParam = data.id;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeUndoModal() {
     this.undoModal = false;
   }
 
-  openAcceptModal() {
+  openAcceptModal(data: any) {
     this.acceptModal = true;
+    this.acceptPendingParam = data.id;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeAcceptModal() {
     this.acceptModal = false;
   }
 
-  openRejectModal() {
+  openRejectModal(data: any) {
     this.rejectModal = true;
+    this.rejectPendingParam = data.id;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeRejectModal() {
     this.rejectModal = false;
   }
 
-  openReactivateModal() {
+  openReactivateModal(data: any) {
     this.reactivateModal = true;
+    this.reactivateResignedParam = data.id;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeReactivateModal() {
     this.reactivateModal = false;
   }
 
-  openResignModal() {
+  openResignModal(data: any) {
     this.resignModal = true;
+    this.resignVerifiedParam = data.id;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeResignModal() {
     this.resignModal = false;
   }
 
-  openUpdateModal() {
+  openUpdateModal(data: any) {
     this.updateModal = true;
+    this.updateModalParam = data.id;
+
+    this.editFirstName = data.first_name;
+    this.editLastName = data.last_name;
+    this.editDepartment = data.department;
+    this.editDesignation = data.designation;
+    this.editEmail = data.email;
+
+    this.modalId = data.id;
+    this.modalFirstName = data.first_name;
+    this.modalLastName = data.last_name;
   }
 
   closeUpdateModal() {
@@ -90,186 +190,206 @@ export class FacultyAdminComponent {
     this.updateSelection = true;
     this.updateEmail = false;
     this.updateInfo = false;
+    this.updatePassword = false;
   }
 
   toUpdateInfo() {
     this.updateSelection = false;
     this.updateEmail = false;
     this.updateInfo = true;
+    this.updatePassword = false;
   }
 
   toUpdateEmail() {
     this.updateSelection = false;
     this.updateEmail = true;
     this.updateInfo = false;
+    this.updatePassword = false;
   }
 
   toUpdateSelection() {
     this.updateSelection = true;
     this.updateEmail = false;
     this.updateInfo = false;
+    this.updatePassword = false;
   }
 
-  verifiedFaculty: any[] = [
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-  ];
+  toUpdatePassword() {
+    this.updateSelection = false;
+    this.updateEmail = false;
+    this.updateInfo = false;
+    this.updatePassword = true;
+  }
 
-  resignedFaculty: any[] = [
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-  ];
+  // Table list of Data
 
-  pendingFaculty: any[] = [
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Gabriel Galang',
-      id: '2019XXXXXX',
-      email: 'gabriel.galang@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Area Chair - Web and Mobile Development'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Welsie Vergara',
-      id: '2019XXXXXX',
-      email: 'welsie.vergara@bulsu.edu.ph',
-      department: 'BLIS',
-      designation: 'Department Head'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Renato Adriano',
-      id: '2019XXXXXX',
-      email: 'renato.adriano@bulsu.edu.ph',
-      department: 'Allied',
-      designation: 'Department Head'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/7d68cda9405368d6c315d6e919b6a174',
-      name: 'Abegail Malonzo',
-      id: '2019000011',
-      email: 'abegail.malonzo@bulsu.edu.ph',
-      department: 'BSCS',
-      designation: 'Faculty'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/c2c23888c99b8b1cfc55e14fc7a72513',
-      name: 'Adrian Atenta',
-      id: '2019000012',
-      email: 'adrian.atenta@bulsu.edu.ph',
-      department: 'BSCS',
-      designation: 'Faculty'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/826c1e6e8f2cbe368b13809135a7a4d4',
-      name: 'Adrian Manalansan',
-      id: '2019000013',
-      email: 'adrian.manalansan@bulsu.edu.ph',
-      department: 'BSCS',
-      designation: 'Faculty'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/2c9c9f732b76d7ab7c2e0598a14a61d4',
-      name: 'Aimee Nievarez',
-      id: '2019000014',
-      email: 'aimee.nievarez@bulsu.edu.ph',
-      department: 'BSCS',
-      designation: 'Faculty'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/1f60e53dce11f26677418dd8e321371a',
-      name: 'Alexis Barrozo',
-      id: '2019000015',
-      email: 'alexis.barrozo@bulsu.edu.ph',
-      department: 'BSCS',
-      designation: 'Faculty'
-    },
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/6c47ad994ab4a3e4f8b670c6a21223a1',
-      name: 'Amanda Tolentino',
-      id: '2019000016',
-      email: 'amanda.tolentino@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Faculty'
-    },
-  ];
+  getVerifiedFaculty() {
+    this.http.get("http://127.0.0.1:8000/api/user/verified-user").subscribe((resultData: any) => {
+      this.verifiedFaculty = resultData;
+      console.log(this.verifiedFaculty);
+    });
+  }
 
-  rejectedFaculty: any[] = [
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
-    },
-  ];
+  getResignedFaculty() {
+    this.http.get("http://127.0.0.1:8000/api/user/resigned-user").subscribe((resultData: any) => {
+      this.resignedFaculty = resultData;
+      console.log(this.resignedFaculty);
+    });
+  }
 
-  administrators: any[] = [
-    {
-      profile_image: 'https://bulsu-cict-app.s3.ap-southeast-1.amazonaws.com/069280e57d5a8637ea2f1fb4301816da',
-      name: 'Aaron Paul Dela Rosa',
-      id: '2019XXXXXX',
-      email: 'aaronpaul.delarosa@bulsu.edu.ph',
-      department: 'BSIT',
-      designation: 'Department Head'
+  getPendingFaculty() {
+    this.http.get("http://127.0.0.1:8000/api/user/pending-user").subscribe((resultData: any) => {
+      this.pendingFaculty = resultData;
+      console.log(this.pendingFaculty);
+    });
+  }
+
+  getRejectedFaculty() {
+    this.http.get("http://127.0.0.1:8000/api/user/rejected-user").subscribe((resultData: any) => {
+      this.rejectedFaculty = resultData;
+      console.log(this.rejectedFaculty);
+    });
+  }
+
+  getAdmins() {
+    this.http.get("http://127.0.0.1:8000/api/user/get-admin").subscribe((resultData: any) => {
+      this.administrators = resultData;
+      console.log(this.administrators);
+    });
+  }
+
+  // Buttons Functionality
+
+  getNoneAdminFaculty() {
+    this.http.get("http://127.0.0.1:8000/api/user/get-faculty").subscribe((resultData: any) => {
+      this.noneAdminFaculty = resultData;
+      console.log(this.noneAdminFaculty);
+    });
+  }
+
+  resignVerifiedFaculty() {
+    this.resignLoading = true;
+    this.http.post("http://127.0.0.1:8000/api/user/resign/" + this.resignVerifiedParam, "").subscribe((resultData: any) => {
+      console.log(resultData);
+      this.resignModal = false;
+      this.resignLoading = false;
+    });
+  }
+
+  updateInfoVerifiedFaculty() {
+
+    var formData = new FormData();
+    formData.append("first_name", this.editFirstName);
+    formData.append("last_name", this.editLastName);
+    formData.append("department", this.editDepartment);
+    formData.append("designation", this.editDesignation);
+    formData.append("profile_image", this.imageToUpdate, this.imageToUpdate.name);
+
+    this.http.post("http://127.0.0.1:8000/api/user/update-info/" + this.updateModalParam, formData).subscribe((resultData: any) => {
+      console.log(resultData);
+      this.updateModal = false;
+    });
+  }
+
+  updateEmailVerifiedFaculty() {
+    let bodyData = {
+      "email": this.editEmail
+    }
+
+    this.http.post("http://127.0.0.1:8000/api/user/update-email/" + this.updateModalParam, bodyData).subscribe((resultData: any) => {
+      console.log(resultData);
+      this.updateModal = false;
+    });
+  }
+
+  updatePassVerifiedFaculty() {
+    this.submitted = true;
+    if (this.passwordForm.invalid) {
+      return
+    }
+
+    this.http.post("http://127.0.0.1:8000/api/user/update-password/" + this.updateModalParam, this.passwordForm.value).subscribe((resultData: any) => {
+      console.log(resultData);
+      this.updateModal = false;
+    });
+
+    this.submitted = false;
+    this.passwordForm.reset();
+
+    this.updatePassword = false;
+  }
+
+  createPasswordForm() {
+    this.passwordForm = this.fb.group({
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required]
     },
-  ]
+      { validator: MustMatch('password', 'confirmPassword') });
+  }
+
+  reactivateResignedFaculty() {
+    this.http.post("http://127.0.0.1:8000/api/user/pending/" + this.reactivateResignedParam, "").subscribe((resultData: any) => {
+      console.log(resultData);
+      this.reactivateModal = false;
+    });
+  }
+
+  acceptPendingFaculty() {
+    this.http.post("http://127.0.0.1:8000/api/user/verify/" + this.acceptPendingParam, '').subscribe((resultData: any) => {
+      console.log(resultData);
+      this.acceptModal = false;
+    });
+  }
+
+  rejectPendingFaculty() {
+    this.http.post("http://127.0.0.1:8000/api/user/reject/" + this.rejectPendingParam, '').subscribe((resultData: any) => {
+      console.log(resultData);
+      this.rejectModal = false;
+    });
+  }
+
+  undoRejectedFaculty() {
+    this.http.post("http://127.0.0.1:8000/api/user/pending/" + this.undoRejectedParam, "").subscribe((resultData: any) => {
+      console.log(resultData);
+      this.undoModal = false;
+    });
+  }
+
+  deleteRejectedFaculty() {
+    this.http.delete("http://127.0.0.1:8000/api/user/delete/" + this.deleteRejectedParam,).subscribe((resultData: any) => {
+      console.log(resultData);
+      this.deleteModal = false;
+    });
+  }
+
+  makeFaculty() {
+    console.log(this.removeAdminParam)
+    this.http.post("http://127.0.0.1:8000/api/user/make-faculty/" + this.removeAdminParam, "").subscribe((resultData: any) => {
+      console.log(resultData);
+      //this.hi=resultData.id;
+      this.removeModal = false;
+    });
+  }
+
+  makeAdmin(data: any) {
+    this.http.post("http://127.0.0.1:8000/api/user/make-admin/" + data.id, '').subscribe((resultData: any) => {
+      console.log(resultData);
+      this.addAdminModal = false;
+    });
+  }
+
+  ngOnInit(): void {
+    this.getVerifiedFaculty();
+    this.getResignedFaculty();
+    this.getPendingFaculty();
+    this.getRejectedFaculty();
+    this.getAdmins();
+    this.createPasswordForm();
+    this.getNoneAdminFaculty();
+  }
 
   activeTab = 0;
+
   tabs = [
     { label: 'Verified accounts', badge: this.verifiedFaculty.length },
     { label: 'Deactivated accounts', badge: this.resignedFaculty.length },
@@ -288,17 +408,33 @@ export class FacultyAdminComponent {
   filteredPendingFaculty: any;
   filteredRejectedFaculty: any;
   filteredAdministrators: any;
+  filteredAddAdminModal: any;
 
   p: number = 1;
 
   imageUrl = 'http://via.placeholder.com/150'; // Placeholder image URL
   fileToUpload: File | null = null; // Selected file to upload
 
+  imageToUpdate: any;
+  imagePreview: any;
+
   onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.fileToUpload = file;
-      this.imageUrl = URL.createObjectURL(file);
+    // const file: File = event.target.files[0];
+    // if (file) {
+    //   this.fileToUpload = file;
+    //   this.imageUrl = URL.createObjectURL(file);
+    // }
+
+    this.imageToUpdate = event.target.files[0];
+    console.log(this.imageToUpdate);
+
+    if (event.target.files && event.target.files[0]){
+      const file = event.target.files[0];
+
+      const reader = new FileReader();
+      reader.onload = e => this.imagePreview = reader.result;
+
+      reader.readAsDataURL(file);
     }
   }
 

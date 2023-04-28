@@ -10,6 +10,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { Modal } from 'flowbite'
 import { HttpClientModule } from '@angular/common/http';
 import { environment } from './../environments/environment';
+import { AvatarModule } from 'ngx-avatar';
+
 
 
 
@@ -29,9 +31,12 @@ import { SignUpComponent } from './management/auth/sign-up/sign-up.component';
 import { FacultyAdminComponent } from './management/admin/faculty-admin/faculty-admin.component';
 import { PartnersAdminComponent } from './management/admin/partners-admin/partners-admin.component';
 
+const avatarColors = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6"];
+
+
 @NgModule({
   declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, FacultyAdminComponent, PartnersAdminComponent],
-  imports: [BrowserModule, AppRoutingModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([])],
+  imports: [BrowserModule, AvatarModule.forRoot({colors: avatarColors}), AppRoutingModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([])],
   providers: [],
   bootstrap: [AppComponent],
 })

@@ -1,34 +1,36 @@
 <header
-  class="w-full justify-between h-16 flex border-b px-10 items-center sticky top-0 z-50 bg-neutral-50 backdrop-opacity-50 backdrop-saturate-200 backdrop-blur-xl ">
-  <div class="flex items-center">
-    <img src="assets/logo/echo-full-colored.svg" class="h-6 w-auto">
-    <nav class="ml-6 gap-x-2 flex">
-      <a routerLink="./dashboard" class="nav-link" routerLinkActive="nav-link-active">Dashboard</a>
-      <a routerLink="./programs" class="nav-link" routerLinkActive="nav-link-active">Programs</a>
-      <a routerLink="./partners" class="nav-link" routerLinkActive="nav-link-active">Partners</a>
-      <a routerLink="./faculty" class="nav-link" routerLinkActive="nav-link-active">Faculty</a>
-      <a routerLink="./content" class="nav-link" routerLinkActive="nav-link-active">Content</a>
-      <a routerLink="./report" class="nav-link" routerLinkActive="nav-link-active">Report</a>
-    </nav>
-  </div>
-  <div class="justify-self-end flex flex-row gap-x-2">
-    <!-- Notifications -->
-    <div class="relative" (click)="toggleNotification()">
-      <div>
-        <button type="button"
-          class="flex p-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-800">
-          <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12.0196 2.91016C8.7096 2.91016 6.0196 5.60016 6.0196 8.91016V11.8002C6.0196 12.4102 5.7596 13.3402 5.4496 13.8602L4.2996 15.7702C3.5896 16.9502 4.0796 18.2602 5.3796 18.7002C9.6896 20.1402 14.3396 20.1402 18.6496 18.7002C19.8596 18.3002 20.3896 16.8702 19.7296 15.7702L18.5796 13.8602C18.2796 13.3402 18.0196 12.4102 18.0196 11.8002V8.91016C18.0196 5.61016 15.3196 2.91016 12.0196 2.91016Z"
-              stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" />
-            <path
-              d="M13.8699 3.19994C13.5599 3.10994 13.2399 3.03994 12.9099 2.99994C11.9499 2.87994 11.0299 2.94994 10.1699 3.19994C10.4599 2.45994 11.1799 1.93994 12.0199 1.93994C12.8599 1.93994 13.5799 2.45994 13.8699 3.19994Z"
-              stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-            <path opacity="0.4"
-              d="M15.0195 19.0601C15.0195 20.7101 13.6695 22.0601 12.0195 22.0601C11.1995 22.0601 10.4395 21.7201 9.89953 21.1801C9.35953 20.6401 9.01953 19.8801 9.01953 19.0601"
-              stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" />
+  class="w-full flex justify-center h-16  border-b sticky top-0 z-50 bg-white bg-opacity-50 bg-saturate-200 backdrop-blur ">
+  <div class="max-w-screen-2xl justify-between flex items-center w-full px-10">
+    <div class="flex items-center">
+      <img src="assets/logo/echo-full-colored.svg" class="h-6 w-auto">
+      <nav class="ml-6 gap-x-2 flex">
+        <a routerLink="./dashboard" class="nav-link" routerLinkActive="nav-link-active">Dashboard</a>
+        <a routerLink="./programs" class="nav-link" routerLinkActive="nav-link-active">Programs</a>
+        <a routerLink="./partners" class="nav-link" routerLinkActive="nav-link-active">Partners</a>
+        <a routerLink="./faculty" class="nav-link" routerLinkActive="nav-link-active">Faculty</a>
+        <a routerLink="./content" class="nav-link" routerLinkActive="nav-link-active">Content</a>
+        <a routerLink="./report" class="nav-link" routerLinkActive="nav-link-active">Report</a>
+      </nav>
+    </div>
+    <div class="justify-self-end flex flex-row gap-x-2">
+      <!-- Notifications -->
+      <div class="relative" (click)="toggleNotification()">
+        <div>
+          <button type="button"
+            class="flex p-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-800">
+            <svg class="h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12.0196 2.91016C8.7096 2.91016 6.0196 5.60016 6.0196 8.91016V11.8002C6.0196 12.4102 5.7596 13.3402 5.4496 13.8602L4.2996 15.7702C3.5896 16.9502 4.0796 18.2602 5.3796 18.7002C9.6896 20.1402 14.3396 20.1402 18.6496 18.7002C19.8596 18.3002 20.3896 16.8702 19.7296 15.7702L18.5796 13.8602C18.2796 13.3402 18.0196 12.4102 18.0196 11.8002V8.91016C18.0196 5.61016 15.3196 2.91016 12.0196 2.91016Z"
+                stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" />
+              <path
+                d="M13.8699 3.19994C13.5599 3.10994 13.2399 3.03994 12.9099 2.99994C11.9499 2.87994 11.0299 2.94994 10.1699 3.19994C10.4599 2.45994 11.1799 1.93994 12.0199 1.93994C12.8599 1.93994 13.5799 2.45994 13.8699 3.19994Z"
+                stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path opacity="0.4"
+                d="M15.0195 19.0601C15.0195 20.7101 13.6695 22.0601 12.0195 22.0601C11.1995 22.0601 10.4395 21.7201 9.89953 21.1801C9.35953 20.6401 9.01953 19.8801 9.01953 19.0601"
+                stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" />
             </svg>
-        </button>
+          </button>
         </div>
         <!-- MENU DROPDOWN -->
         <div *ngIf="isNotificationOpen"
@@ -51,46 +53,46 @@
                       d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z">
                     </path>
                   </svg>
-              </div>
+                </div>
               </div>
               <div class="w-full pl-3">
                 <div class="text-neutral-500 text-sm mb-1.5 ">New message from <span class="font-semibold text-neutral-900 ">Jese
                     Leos</span>: "Hey, what's up? All set for the presentation?"</div>
                 <div class="text-xs text-blue-600 ">a few moments ago</div>
               </div>
-              </a>
-        </div>
-        <a routerLink="#"
-          class="block py-2 text-sm font-medium text-center text-neutral-900 rounded-b-lg bg-neutral-50 hover:bg-neutral-100">
-          <div class="inline-flex items-center ">
-            <svg class="w-4 h-4 mr-2 text-neutral-500 dark:text-neutral-400" aria-hidden="true" fill="currentColor"
-              viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-              <path fill-rule="evenodd"
-                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                clip-rule="evenodd"></path>
-            </svg>
-            View all
-            </div>
             </a>
+            </div>
+            <a routerLink="#"
+              class="block py-2 text-sm font-medium text-center text-neutral-900 rounded-b-lg bg-neutral-50 hover:bg-neutral-100">
+              <div class="inline-flex items-center ">
+                <svg class="w-4 h-4 mr-2 text-neutral-500 dark:text-neutral-400" aria-hidden="true" fill="currentColor"
+                  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                  <path fill-rule="evenodd"
+                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                View all
+            </div>
+          </a>
+          </div>
       </div>
-      </div>
-      
+
       <!-- Account menu -->
       <div class="relative" (click)="toggleMenu()">
         <div class="h-fit m-1 ">
           <button type="button"
             class="flex rounded-full bg-neutral-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-800">
             <span class="sr-only">Open user menu</span>
-            <img class="h-8 w-8 rounded-full" src="assets/images/default-profile.jpg" alt="" />
+            <img class="h-8 w-8 rounded-full" src="http://127.0.0.1:8000/users/{{profile_image}}" alt="" />
           </button>
         </div>
         <!-- MENU DROPDOWN -->
         <div *ngIf="isMenuOpen"
           class="absolute right-0 z-10 mt-2 w-64 origin-top-right divide-y rounded-md bg-white p-3 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div class="rounded-t-md px-3 py-2 text-sm text-neutral-900">
-            <div class="truncate font-semibold">Ma. Lourdes Tiongon</div>
-            <div class="truncate text-xs">College Extension and Services Unit Head</div>
+            <div class="truncate font-semibold">{{first_name + ' ' + last_name}}</div>
+            <div class="truncate text-xs">{{designation}}</div>
           </div>
           <div class="flex flex-col gap-y-1 pt-3">
             <a routerLink="#" class="nav-link text-sm">
@@ -104,24 +106,25 @@
                   stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
                   stroke-linejoin="round" />
               </svg>
-            Settings
+              Settings
             </a>
-          <a routerLink="#" class="nav-link text-sm">
-            <svg class="h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M8.90039 7.56023C9.21039 3.96023 11.0604 2.49023 15.1104 2.49023H15.2404C19.7104 2.49023 21.5004 4.28023 21.5004 8.75023V15.2702C21.5004 19.7402 19.7104 21.5302 15.2404 21.5302H15.1104C11.0904 21.5302 9.24039 20.0802 8.91039 16.5402"
-                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <g opacity="0.4">
-                <path d="M14.9991 12H3.61914" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                  stroke-linejoin="round" />
-                <path d="M5.85 8.65039L2.5 12.0004L5.85 15.3504" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </g>
-            </svg>
-            Sign out
+            <a routerLink="#" class="nav-link text-sm" (click)="signOut()">
+              <svg class="h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M8.90039 7.56023C9.21039 3.96023 11.0604 2.49023 15.1104 2.49023H15.2404C19.7104 2.49023 21.5004 4.28023 21.5004 8.75023V15.2702C21.5004 19.7402 19.7104 21.5302 15.2404 21.5302H15.1104C11.0904 21.5302 9.24039 20.0802 8.91039 16.5402"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <g opacity="0.4">
+                  <path d="M14.9991 12H3.61914" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path d="M5.85 8.65039L2.5 12.0004L5.85 15.3504" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </g>
+              </svg>
+              Sign out
             </a>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
-    </div>
-    </header>
+  </div>
+  </header>

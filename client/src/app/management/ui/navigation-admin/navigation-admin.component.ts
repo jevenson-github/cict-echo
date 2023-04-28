@@ -1,4 +1,6 @@
 import { Component, HostListener, ElementRef } from '@angular/core';
+import jwt_decode from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-admin',
@@ -8,8 +10,22 @@ import { Component, HostListener, ElementRef } from '@angular/core';
 export class NavigationAdminComponent {
   isMenuOpen = false;
   isNotificationOpen = false;
+  userData: any;
+  token: any;
 
-  constructor(private elementRef: ElementRef) { }
+  last_name: any;
+  first_name: any;
+  designation: any;
+  profile_image: any;
+
+  constructor(private elementRef: ElementRef, private router: Router) {
+    this.token = localStorage.getItem('token');
+    this.userData = jwt_decode(this.token);
+    this.first_name = this.userData.firstName;
+    this.last_name = this.userData.lastName;
+    this.designation = this.userData.designation;
+    this.profile_image = this.userData.profileImage;
+  }
 
   @HostListener('document:click', ['$event'])
   clickout(event: Event) {
@@ -31,5 +47,17 @@ export class NavigationAdminComponent {
     if (this.isNotificationOpen) {
       this.isMenuOpen = false; // Close account dropdown when notification dropdown is opened
     }
+  }
+
+  //sign out function
+  signOut() {
+    //remove the session token data
+    localStorage.removeItem('token');
+
+    //navigate back to sign in page
+    this.router.navigate(['auth/']);
+
+
+
   }
 }

@@ -5,7 +5,7 @@
 
 @layer base {
   body {
-    @apply bg-neutral-50
+    @apply bg-white
   }
 
   label {
@@ -39,7 +39,7 @@
   }
 
   .btn-small {
-    @apply text-xs px-3 py-2 font-medium
+    @apply text-sm px-3 py-2 font-medium rounded-lg
   }
 
   .btn-primary {
@@ -60,6 +60,10 @@
 
   .btn-negative {
     @apply text-red-700 bg-red-50 border border-red-100 hover:bg-red-100 hover:text-red-700 hover:border-red-500
+  }
+
+  .btn-solid-negative {
+    @apply bg-red-700 hover:bg-red-800 text-white
   }
 
   .btn-secondary-outline {
@@ -121,4 +125,21 @@
   .modal {
     @apply inline-block align-middle h-fit m-auto w-full bg-white rounded-lg shadow
   }
+
+}
+
+.avatar-content {
+  font-family: Inter var !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  user-select: none !important;
+} 
+
+.ngx-pagination .current {
+  font-size: 1rem !important;
+  padding-left: 0.75rem !important;
+padding-right: 0.75rem !important;
+padding-top: 0.5rem !important;
+padding-bottom: 0.5rem !important;
+line-height: 1.25rem !important;
 }

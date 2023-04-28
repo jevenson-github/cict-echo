@@ -1,11 +1,12 @@
 <header>
   <h2 class="font-semibold text-neutral-950 truncate text-3xl tracking-tight">Faculty</h2>
-  <p class="text-neutral-700 mt-1">Manage your team members and their account permission here.</p>
+  <p class="text-neutral-700 mt-1">View and manage the accounts of all faculty members and administrators, as well as
+    filter and search for specific accounts.</p>
 </header>
 
 <main class="flex flex-row w-full gap-x-10 mt-10">
 
-  <nav class="max-w-xs w-full flex flex-col gap-y-1 sticky">
+  <nav class="max-w-xs w-full flex flex-col gap-y-1">
     <ng-container *ngFor="let tab of tabs; let i = index">
       <a class="tab-link" [class.tab-link-active]="activeTab === i" (click)="setActiveTab(i)">
         {{ tab.label }}
@@ -18,7 +19,10 @@
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-0.5">
         <h3 class="text-xl font-semibold text-neutral-950">Verified accounts</h3>
-        <p class="text-sm text-neutral-700">Para saan to? Parang hindi ka naman nag grade 2 niyan.</p>
+        <p class="text-sm text-neutral-700">These accounts have verified their identity and can use services with
+          limited
+          access.
+        </p>
       </div>
       <div class="">
         <div class="relative mt-1">
@@ -38,110 +42,127 @@
       </div>
     </div>
 
-    <ng-container *ngIf="verifiedFaculty && verifiedFaculty.length; else noData">
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs text-neutral-700">
+    <div class=" overflow-x-auto border sm:rounded-lg mt-4">
+      <table class="w-full text-left text-sm text-neutral-500">
+        <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 font-medium">Name</th>
+            <th scope="col" class="px-6 py-3 font-medium">Position</th>
+            <th scope="col" class="px-6 py-3 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="verifiedFaculty && verifiedFaculty.length > 0; else noFaculty">
+            <ng-container *ngIf="(verifiedFaculty | filter: filteredVerifiedFaculty) as filteredResults">
+              <ng-container *ngIf="filteredResults.length > 0; else noData">
+                <tr class="border-b bg-white hover:bg-neutral-50"
+                  *ngFor="let faculty of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}">
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex items-center">
+                      <ng-container *ngIf="faculty.profile_image">
+                        <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                             [src]="'http://127.0.0.1:8000/users/' + faculty.profile_image"
+                             [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)"
+                             [size]="40"
+                             [bgColor]>
+                             </ngx-avatar>
+                      </ng-container>
+                      <div class="pl-3">
+                        <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
+                        <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
+                      </div>
+                    </div>                    
+                  </th>
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex flex-col items-start">
+                        <div class="font-medium">{{ faculty.designation }}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.department }}</div>
+                    </div>                    
+                  </th>
+                  <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
+                    <button (click)="openResignModal(faculty)" class="btn-small btn-negative">Resign</button>
+                    <button (click)="openUpdateModal(faculty)" class="btn-small btn-action">Update</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-template #noFaculty>
             <tr>
-              <th scope="col" class="px-6 py-3 font-semibold">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b bg-white hover:bg-neutral-50"
-              *ngFor="let faculty of verifiedFaculty | filter: filteredVerifiedFaculty | paginate: {itemsPerPage: 10, currentPage: p}">
-              <th scope="row" class="flex items-center whitespace-nowrap px-6 py-4 text-neutral-900">
-                <img class="h-10 w-10 rounded-full object-cover object-top flex-none" src="{{faculty.profile_image}}" />
-                <div class="pl-3">
-                  <div class="font-semibold">{{ faculty.name }}</div>
-                  <div class="font-normal text-neutral-500">{{ faculty.id }}</div>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4">No verified accounts found</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that have verified their identity and can
+                        use all the services
+                        with limited access.</p>
+                    </div>
+                  </div>
                 </div>
-              </th>
-              <td class="px-6 py-4">{{ faculty.email }}</td>
-              <td class="px-6 py-4">{{ faculty.department }}</td>
-              <td class="px-6 py-4">{{ faculty.designation }}</td>
-              <td class="space-x-2 px-6 py-4 text-right">
-                <button (click)="openResignModal()" class="btn-small btn-negative">Resign</button>
-                <button (click)="openUpdateModal()" class="btn-small btn-action">Update</button>
               </td>
             </tr>
-          </tbody>
-        </table>
-        <div class="flex flex-row justify-between py-2 px-4">
+          </ng-template>
+          <ng-template #noData>
+            <tr>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4 line-clamp-2">No verified accounts found for
+                        "{{filteredVerifiedFaculty}}"</h4>
+                      <p class="my-auto text-sm mt-1"> There are no accounts that have verified their identity and can
+                        use all the services
+                        with limited access.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+        <tfoot *ngIf="verifiedFaculty.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
           <span></span>
           <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
-
-        </div>
-
-      </div>
-    </ng-container>
-
-    <ng-template #noData>
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
-            <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="border-b bg-white hover:bg-neutral-50 text-center flex flex-col content-center items-center whitespace-nowrap px-6 py-4 text-neutral-900 h-96 w-full">
-          <p class="my-auto">No data found for verified accounts.</p>
-        </div>
-        <div class="flex flex-row justify-between py-2 px-4">
-          <span></span>
-          <nav class="mt-1.5">
-            <ul class="inline-flex items-center -space-x-px">
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 ml-0 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-l-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Previous</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#"
-                  class="px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700">1</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-r-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Next</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-      </div>
-    </ng-template>
-
+        </tfoot>
+      </table>
+    </div>
   </section>
 
   <section id="faculty-section-resigned" class="w-full" *ngIf="activeTab === 1">
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-0.5">
-        <h3 class="text-xl font-semibold text-neutral-950">Resigned accounts</h3>
-        <p class="text-sm text-neutral-700">Para saan to? Parang hindi ka naman nag grade 2 niyan.</p>
+        <h3 class="text-xl font-semibold text-neutral-950">Deactivated accounts</h3>
+        <p class="text-sm text-neutral-700">These accounts are deactivated and cannot use any of the services. </p>
       </div>
       <div class="">
         <div class="relative mt-1">
@@ -162,109 +183,124 @@
       </div>
     </div>
 
-    <ng-container *ngIf="resignedFaculty && resignedFaculty.length; else noData">
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
+    <div class=" overflow-x-auto border sm:rounded-lg mt-4">
+      <table class="w-full text-left text-sm text-neutral-500">
+        <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 font-medium">Name</th>
+            <th scope="col" class="px-6 py-3 font-medium">Position</th>
+            <th scope="col" class="px-6 py-3 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="resignedFaculty && resignedFaculty.length > 0; else noFaculty">
+            <ng-container *ngIf="(resignedFaculty | filter: filteredResignedFaculty) as filteredResults">
+              <ng-container *ngIf="filteredResults.length > 0; else noData">
+                <tr class="border-b bg-white hover:bg-neutral-50"
+                  *ngFor="let faculty of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}">
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex items-center">
+                      <ng-container *ngIf="faculty.profile_image">
+                        <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                             [src]="'http://127.0.0.1:8000/users/' + faculty.profile_image"
+                             [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)"
+                             [size]="40"
+                             [bgColor]>
+                             </ngx-avatar>
+                      </ng-container>
+                      <div class="pl-3">
+                        <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
+                        <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
+                      </div>
+                    </div>                    
+                  </th>
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex flex-col items-start">
+                        <div class="font-medium">{{ faculty.designation }}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.department }}</div>
+                    </div>                    
+                  </th>
+                  <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
+                    <button (click)="openReactivateModal(faculty)" class="btn-small btn-negative">Reactivate</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-template #noFaculty>
             <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b bg-white hover:bg-neutral-50"
-              *ngFor="let faculty of resignedFaculty | filter: filteredResignedFaculty | paginate: {itemsPerPage: 10, currentPage: p}">
-              <th scope="row" class="flex items-center whitespace-nowrap px-6 py-4 text-neutral-900">
-                <img class="h-10 w-10 rounded-full object-cover object-top flex-none" src="{{faculty.profile_image}}" />
-                <div class="pl-3">
-                  <div class="font-semibold">{{ faculty.name }}</div>
-                  <div class="font-normal text-neutral-500">{{ faculty.id }}</div>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4">No deactivated accounts found</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that are deactivated and cannot use any of the services.</p>
+                    </div>
+                  </div>
                 </div>
-              </th>
-              <td class="px-6 py-4">{{ faculty.email }}</td>
-              <td class="px-6 py-4">{{ faculty.department }}</td>
-              <td class="px-6 py-4">{{ faculty.designation }}</td>
-              <td class="space-x-2 px-6 py-4 text-right">
-                <button (click)="openReactivateModal()" class="btn-small btn-positive">Reactivate</button>
               </td>
             </tr>
-          </tbody>
-        </table>
-        <div class="flex flex-row justify-between py-2 px-4">
+          </ng-template>
+          <ng-template #noData>
+            <tr>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4 line-clamp-2">No deactivated accounts found for
+                        "{{filteredResignedFaculty}}"</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that are deactivated and cannot use any of the services.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+        <tfoot *ngIf="resignedFaculty.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
           <span></span>
           <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
-
-        </div>
-
-      </div>
-    </ng-container>
-
-    <ng-template #noData>
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
-            <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="border-b bg-white hover:bg-neutral-50 text-center flex flex-col content-center items-center whitespace-nowrap px-6 py-4 text-neutral-900 h-96 w-full">
-          <p class="my-auto">No data found for verified accounts.</p>
-        </div>
-        <div class="flex flex-row justify-between py-2 px-4">
-          <span></span>
-          <nav class="mt-1.5">
-            <ul class="inline-flex items-center -space-x-px">
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 ml-0 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-l-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Previous</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#"
-                  class="px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700">1</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-r-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Next</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-      </div>
-    </ng-template>
-
+        </tfoot>
+      </table>
+    </div>
   </section>
 
   <section id="faculty-section-pending" class="w-full" *ngIf="activeTab === 2">
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-0.5">
-        <h3 class="text-xl font-semibold text-neutral-950">Pendinng accounts</h3>
-        <p class="text-sm text-neutral-700">Para saan to? Parang hindi ka naman nag grade 2 niyan.</p>
+        <h3 class="text-xl font-semibold text-neutral-950">Pending accounts</h3>
+        <p class="text-sm text-neutral-700">These accounts are on the waitlist for verification and have limited access
+          to some
+          of the services. </p>
       </div>
       <div class="">
         <div class="relative mt-1">
@@ -285,102 +321,118 @@
       </div>
     </div>
 
-    <ng-container *ngIf="pendingFaculty && pendingFaculty.length; else noData">
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
+    <div class=" overflow-x-auto border sm:rounded-lg mt-4">
+      <table class="w-full text-left text-sm text-neutral-500">
+        <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 font-medium">Name</th>
+            <th scope="col" class="px-6 py-3 font-medium">Position</th>
+            <th scope="col" class="px-6 py-3 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="pendingFaculty && pendingFaculty.length > 0; else noFaculty">
+            <ng-container *ngIf="(pendingFaculty | filter: filteredPendingFaculty) as filteredResults">
+              <ng-container *ngIf="filteredResults.length > 0; else noData">
+                <tr class="border-b bg-white hover:bg-neutral-50"
+                  *ngFor="let faculty of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}">
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex items-center">
+                      <ng-container *ngIf="faculty.profile_image">
+                        <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                             [src]="'http://127.0.0.1:8000/users/' + faculty.profile_image"
+                             [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)"
+                             [size]="40"
+                             [bgColor]>
+                             </ngx-avatar>
+                      </ng-container>
+                      <div class="pl-3">
+                        <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
+                        <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
+                      </div>
+                    </div>                    
+                  </th>
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex flex-col items-start">
+                        <div class="font-medium">{{ faculty.designation }}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.department }}</div>
+                    </div>                    
+                  </th>
+                  <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
+                    <button (click)="openRejectModal(faculty)" class="btn-small btn-negative">Reject</button>
+                    <button (click)="openAcceptModal(faculty)" class="btn-small btn-positive">Accept</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-template #noFaculty>
             <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b bg-white hover:bg-neutral-50"
-              *ngFor="let faculty of pendingFaculty | filter: filteredPendingFaculty | paginate: {itemsPerPage: 10, currentPage: p}">
-              <th scope="row" class="flex items-center whitespace-nowrap px-6 py-4 text-neutral-900">
-                <img class="h-10 w-10 rounded-full object-cover object-top flex-none" src="{{faculty.profile_image}}" />
-                <div class="pl-3">
-                  <div class="font-semibold">{{ faculty.name }}</div>
-                  <div class="font-normal text-neutral-500">{{ faculty.id }}</div>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4">No pending accounts found</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that are on the waitlist for verification 
+                        and have limited access to some of the services.</p>
+                    </div>
+                  </div>
                 </div>
-              </th>
-              <td class="px-6 py-4">{{ faculty.email }}</td>
-              <td class="px-6 py-4">{{ faculty.department }}</td>
-              <td class="px-6 py-4">{{ faculty.designation }}</td>
-              <td class="space-x-2 px-6 py-4 text-right">
-                <button (click)="openRejectModal()" class="btn-small btn-negative">Reject</button>
-                <button (click)="openAcceptModal()" class="btn-small btn-positive">Accept</button>
               </td>
             </tr>
-          </tbody>
-        </table>
-        <div class="flex flex-row justify-between py-2 px-4">
+          </ng-template>
+          <ng-template #noData>
+            <tr>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4 line-clamp-2">No pending accounts found for
+                        "{{filteredPendingFaculty}}"</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that are on the waitlist for verification 
+                        and have limited access to some of the services.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+        <tfoot *ngIf="pendingFaculty.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
           <span></span>
           <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
-
-        </div>
-
-      </div>
-    </ng-container>
-
-    <ng-template #noData>
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
-            <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="border-b bg-white hover:bg-neutral-50 text-center flex flex-col content-center items-center whitespace-nowrap px-6 py-4 text-neutral-900 h-96 w-full">
-          <p class="my-auto">No data found for pending accounts.</p>
-        </div>
-        <div class="flex flex-row justify-between py-2 px-4">
-          <span></span>
-          <nav class="mt-1.5">
-            <ul class="inline-flex items-center -space-x-px">
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 ml-0 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-l-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Previous</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#"
-                  class="px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700">1</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-r-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Next</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-      </div>
-    </ng-template>
+        </tfoot>
+      </table>
+    </div>
 
   </section>
 
@@ -388,7 +440,7 @@
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-0.5">
         <h3 class="text-xl font-semibold text-neutral-950">Rejected accounts</h3>
-        <p class="text-sm text-neutral-700">Para saan to? Parang hindi ka naman nag grade 2 niyan.</p>
+        <p class="text-sm text-neutral-700">These accounts are rejected and cannot use any of the services. </p>
       </div>
       <div class="">
         <div class="relative mt-1">
@@ -409,102 +461,118 @@
       </div>
     </div>
 
-    <ng-container *ngIf="rejectedFaculty && rejectedFaculty.length; else noData">
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
+    <div class=" overflow-x-auto border sm:rounded-lg mt-4">
+      <table class="w-full text-left text-sm text-neutral-500">
+        <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 font-medium">Name</th>
+            <th scope="col" class="px-6 py-3 font-medium">Position</th>
+            <th scope="col" class="px-6 py-3 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="rejectedFaculty && rejectedFaculty.length > 0; else noFaculty">
+            <ng-container *ngIf="(rejectedFaculty | filter: filteredRejectedFaculty) as filteredResults">
+              <ng-container *ngIf="filteredResults.length > 0; else noData">
+                <tr class="border-b bg-white hover:bg-neutral-50"
+                  *ngFor="let faculty of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}">
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex items-center">
+                      <ng-container *ngIf="faculty.profile_image">
+                        <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                             [src]="'http://127.0.0.1:8000/users/' + faculty.profile_image"
+                             [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)"
+                             [size]="40"
+                             [bgColor]>
+                             </ngx-avatar>
+                      </ng-container>
+                      <div class="pl-3">
+                        <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
+                        <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
+                      </div>
+                    </div>                    
+                  </th>
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex flex-col items-start">
+                        <div class="font-medium">{{ faculty.designation }}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.department }}</div>
+                    </div>                    
+                  </th>
+                  <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
+                    <button (click)="openDeleteModal(faculty)" class="btn-small btn-negative">Delete</button>
+                    <button (click)="openUndoModal(faculty)" class="btn-small btn-action">Undo</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-template #noFaculty>
             <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b bg-white hover:bg-neutral-50"
-              *ngFor="let faculty of rejectedFaculty | filter: filteredRejectedFaculty | paginate: {itemsPerPage: 10, currentPage: p}">
-              <th scope="row" class="flex items-center whitespace-nowrap px-6 py-4 text-neutral-900">
-                <img class="h-10 w-10 rounded-full object-cover object-top flex-none" src="{{faculty.profile_image}}" />
-                <div class="pl-3">
-                  <div class="font-semibold">{{ faculty.name }}</div>
-                  <div class="font-normal text-neutral-500">{{ faculty.id }}</div>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4">No rejected accounts found</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that are rejected and cannot use any of 
+                        the services or reapply for verification.</p>
+                    </div>
+                  </div>
                 </div>
-              </th>
-              <td class="px-6 py-4">{{ faculty.email }}</td>
-              <td class="px-6 py-4">{{ faculty.department }}</td>
-              <td class="px-6 py-4">{{ faculty.designation }}</td>
-              <td class="space-x-2 px-6 py-4 text-right">
-                <button (click)="openDeleteModal()" class="btn-small btn-negative">Delete</button>
-                <button (click)="openUndoModal()" class="btn-small btn-action">Undo</button>
               </td>
             </tr>
-          </tbody>
-        </table>
-        <div class="flex flex-row justify-between py-2 px-4">
+          </ng-template>
+          <ng-template #noData>
+            <tr>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4 line-clamp-2">No rejected accounts found for
+                        "{{filteredRejectedFaculty}}"</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that are rejected and cannot use any of 
+                        the services or reapply for verification.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+        <tfoot *ngIf="rejectedFaculty.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
           <span></span>
           <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
-
-        </div>
-
-      </div>
-    </ng-container>
-
-    <ng-template #noData>
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
-            <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="border-b bg-white hover:bg-neutral-50 text-center flex flex-col content-center items-center whitespace-nowrap px-6 py-4 text-neutral-900 h-96 w-full">
-          <p class="my-auto">No data found for rejected accounts.</p>
-        </div>
-        <div class="flex flex-row justify-between py-2 px-4">
-          <span></span>
-          <nav class="mt-1.5">
-            <ul class="inline-flex items-center -space-x-px">
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 ml-0 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-l-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Previous</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#"
-                  class="px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700">1</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-r-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Next</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-      </div>
-    </ng-template>
+        </tfoot>
+      </table>
+    </div>
 
   </section>
 
@@ -512,7 +580,9 @@
     <div class="flex flex-row justify-between">
       <div class="flex flex-col gap-0.5">
         <h3 class="text-xl font-semibold text-neutral-950">Administrators</h3>
-        <p class="text-sm text-neutral-700">Para saan to? Parang hindi ka naman nag grade 2 niyan.</p>
+        <p class="text-sm text-neutral-700">These accounts have the permission to view and manage all the services
+          without any
+          restrictions. </p>
       </div>
       <div class="">
         <div class="relative mt-1">
@@ -529,105 +599,122 @@
           </div>
           <input type="search" id="search-faculty-administrators" placeholder="Search for items"
             [(ngModel)]="filteredAdministrators">
+          <button (click)="openAddAdminModal()">Add</button>
         </div>
       </div>
     </div>
 
-    <ng-container *ngIf="administrators && administrators.length; else noData">
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
+    <div class=" overflow-x-auto border sm:rounded-lg mt-4">
+      <table class="w-full text-left text-sm text-neutral-500">
+        <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 font-medium">Name</th>
+            <th scope="col" class="px-6 py-3 font-medium">Position</th>
+            <th scope="col" class="px-6 py-3 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngIf="administrators && administrators.length > 0; else noFaculty">
+            <ng-container *ngIf="(administrators | filter: filteredAdministrators) as filteredResults">
+              <ng-container *ngIf="filteredResults.length > 0; else noData">
+                <tr class="border-b bg-white hover:bg-neutral-50"
+                  *ngFor="let faculty of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}">
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex items-center">
+                      <ng-container *ngIf="faculty.profile_image">
+                        <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                             [src]="'http://127.0.0.1:8000/users/' + faculty.profile_image"
+                             [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)"
+                             [size]="40"
+                             [bgColor]>
+                             </ngx-avatar>
+                      </ng-container>
+                      <div class="pl-3">
+                        <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
+                        <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
+                      </div>
+                    </div>                    
+                  </th>
+                  <th scope="row" class="px-6 py-4 text-neutral-900">
+                    <div class="flex flex-col items-start">
+                        <div class="font-medium">{{ faculty.designation }}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.department }}</div>
+                    </div>                    
+                  </th>
+                  <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
+                    <button (click)="openRemoveModal(faculty)" class="btn-small btn-negative">Remove</button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-template #noFaculty>
             <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b bg-white hover:bg-neutral-50"
-              *ngFor="let faculty of administrators | filter: filteredAdministrators | paginate: {itemsPerPage: 10, currentPage: p}">
-              <th scope="row" class="flex items-center whitespace-nowrap px-6 py-4 text-neutral-900">
-                <img class="h-10 w-10 rounded-full object-cover object-top flex-none" src="{{faculty.profile_image}}" />
-                <div class="pl-3">
-                  <div class="font-semibold">{{ faculty.name }}</div>
-                  <div class="font-normal text-neutral-500">{{ faculty.id }}</div>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4">No administrators found</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that have the permission to view 
+                        and manage all the services and change the settings of the system.</p>
+                    </div>
+                  </div>
                 </div>
-              </th>
-              <td class="px-6 py-4">{{ faculty.email }}</td>
-              <td class="px-6 py-4">{{ faculty.department }}</td>
-              <td class="px-6 py-4">{{ faculty.designation }}</td>
-              <td class="space-x-2 px-6 py-4 text-right">
-                <button (click)="openRemoveModal()" class="btn-small btn-negative">Remove</button>
               </td>
             </tr>
-          </tbody>
-        </table>
-        <div class="flex flex-row justify-between py-2 px-4">
+          </ng-template>
+          <ng-template #noData>
+            <tr>
+              <td colspan="5" class="">
+                <div
+                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                  <div class="h-fit my-auto">
+                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
+                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                          stroke-linejoin="round" />
+                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
+                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                    <div class="max-w-sm">
+                      <h4 class="text-lg font-semibold mt-4 line-clamp-2">No administrators found for
+                        "{{filteredAdministrators}}"</h4>
+                      <p class="my-auto text-sm mt-1">There are no accounts that have the permission to view 
+                        and manage all the services and change the settings of the system.</p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+        <tfoot *ngIf="administrators.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
           <span></span>
           <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
-
-        </div>
-
-      </div>
-    </ng-container>
-
-    <ng-template #noData>
-      <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-        <table class="w-full text-left text-sm text-neutral-500">
-          <thead class="border-b bg-neutral-50 text-xs uppercase text-neutral-700">
-            <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Email</th>
-              <th scope="col" class="px-6 py-3">Department</th>
-              <th scope="col" class="px-6 py-3">Designation</th>
-              <th scope="col" class="px-6 py-3"></th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="border-b bg-white hover:bg-neutral-50 text-center flex flex-col content-center items-center whitespace-nowrap px-6 py-4 text-neutral-900 h-96 w-full">
-          <p class="my-auto">No data found for administrators accounts.</p>
-        </div>
-        <div class="flex flex-row justify-between py-2 px-4">
-          <span></span>
-          <nav class="mt-1.5">
-            <ul class="inline-flex items-center -space-x-px">
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 ml-0 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-l-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Previous</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a href="#"
-                  class="px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 hover:bg-neutral-100 hover:text-neutral-700">1</a>
-              </li>
-              <li>
-                <a href="#"
-                  class="block px-3 py-2 leading-tight text-neutral-500 bg-white border border-neutral-300 rounded-r-lg hover:bg-neutral-100 hover:text-neutral-700">
-                  <span class="sr-only">Next</span>
-                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"></path>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-      </div>
-    </ng-template>
+        </tfoot>
+      </table>
+    </div>
 
   </section>
 
@@ -655,13 +742,26 @@
               stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col w-full">
           <h4 class="text-lg font-semibold text-neutral-950">Deactivate account</h4>
-          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to deactivate your account? This action cannot
-            be undone.</p>
+          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to deactivate <span class="font-medium"> {{modalFirstName + " " + modalLastName}} ({{modalId}}) </span>?</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeResignModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button class="btn-small btn-base btn-primary-negative">Deactivate</button>
+            <button (click)="resignVerifiedFaculty()" [disabled]="resignLoading" class="btn-small btn-solid-negative">
+              <ng-container *ngIf="!resignLoading">Deactivate</ng-container>
+                <ng-container *ngIf="resignLoading">
+                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                        viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4"
+                            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                            fill="currentColor" />
+                        <path
+                            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                            fill="currentColor" />
+                    </svg>
+                    Deactivating...
+                </ng-container>
+            </button>
           </div>
         </div>
       </div>
@@ -695,7 +795,9 @@
                 </svg>
               </div>
               <h4 class="text-lg font-semibold text-neutral-950 mt-2">Update account</h4>
-              <p class="text-sm mt-1 text-neutral-700">Are you sure you want to deactivate your account? This action
+              <p class="text-sm mt-1 text-neutral-700">Are you sure you want to edit {{modalFirstName + " " +
+                modalLastName}}
+                ({{modalId}})? This action
                 cannot
                 be undone.</p>
             </div>
@@ -744,26 +846,46 @@
                 <h4 class="text-neutral-900 font-medium mb-0.5">Update email address</h4>
                 <p class="text-neutral-700 text-xs">Edit email address</p>
               </button>
+              <button (click)="toUpdatePassword()"
+                class="flex flex-col justify-between p-4 w-full btn-secondary-outline items-center">
+                <svg class="h-8 mb-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 20.5H7C4 20.5 2 19 2 15.5V8.5C2 5 4 3.5 7 3.5H17C20 3.5 22 5 22 8.5V11.5"
+                    stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path opacity="0.4" d="M17 9L13.87 11.5C12.84 12.32 11.15 12.32 10.12 11.5L7 9" stroke="currentColor"
+                    stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                  <g opacity="0.4">
+                    <path
+                      d="M19.2091 14.7698L15.6691 18.3098C15.5291 18.4498 15.3991 18.7098 15.3691 18.8998L15.1791 20.2498C15.1091 20.7398 15.4491 21.0798 15.9391 21.0098L17.2891 20.8198C17.4791 20.7898 17.7491 20.6598 17.8791 20.5198L21.4191 16.9798C22.0291 16.3698 22.3191 15.6598 21.4191 14.7598C20.5291 13.8698 19.8191 14.1598 19.2091 14.7698Z"
+                      stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path d="M18.6992 15.2798C18.9992 16.3598 19.8392 17.1998 20.9192 17.4998" stroke="currentColor"
+                      stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                  </g>
+                </svg>
+                <h4 class="text-neutral-900 font-medium mb-0.5">Update password</h4>
+                <p class="text-neutral-700 text-xs">Edit password</p>
+              </button>
             </div>
           </div>
 
           <div *ngIf="updateInfo">
             <div class="grid grid-cols-2 gap-4">
               <div class="col-span-2  flex flex-col items-center">
-                <img src="{{imageUrl}}" class="h-32 w-32 rounded-full" (click)="fileInput.click()">
+                <img id="blah" [src]="imagePreview || 'http://placehold.it/180' " alt="your image" />
                 <input type="file" #fileInput (change)="onFileSelected($event)">
               </div>
               <div>
                 <label for="">First name</label>
-                <input id="" type="text" />
+                <input id="" type="text" [(ngModel)]="editFirstName" />
               </div>
               <div>
                 <label for="">Last name</label>
-                <input id="" type="text" />
+                <input id="" type="text" [(ngModel)]="editLastName" />
               </div>
               <div>
                 <label for="">Department</label>
-                <select id="" name="department" required>
+                <select id="" name="department" [(ngModel)]="editDepartment" required>
                   <option value="Allied">Allied</option>
                   <option value="BLIS">BLIS</option>
                   <option value="BSIT">BSIT</option>
@@ -771,7 +893,7 @@
               </div>
               <div>
                 <label for="">Designation</label>
-                <select id="" name="designation" required>
+                <select id="" name="designation" [(ngModel)]="editDesignation" required>
                   <option value="Alumni Coordinator">Alumni Coordinator</option>
                   <option value="BSIT Area Chair - Business Analytics">BSIT Area Chair - Business Analytics</option>
                   <option value="BSIT Area Chair - Service Management">BSIT Area Chair - Service Management</option>
@@ -800,19 +922,59 @@
             </div>
             <div class="mt-6 flex justify-end gap-x-3">
               <button (click)="closeUpdateModal()" class="btn-small btn-secondary-outline">Cancel</button>
-              <button class="btn-small btn-base btn-primary-small">Update</button>
+              <button (click)="updateInfoVerifiedFaculty()" class="btn-small btn-base btn-primary-small">Update</button>
             </div>
           </div>
 
           <div *ngIf="updateEmail">
             <div>
               <label for="">Email</label>
-              <input id="" type="email" />
+              <input id="" type="email" [(ngModel)]="editEmail" />
             </div>
             <div class="mt-6 flex justify-end gap-x-3">
               <button (click)="closeUpdateModal()" class="btn-small btn-secondary-outline">Cancel</button>
-              <button class="btn-small btn-base btn-primary-small">Update</button>
+              <button (click)="updateEmailVerifiedFaculty()"
+                class="btn-small btn-base btn-primary-small">Update</button>
             </div>
+          </div>
+          <div *ngIf="updatePassword">
+            <form [formGroup]="passwordForm" (ngSubmit)="updatePassVerifiedFaculty()">
+              <!-- Password  -->
+              <div>
+                <label for="password">Password * </label>
+                <input type="password" formControlName="password" name="password" id="password"
+                  [ngClass]="{'is-invalid' : submitted && f['password'].errors}" placeholder="password">
+
+                <!-- error block  -->
+                <div *ngIf="submitted && f['password'].errors">
+                  <div *ngIf="f['password'].errors['required']">
+                    Password is required
+                  </div>
+                  <div *ngIf="f['password'].errors['minlength']">
+                    Password must be aleast 8 characters
+                  </div>
+                </div>
+              </div>
+
+              <!-- Confirm Password  -->
+              <div class="mb-3">
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" formControlName="confirmPassword" name="confirm_password" id="confirmPassword"
+                  [ngClass]="{'is-invalid' : submitted && f['confirmPassword'].errors}" placeholder="confirm password">
+
+                <!-- error block  -->
+                <div *ngIf="submitted && f['confirmPassword'].errors">
+                  <div *ngIf="f['confirmPassword'].errors['required']">
+                    Confirm Password is required
+                  </div>
+
+                  <div *ngIf="f['confirmPassword'].errors['mustMatch']">
+                    Password must match
+                  </div>
+                </div>
+              </div>
+              <button type="submit">Save</button>
+            </form>
           </div>
 
         </div>
@@ -846,11 +1008,14 @@
         </div>
         <div class="flex flex-col">
           <h4 class="text-lg font-semibold text-neutral-950">Reactivate account</h4>
-          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to deactivate your account? This action cannot
+          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to reactivate {{modalFirstName + " " +
+            modalLastName}}
+            ({{modalId}})? This action cannot
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeReactivateModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button class="btn-small btn-base btn-primary-small">Reactivate</button>
+            <button (click)="reactivateResignedFaculty()"
+              class="btn-small btn-base btn-primary-small">Reactivate</button>
           </div>
         </div>
       </div>
@@ -883,12 +1048,13 @@
         </div>
         <div class="flex flex-col">
           <h4 class="text-lg font-semibold text-neutral-950">Reject pending account</h4>
-          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to accept Aaron Paul Dela Rosa (2019115168)
-            your account? This action cannot
+          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to reject {{modalFirstName + " " +
+            modalLastName}}
+            ({{modalId}})? This action cannot
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeRejectModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button class="btn-small btn-base btn-primary-negative">Reject</button>
+            <button (click)="rejectPendingFaculty()" class="btn-small btn-base btn-primary-negative">Reject</button>
           </div>
         </div>
       </div>
@@ -922,12 +1088,13 @@
         </div>
         <div class="flex flex-col">
           <h4 class="text-lg font-semibold text-neutral-950">Accept pending account</h4>
-          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to accept Aaron Paul Dela Rosa (2019115168)
-            your account? This action cannot
+          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to accept {{modalFirstName + " " +
+            modalLastName}}
+            ({{modalId}})? This action cannot
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeAcceptModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button class="btn-small btn-base btn-primary-small">Accept</button>
+            <button (click)="acceptPendingFaculty()" class="btn-small btn-base btn-primary-small">Accept</button>
           </div>
         </div>
       </div>
@@ -961,12 +1128,14 @@
         </div>
         <div class="flex flex-col">
           <h4 class="text-lg font-semibold text-neutral-950">Delete pending account</h4>
-          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to accept Aaron Paul Dela Rosa (2019115168)
-            your account? This action cannot
+          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to delete {{modalFirstName + " " +
+            modalLastName}}
+            ({{modalId}})
+            ? This action cannot
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeDeleteModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button class="btn-small btn-base btn-primary-negative">Reject</button>
+            <button (click)="deleteRejectedFaculty()" class="btn-small btn-base btn-primary-negative">Reject</button>
           </div>
         </div>
       </div>
@@ -993,12 +1162,14 @@
         </div>
         <div class="flex flex-col">
           <h4 class="text-lg font-semibold text-neutral-950">Undo pending account</h4>
-          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to accept Aaron Paul Dela Rosa (2019115168)
-            your account? This action cannot
+          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to make {{modalFirstName + " " +
+            modalLastName}}
+            ({{modalId}})
+            account pending again? This action cannot
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeUndoModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button class="btn-small btn-base btn-primary-small">Undo</button>
+            <button (click)="undoRejectedFaculty()" class="btn-small btn-base btn-primary-small">Undo</button>
           </div>
         </div>
       </div>
@@ -1031,12 +1202,74 @@
         </div>
         <div class="flex flex-col">
           <h4 class="text-lg font-semibold text-neutral-950">Remove as an administrator</h4>
-          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to accept Aaron Paul Dela Rosa (2019115168)
-            your account? This action cannot
+          <p class="text-sm mt-1 text-neutral-700">Are you sure you want to remove {{modalFirstName + " " +
+            modalLastName}}
+            ({{modalId}})
+            as an admin? This action cannot
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeRemoveModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button class="btn-small btn-base btn-primary-negative">Remove</button>
+            <button (click)="makeFaculty()" class="btn-small btn-base btn-primary-negative">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Admin Modal -->
+<div *ngIf="addAdminModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeAddAdminModal()">
+  <div class="flex w-full h-full">
+    <!-- Modal content -->
+    <div class="modal max-w-lg ">
+      <div class="flex flex-row p-6 gap-x-4">
+        <div class="bg-red-100 p-2 h-fit w-fit rounded-full ">
+          <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path opacity="0.4"
+              d="M3.41016 22C3.41016 18.13 7.26018 15 12.0002 15C12.9602 15 13.8902 15.13 14.7602 15.37"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M22 18C22 18.32 21.96 18.63 21.88 18.93C21.79 19.33 21.63 19.72 21.42 20.06C20.73 21.22 19.46 22 18 22C16.97 22 16.04 21.61 15.34 20.97C15.04 20.71 14.78 20.4 14.58 20.06C14.21 19.46 14 18.75 14 18C14 16.92 14.43 15.93 15.13 15.21C15.86 14.46 16.88 14 18 14C19.18 14 20.25 14.51 20.97 15.33C21.61 16.04 22 16.98 22 18Z"
+              stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M19.4897 17.98H16.5098" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+
+        </div>
+        <div class="flex flex-col">
+          <h4 class="text-lg font-semibold text-neutral-950">Add an administrator</h4>
+          <input type="text" [(ngModel)]="filteredAddAdminModal" name="keyword" placeholder="Search for users">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Department</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let faculty of noneAdminFaculty | filter: filteredAddAdminModal">
+                <td>
+                  <img class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                    src="http://127.0.0.1:8000/users/{{faculty.profile_image}}" />
+                  <div>{{ faculty.first_name + " " + faculty.last_name }}</div>
+                  <div>{{ faculty.id }}</div>
+                </td>
+                <td>{{faculty.department}}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="makeAdmin(faculty)">
+                    add
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-6 flex justify-end gap-x-3">
+            <button (click)="closeAddAdminModal()" class="btn-small btn-secondary-outline">Cancel</button>
           </div>
         </div>
       </div>

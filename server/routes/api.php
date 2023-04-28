@@ -34,7 +34,10 @@ Route::prefix('auth')->group(function () {
 // User routes for user management
 Route::prefix('user')->group(function () {
     Route::post('/verify/{id}', 'App\Http\Controllers\UserController@verifyUser');
-    Route::delete('/reject/{id}', 'App\Http\Controllers\UserController@rejectUser');
+    Route::post('/resign/{id}', 'App\Http\Controllers\UserController@resignUser');
+    Route::post('/reject/{id}', 'App\Http\Controllers\UserController@rejectUser');
+    Route::post('/pending/{id}', 'App\Http\Controllers\UserController@pendingUser');
+    Route::delete('/delete/{id}', 'App\Http\Controllers\UserController@deleteUser');
     Route::post('/update-info/{id}', 'App\Http\Controllers\UserController@updateInfo');
     Route::post('/update-email/{id}', 'App\Http\Controllers\UserController@updateEmailAddress');
     Route::post('/update-password/{id}', 'App\Http\Controllers\UserController@updatePassword');
@@ -43,6 +46,12 @@ Route::prefix('user')->group(function () {
     Route::post('/make-faculty/{id}', 'App\Http\Controllers\UserController@makeFaculty');
     Route::get('/get-user/{id}', 'App\Http\Controllers\UserController@getUser');
     Route::get('/index-user', 'App\Http\Controllers\UserController@indexUser');
+    Route::get('/verified-user', 'App\Http\Controllers\UserController@getAllVerifiedUser');
+    Route::get('/pending-user', 'App\Http\Controllers\UserController@getAllPendingUser');
+    Route::get('/resigned-user', 'App\Http\Controllers\UserController@getAllResignedUser');
+    Route::get('/rejected-user', 'App\Http\Controllers\UserController@getAllRejectedUser');
+    Route::get('/get-admin', 'App\Http\Controllers\UserController@getAllAdmins');
+    Route::get('/get-faculty', 'App\Http\Controllers\UserController@getAllFaculty');
 });
 
 // Partner routes for partner management
