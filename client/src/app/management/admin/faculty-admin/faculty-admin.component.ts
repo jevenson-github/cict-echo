@@ -4,6 +4,7 @@ import type { ModalOptions, ModalInterface } from 'flowbite'
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MustMatch } from './confirmed.validator';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-faculty-admin',
@@ -13,7 +14,7 @@ import { MustMatch } from './confirmed.validator';
 
 export class FacultyAdminComponent implements OnInit {
 
-  resignLoading: boolean = false;
+
 
   constructor(private http: HttpClient,
     private fb: FormBuilder) { }
@@ -32,6 +33,12 @@ export class FacultyAdminComponent implements OnInit {
   removeModal: boolean = false;
   addAdminModal: boolean = false;
 
+  resignToast: boolean = false;
+  reactivateToast: boolean = false;
+
+  resignLoading: boolean = false;
+  reactivateLoading: boolean = false;
+
   updateSelection: boolean = true;
   updateEmail: boolean = false;
   updateInfo: boolean = false;
@@ -43,6 +50,27 @@ export class FacultyAdminComponent implements OnInit {
   rejectedFaculty: any[] = [];
   administrators: any[] = [];
   noneAdminFaculty: any[] = [];
+
+  verifiedFacultyCount: number = 0;
+  resignedFacultyCount: number = 0;
+  pendingFacultyCount: number = 0;
+  rejectedFacultyCount: number = 0;
+  administratorsCount: number = 0;
+
+  activeTab = 0;
+
+  tabs = [
+    { label: 'Verified accounts', badge: this.verifiedFacultyCount },
+    { label: 'Deactivated accounts', badge: this.resignedFaculty.length },
+    { label: 'Pending accounts', badge: this.pendingFaculty.length },
+    { label: 'Rejected accounts', badge: this.rejectedFaculty.length },
+    { label: 'Administrators', badge: this.administrators.length },
+  ];
+  sections = ['faculty-section-verified', 'faculty-section-resigned', 'faculty-section-pending', 'faculty-section-rejected', 'faculty-section-administrators'];
+
+  setActiveTab(index: number) {
+    this.activeTab = index;
+  }
 
   // id parameter
   resignVerifiedParam: any;
@@ -221,42 +249,72 @@ export class FacultyAdminComponent implements OnInit {
     this.updatePassword = true;
   }
 
+
+  // Observable
+
+  fetchVerifiedFaculty(): Observable<any> {
+    return this.http.get("http://127.0.0.1:8000/api/user/verified-user");
+  }
+
+  fetchResignedFaculty(): Observable<any> {
+    return this.http.get("http://127.0.0.1:8000/api/user/resigned-user");
+  }
+
+  fetchPendingFaculty(): Observable<any> {
+    return this.http.get("http://127.0.0.1:8000/api/user/pending-user");
+  }
+
+  fetchRejectedFaculty(): Observable<any> {
+    return this.http.get("http://127.0.0.1:8000/api/user/rejected-user");
+  }
+
+  fetchAdmins(): Observable<any> {
+    return this.http.get("http://127.0.0.1:8000/api/user/get-admin");
+  }
+
+
   // Table list of Data
 
   getVerifiedFaculty() {
-    this.http.get("http://127.0.0.1:8000/api/user/verified-user").subscribe((resultData: any) => {
+    this.fetchVerifiedFaculty().subscribe((resultData: any) => {
       this.verifiedFaculty = resultData;
+      this.tabs[0].badge = this.verifiedFaculty.length;
       console.log(this.verifiedFaculty);
     });
   }
 
   getResignedFaculty() {
-    this.http.get("http://127.0.0.1:8000/api/user/resigned-user").subscribe((resultData: any) => {
+    this.fetchResignedFaculty().subscribe((resultData: any) => {
       this.resignedFaculty = resultData;
+      this.tabs[1].badge = this.resignedFaculty.length;
       console.log(this.resignedFaculty);
     });
   }
 
   getPendingFaculty() {
-    this.http.get("http://127.0.0.1:8000/api/user/pending-user").subscribe((resultData: any) => {
+    this.fetchPendingFaculty().subscribe((resultData: any) => {
       this.pendingFaculty = resultData;
+      this.tabs[2].badge = this.pendingFaculty.length;
       console.log(this.pendingFaculty);
     });
   }
 
   getRejectedFaculty() {
-    this.http.get("http://127.0.0.1:8000/api/user/rejected-user").subscribe((resultData: any) => {
+    this.fetchRejectedFaculty().subscribe((resultData: any) => {
       this.rejectedFaculty = resultData;
+      this.tabs[3].badge = this.rejectedFaculty.length;
       console.log(this.rejectedFaculty);
     });
   }
 
   getAdmins() {
-    this.http.get("http://127.0.0.1:8000/api/user/get-admin").subscribe((resultData: any) => {
+    this.fetchAdmins().subscribe((resultData: any) => {
       this.administrators = resultData;
+      this.tabs[4].badge = this.administrators.length;
       console.log(this.administrators);
     });
   }
+
 
   // Buttons Functionality
 
@@ -273,6 +331,11 @@ export class FacultyAdminComponent implements OnInit {
       console.log(resultData);
       this.resignModal = false;
       this.resignLoading = false;
+      this.resignToast = true;
+  
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
@@ -328,9 +391,16 @@ export class FacultyAdminComponent implements OnInit {
   }
 
   reactivateResignedFaculty() {
+    this.reactivateLoading = true;
     this.http.post("http://127.0.0.1:8000/api/user/pending/" + this.reactivateResignedParam, "").subscribe((resultData: any) => {
       console.log(resultData);
       this.reactivateModal = false;
+      this.reactivateLoading = false;
+      this.reactivateToast = true;
+  
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
@@ -388,20 +458,7 @@ export class FacultyAdminComponent implements OnInit {
     this.getNoneAdminFaculty();
   }
 
-  activeTab = 0;
 
-  tabs = [
-    { label: 'Verified accounts', badge: this.verifiedFaculty.length },
-    { label: 'Deactivated accounts', badge: this.resignedFaculty.length },
-    { label: 'Pending accounts', badge: this.pendingFaculty.length },
-    { label: 'Rejected accounts', badge: this.rejectedFaculty.length },
-    { label: 'Administrators', badge: this.administrators.length },
-  ];
-  sections = ['faculty-section-verified', 'faculty-section-resigned', 'faculty-section-pending', 'faculty-section-rejected', 'faculty-section-administrators'];
-
-  setActiveTab(index: number) {
-    this.activeTab = index;
-  }
 
   filteredVerifiedFaculty: any;
   filteredResignedFaculty: any;
@@ -428,13 +485,22 @@ export class FacultyAdminComponent implements OnInit {
     this.imageToUpdate = event.target.files[0];
     console.log(this.imageToUpdate);
 
-    if (event.target.files && event.target.files[0]){
+    if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];
 
       const reader = new FileReader();
       reader.onload = e => this.imagePreview = reader.result;
 
       reader.readAsDataURL(file);
+    }
+  }
+
+  showToast() {
+    if (this.resignToast === true || this.reactivateToast === true) {
+      setTimeout(() => {
+        this.resignToast = false;
+        this.reactivateToast = false;
+      }, 5000);
     }
   }
 

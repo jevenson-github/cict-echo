@@ -126,6 +126,10 @@
     @apply inline-block align-middle h-fit m-auto w-full bg-white rounded-lg shadow
   }
 
+  .toast {
+    @apply fixed bottom-8 ml-4 flex w-full max-w-xs items-center rounded-lg bg-neutral-950 bg-opacity-75 p-4 text-white shadow backdrop-blur backdrop-saturate-200
+  }
+
 }
 
 .avatar-content {
