@@ -46,7 +46,7 @@
         <ng-container *ngIf="partners && partners.length > 0; else noPartner">
           <ng-container *ngIf="(partners | filter: filteredPartnerArray) as filteredResults">
             <ng-container *ngIf="filteredResults.length > 0; else noResults">
-              <tr *ngFor="let partner of filteredResults" class="hover:bg-neutral-50">
+              <tr *ngFor="let partner of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}" class="hover:bg-neutral-50">
                 <th scope="row" class="px-6 py-4 text-neutral-900">
                   <div class="flex items-center">
                     <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
@@ -273,6 +273,11 @@
           </tr>
         </ng-template>
       </tbody>
+
+      <tfoot *ngIf="partners.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
+        <span></span>
+        <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
+      </tfoot>
 
     </table>
   </div>

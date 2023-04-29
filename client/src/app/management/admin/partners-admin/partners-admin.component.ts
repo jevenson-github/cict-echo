@@ -26,7 +26,7 @@ export class PartnersAdminComponent implements OnInit {
   partners: any[] = [];
   partner_id: any;
 
-  // Search related
+  // Search related 
   filteredPartnerArray: any;
   p: number = 1;
 
