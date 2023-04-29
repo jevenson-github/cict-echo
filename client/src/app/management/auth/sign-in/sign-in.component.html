@@ -1,13 +1,16 @@
 <!-- HEADER -->
 <div class="mb-8 flex flex-col gap-y-1">
   <h3 class="text-2xl font-semibold">Sign in</h3>
-  <p class="text-sm text-neutral-700">New to ECHO? <a class="link-primary" routerLink="./sign-up">Sign up for an account</a>.</p>
+  <p class="text-sm text-neutral-700">New to ECHO? <a class="link-primary" routerLink="./sign-up">Sign up for an
+      account</a>.</p>
 </div>
 
 <!-- ALERT SIGN UP SUCCESS-->
 <div *ngIf="signUpResponse === 'success'" class="mb-4 flex rounded-lg bg-green-50 p-4 text-sm text-green-700">
   <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="currentColor" />
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
     <path
       d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
       fill="currentColor" />
@@ -20,7 +23,9 @@
 <!-- ALERT SEND RESET INSTRUCTION -->
 <div *ngIf="forgotPasswordResponse === 'success'" class="mb-4 flex rounded-lg bg-blue-50 p-4 text-sm text-blue-700">
   <svg class="mr-3 inline h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="currentColor" />
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
     <path
       d="M12 13.75C12.41 13.75 12.75 13.41 12.75 13V8C12.75 7.59 12.41 7.25 12 7.25C11.59 7.25 11.25 7.59 11.25 8V13C11.25 13.41 11.59 13.75 12 13.75Z"
       fill="currentColor" />
@@ -67,23 +72,24 @@
       [ngClass]="{'is-invalid' : submitted && f['password'].errors}" />
     <div *ngIf="submitted && f['password'].errors">
       <p class="helper-text-error" *ngIf="f['password'].errors['required']">The password is required.</p>
-      <p class="helper-text-error" *ngIf="f['password'].errors['minlength']">Password must contain at least 6 characters.
+      <p class="helper-text-error" *ngIf="f['password'].errors['minlength']">Password must contain at least 6
+        characters.
       </p>
     </div>
-    </div>
-    <button (click)="submitSignIn()" class="mt-2 btn-base btn-primary" [disabled]="signInLoading">
-      <ng-container *ngIf="!signInLoading">Sign in</ng-container>
-      <ng-container *ngIf="signInLoading">
-        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin" viewBox="0 0 100 101"
-          fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path opacity="0.4"
-            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-            fill="currentColor" />
-          <path
-            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-            fill="currentColor" />
-        </svg>
-        Signing in...
-      </ng-container>
-    </button>
-    </div>
+  </div>
+  <button (click)="submitSignIn()" class="mt-2 btn-base btn-primary" [disabled]="signInLoading">
+    <ng-container *ngIf="!signInLoading">Sign in</ng-container>
+    <ng-container *ngIf="signInLoading">
+      <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin" viewBox="0 0 100 101"
+        fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path opacity="0.4"
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor" />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentColor" />
+      </svg>
+      Signing in...
+    </ng-container>
+  </button>
+</div>

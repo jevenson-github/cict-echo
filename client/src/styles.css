@@ -12,7 +12,7 @@
     @apply block mb-2 text-sm font-medium text-neutral-900
   }
 
-  input[type="text"], input[type="email"], input[type="password"], input[type="number"], select {
+  input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], select, textarea {
     @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5;
   }
 
@@ -35,7 +35,7 @@
 
 @layer components {
   .btn-base {
-    @apply font-medium rounded-lg px-5 py-2.5 text-sm
+    @apply font-medium rounded-lg px-5 py-2.5 text-sm h-fit
   }
 
   .btn-small {
@@ -123,11 +123,19 @@
   }
 
   .modal {
-    @apply inline-block align-middle h-fit m-auto w-full bg-white rounded-lg shadow
+    @apply inline-block align-middle h-fit m-auto w-full bg-white rounded-lg shadow p-6
   }
 
   .toast {
-    @apply fixed bottom-8 ml-4 flex w-full max-w-xs items-center rounded-lg bg-neutral-950 bg-opacity-75 p-4 text-white shadow backdrop-blur backdrop-saturate-200
+    @apply fixed bottom-8 flex w-full max-w-xs items-center rounded-lg bg-neutral-950 bg-opacity-75 p-4 text-white shadow backdrop-blur backdrop-saturate-200
+  }
+
+  .action-icon-destructive {
+    @apply h-6 w-6 hover:text-red-700 m-2
+  }
+
+  .action-icon-action {
+    @apply h-6 w-6 hover:text-blue-700 m-2
   }
 
 }
@@ -146,4 +154,22 @@ padding-right: 0.75rem !important;
 padding-top: 0.5rem !important;
 padding-bottom: 0.5rem !important;
 line-height: 1.25rem !important;
+}
+
+.dropdown-cell {
+  position: relative !important;
+}
+
+.dropdown-cell .dropdown-menu {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  z-index: 10 !important;
+}
+
+.dropdown-menu {
+  position: absolute !important;
+  z-index: 10 !important;
+  right: 0 !important;
+  transform: translateX(100%) !important;
 }

@@ -1024,7 +1024,7 @@
             <button (click)="closeReactivateModal()" class="btn-small btn-secondary-outline">Cancel</button>
             <button (click)="reactivateResignedFaculty()" [disabled]="reactivateLoading"
               class="btn-small btn-solid-negative">
-              <ng-container *ngIf="!reactivateLoading">Deactivate</ng-container>
+              <ng-container *ngIf="!reactivateLoading">Reactivate</ng-container>
               <ng-container *ngIf="reactivateLoading">
                 <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
                   viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1086,12 +1086,36 @@
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeRejectModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button (click)="rejectPendingFaculty()" class="btn-small btn-base btn-primary-negative">Reject</button>
+            <button (click)="rejectPendingFaculty()" [disabled]="rejectLoading" class="btn-small btn-solid-negative">
+              <ng-container *ngIf="!rejectLoading">Reject</ng-container>
+              <ng-container *ngIf="rejectLoading">
+                <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                  viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4"
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentColor" />
+                </svg>
+                Rejecting...
+              </ng-container>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Reject toast -->
+<div *ngIf="rejectToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3 ">User rejected successfully.</div>
 </div>
 
 <!-- Accept modal -->
@@ -1126,12 +1150,36 @@
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeAcceptModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button (click)="acceptPendingFaculty()" class="btn-small btn-base btn-primary-small">Accept</button>
+            <button (click)="acceptPendingFaculty()" [disabled]="acceptLoading" class="btn-small btn-solid-negative">
+              <ng-container *ngIf="!acceptLoading">Accept</ng-container>
+              <ng-container *ngIf="acceptLoading">
+                <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                  viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4"
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentColor" />
+                </svg>
+                Accepting...
+              </ng-container>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Accept toast -->
+<div *ngIf="acceptToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3 ">User accepted successfully.</div>
 </div>
 
 <!-- Delete modal -->
@@ -1167,12 +1215,36 @@
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeDeleteModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button (click)="deleteRejectedFaculty()" class="btn-small btn-base btn-primary-negative">Reject</button>
+            <button (click)="deleteRejectedFaculty()" [disabled]="deleteLoading" class="btn-small btn-solid-negative">
+              <ng-container *ngIf="!deleteLoading">Delete</ng-container>
+              <ng-container *ngIf="deleteLoading">
+                <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                  viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4"
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentColor" />
+                </svg>
+                Deleting...
+              </ng-container>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Delete toast -->
+<div *ngIf="deleteToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3 ">User deleted successfully.</div>
 </div>
 
 <!-- Undo modal -->
@@ -1201,12 +1273,36 @@
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeUndoModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button (click)="undoRejectedFaculty()" class="btn-small btn-base btn-primary-small">Undo</button>
+            <button (click)="undoRejectedFaculty()" [disabled]="undoLoading" class="btn-small btn-solid-negative">
+              <ng-container *ngIf="!undoLoading">Undo</ng-container>
+              <ng-container *ngIf="undoLoading">
+                <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                  viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4"
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentColor" />
+                </svg>
+                Processing...
+              </ng-container>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Undo toast -->
+<div *ngIf="undoToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3 ">Undo changes successfully.</div>
 </div>
 
 <!-- Remove modal -->
@@ -1241,12 +1337,36 @@
             be undone.</p>
           <div class="mt-6 flex justify-end gap-x-3">
             <button (click)="closeRemoveModal()" class="btn-small btn-secondary-outline">Cancel</button>
-            <button (click)="makeFaculty()" class="btn-small btn-base btn-primary-negative">Remove</button>
+            <button (click)="makeFaculty()" [disabled]="removeLoading" class="btn-small btn-solid-negative">
+              <ng-container *ngIf="!removeLoading">Remove</ng-container>
+              <ng-container *ngIf="removeLoading">
+                <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                  viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4"
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentColor" />
+                </svg>
+                Removing...
+              </ng-container>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Remove toast -->
+<div *ngIf="removeToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3 ">User removed successfully.</div>
 </div>
 
 <!-- Add Admin Modal -->
@@ -1293,8 +1413,20 @@
                 </td>
                 <td>{{faculty.department}}</td>
                 <td>
-                  <button class="btn btn-primary" (click)="makeAdmin(faculty)">
-                    add
+                  <button (click)="makeAdmin(faculty)" [disabled]="addLoading" class="btn-small btn-solid-negative">
+                    <ng-container *ngIf="!addLoading">Add</ng-container>
+                    <ng-container *ngIf="addLoading">
+                      <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                        viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4"
+                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                          fill="currentColor" />
+                        <path
+                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                          fill="currentColor" />
+                      </svg>
+                      Adding...
+                    </ng-container>
                   </button>
                 </td>
               </tr>
@@ -1307,4 +1439,14 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Remove toast -->
+<div *ngIf="addToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3 ">User added successfully.</div>
 </div>

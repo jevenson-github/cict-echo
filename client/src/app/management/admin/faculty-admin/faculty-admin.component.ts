@@ -35,9 +35,21 @@ export class FacultyAdminComponent implements OnInit {
 
   resignToast: boolean = false;
   reactivateToast: boolean = false;
+  rejectToast: boolean = false;
+  acceptToast: boolean = false;
+  deleteToast: boolean = false;
+  undoToast: boolean = false;
+  removeToast: boolean = false;
+  addToast: boolean = false;
 
   resignLoading: boolean = false;
   reactivateLoading: boolean = false;
+  rejectLoading: boolean = false;
+  acceptLoading: boolean = false;
+  deleteLoading: boolean = false;
+  undoLoading: boolean = false;
+  removeLoading: boolean = false;
+  addLoading: boolean = false;
 
   updateSelection: boolean = true;
   updateEmail: boolean = false;
@@ -332,7 +344,7 @@ export class FacultyAdminComponent implements OnInit {
       this.resignModal = false;
       this.resignLoading = false;
       this.resignToast = true;
-  
+
       // Call showToast() function to start the timer
       this.showToast();
       this.ngOnInit();
@@ -392,12 +404,12 @@ export class FacultyAdminComponent implements OnInit {
 
   reactivateResignedFaculty() {
     this.reactivateLoading = true;
-    this.http.post("http://127.0.0.1:8000/api/user/pending/" + this.reactivateResignedParam, "").subscribe((resultData: any) => {
+    this.http.post("http://127.0.0.1:8000/api/user/verify/" + this.reactivateResignedParam, "").subscribe((resultData: any) => {
       console.log(resultData);
       this.reactivateModal = false;
       this.reactivateLoading = false;
       this.reactivateToast = true;
-  
+
       // Call showToast() function to start the timer
       this.showToast();
       this.ngOnInit();
@@ -405,46 +417,88 @@ export class FacultyAdminComponent implements OnInit {
   }
 
   acceptPendingFaculty() {
+    this.acceptLoading = true;
     this.http.post("http://127.0.0.1:8000/api/user/verify/" + this.acceptPendingParam, '').subscribe((resultData: any) => {
       console.log(resultData);
       this.acceptModal = false;
+      this.acceptLoading = false;
+      this.acceptToast = true;
+
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
   rejectPendingFaculty() {
+    this.rejectLoading = true;
     this.http.post("http://127.0.0.1:8000/api/user/reject/" + this.rejectPendingParam, '').subscribe((resultData: any) => {
       console.log(resultData);
       this.rejectModal = false;
+      this.rejectLoading = false;
+      this.rejectToast = true;
+
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
   undoRejectedFaculty() {
+    this.undoLoading = true;
     this.http.post("http://127.0.0.1:8000/api/user/pending/" + this.undoRejectedParam, "").subscribe((resultData: any) => {
       console.log(resultData);
       this.undoModal = false;
+      this.undoLoading = false;
+      this.undoToast = true;
+
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
   deleteRejectedFaculty() {
+    this.deleteLoading = true;
     this.http.delete("http://127.0.0.1:8000/api/user/delete/" + this.deleteRejectedParam,).subscribe((resultData: any) => {
       console.log(resultData);
       this.deleteModal = false;
+      this.deleteLoading = false;
+      this.deleteToast = true;
+
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
+  //remove admin
   makeFaculty() {
+    this.removeLoading = true;
     console.log(this.removeAdminParam)
     this.http.post("http://127.0.0.1:8000/api/user/make-faculty/" + this.removeAdminParam, "").subscribe((resultData: any) => {
       console.log(resultData);
-      //this.hi=resultData.id;
       this.removeModal = false;
+      this.removeLoading = false;
+      this.removeToast = true;
+
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
   makeAdmin(data: any) {
+    this.addLoading = true;
     this.http.post("http://127.0.0.1:8000/api/user/make-admin/" + data.id, '').subscribe((resultData: any) => {
       console.log(resultData);
       this.addAdminModal = false;
+      this.addLoading = false;
+      this.addToast = true;
+
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
@@ -496,10 +550,17 @@ export class FacultyAdminComponent implements OnInit {
   }
 
   showToast() {
-    if (this.resignToast === true || this.reactivateToast === true) {
+    if (this.resignToast === true || this.reactivateToast === true || this.rejectToast === true || this.acceptToast === true ||
+        this.deleteToast === true || this.undoToast === true || this.removeToast === true || this.addToast === true) {
       setTimeout(() => {
         this.resignToast = false;
         this.reactivateToast = false;
+        this.rejectToast = false;
+        this.acceptToast = false;
+        this.deleteToast = false;
+        this.undoToast = false;
+        this.removeToast = false;
+        this.addToast = false;
       }, 5000);
     }
   }

@@ -7,8 +7,6 @@ use App\Models\Partner;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
-
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -17,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+
+use Illuminate\Support\Facades\DB;
 
 class PartnerController extends Controller
 {
@@ -44,7 +44,7 @@ class PartnerController extends Controller
         $partner->id = $id;
 
         // Create folder for partner
-        $partnerFolderPath = storage_path('app/public/partners/' . $id);
+        $partnerFolderPath = 'partners/' . $id;
         if (!File::exists($partnerFolderPath)) {
             File::makeDirectory($partnerFolderPath, 0755, true);
 
@@ -201,7 +201,7 @@ class PartnerController extends Controller
             return response()->json(['message' => 'Partner must be in draft status to be deleted'], 403);
         }
 
-        $partnerFolderPath = storage_path('app/public/partners/' . $id);
+        $partnerFolderPath = 'partners/' . $id;
 
         if (File::exists($partnerFolderPath)) {
             File::deleteDirectory($partnerFolderPath);
@@ -216,7 +216,9 @@ class PartnerController extends Controller
     {
         $partners = Partner::all();
 
-        return response()->json(['partners' => $partners]);
+        // return response()->json(['partners' => $partners]);
+
+        return response()->json($partners, 200);
     }
 
     public function getPartner($id)
@@ -230,26 +232,9 @@ class PartnerController extends Controller
         return response()->json(['partner' => $partner]);
     }
 
-    public function fileData()
-    {
-        $files = File::files('users');
-
-
-        $fileData = [];
-
-        foreach ($files as $file) {
-            $filePath = $file->getPathname();
-            $fileType = $file->getExtension();
-            $fileUrl = URL::to('/' . $filePath);
-
-            $fileData[] = [
-                'filename' => $filePath,
-                'filetype' => $fileType,
-                'fileurl' => $fileUrl
-
-            ];
-        }
-
-        return response()->json(['files' => $fileData]);
+    public function activePartner() {
+        $partner = DB::table('partners')->where('status', '=', 'active')->get();
+        return response()->json($partner, 200);
     }
 }
+

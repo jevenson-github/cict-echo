@@ -12,6 +12,7 @@ import { SignUpComponent } from './management/auth/sign-up/sign-up.component';
 // Import components for ADMIN
 import { AdminComponent } from './management/admin/admin.component';
 import { FacultyAdminComponent } from './management/admin/faculty-admin/faculty-admin.component';
+import { PartnersAdminComponent } from './management/admin/partners-admin/partners-admin.component';
 
 // Import components for FACULTY
 import { FacultyComponent } from './management/faculty/faculty.component';
@@ -29,7 +30,8 @@ const routes: Routes = [
     children: [
       { path: '', component: DashboardAdminComponent },
       { path: 'dashboard', component: DashboardAdminComponent },
-      { path: 'faculty', component: FacultyAdminComponent}
+      { path: 'faculty', component: FacultyAdminComponent},
+      { path: 'partners', component: PartnersAdminComponent},
     ],
   },
 
@@ -76,4 +78,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
+
 export class AppRoutingModule {}

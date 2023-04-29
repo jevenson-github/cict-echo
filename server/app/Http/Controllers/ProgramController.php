@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
+use Illuminate\Support\Facades\DB;
+
 
 class ProgramController extends Controller
 {
@@ -37,7 +39,7 @@ class ProgramController extends Controller
         $id = substr("CICT-EXT-PROGRAM-{$currentYear}{$companyInitials}{$randomString}", 0, 27);
 
         // Create folder for partner programs
-        $partnerFolderPath = storage_path('app/public/partners/' . $request->input('partner_id') . '/programs/' . $id);
+        $partnerFolderPath = 'partners/' . $request->input('partner_id') . '/programs/' . $id;
         if (!File::exists($partnerFolderPath)) {
             File::makeDirectory($partnerFolderPath, 0755, true);
         }
@@ -129,12 +131,20 @@ class ProgramController extends Controller
                 $program->status = 'upcoming';
             } elseif ($program->end_date < $currentDate) {
                 $program->status = 'completed';
-            } else {
+            } 
+           
+            else {
                 $program->status = 'ongoing';
             }
 
             $program->save();
 
+            return response()->json(['message' => 'Program status updated']);
+        }
+        elseif($program->status == "upcoming" ) {
+
+            $program->status = 'ongoing';
+            $program->save();
             return response()->json(['message' => 'Program status updated']);
         }
 
@@ -153,7 +163,7 @@ class ProgramController extends Controller
         if ($program->status == 'draft') {
 
             // Delete program folder
-            $programFolderPath = storage_path('app/public/partners/' . $program->partner_id . '/programs/' . $id);
+            $programFolderPath = 'partners/' . $program->partner_id . '/programs/' . $id;
             if (File::exists($programFolderPath)) {
                 File::deleteDirectory($programFolderPath);
             }
@@ -183,7 +193,7 @@ class ProgramController extends Controller
         }
 
         // Create folder for program files
-        $programFolderPath = storage_path('app/public/partners/' . $program->partner_id . '/programs/' . $id);
+        $programFolderPath = 'partners/' . $program->partner_id . '/programs/' . $id;
 
         // Upload certificate file if present
         if ($request->hasFile('certificate_file')) {
@@ -210,6 +220,9 @@ class ProgramController extends Controller
         }
 
         $program->status = 'completed';
+        $program->attendance = $attendanceFileName;
+        $program->certificate = $certificateFileName;
+        $program->invitation = $invitationFileName;
         $program->save();
 
         return response()->json(['message' => 'Program completed successfully.']);
@@ -217,22 +230,36 @@ class ProgramController extends Controller
 
     public function indexProgram()
     {
-        $programs = Program::with(['programLead', 'partner'])
-            ->orderByDesc('created_at')
-            ->get();
+        // $programs = Program::with(['programLead', 'partner'])
+        //     ->orderByDesc('created_at')
+        //     ->get();
+        $programs = DB::table('programs')
+        ->join('users', 'users.id', '=', 'programs.program_lead_id')
+        ->join('partners', 'partners.id', '=', 'programs.partner_id')
+        ->select('programs.*', 'users.first_name', 'partners.company_name')
+        ->get();
 
-        return response()->json($programs);
+        return response()->json($programs, 200);
     }
 
-    public function getProgram($id)
+    public function getProgram(Request $request, $id)
     {
-        $program = Program::with(['programLead', 'partner'])
-            ->find($id);
+        // $program = Program::with(['programLead', 'partner'])
+        //     ->find($id);  4
+        $programs = DB::table('programs')
+        ->join('users', 'users.id', '=', 'programs.program_lead_id')
+        ->join('partners', 'partners.id', '=', 'programs.partner_id')
+        ->select('programs.*', 'users.first_name', 'users.last_name', 'partners.company_name', 'partners.logo')
+        ->where('programs.id', '=', $id)
+        ->get();
+        
+        // ->where('id', '=', $id)->get();
+        // $programs = Program::where('id', '=', $id)->get();
 
-        if (!$program) {
+        if (!$programs) {
             return response()->json(['message' => 'Program not found'], 404);
         }
 
-        return response()->json($program);
+        return response()->json($programs,200);
     }
 }

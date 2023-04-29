@@ -27,8 +27,6 @@ Route::prefix('auth')->group(function () {
     Route::post('/sign-up', 'App\Http\Controllers\UserController@signUp');
     Route::post('/sign-in', 'App\Http\Controllers\UserController@signIn');
     Route::post('/reset-password', 'App\Http\Controllers\UserController@resetPassword');
-    Route::post('/validate-email', 'App\Http\Controllers\UserController@validateEmail');
-    Route::post('/validate-id', 'App\Http\Controllers\UserController@validateId');
 });
 
 // User routes for user management
@@ -63,6 +61,7 @@ Route::prefix('partner')->group(function () {
     Route::delete('/delete/{id}', 'App\Http\Controllers\PartnerController@deletePartner');
     Route::get('/get-partner/{id}', 'App\Http\Controllers\PartnerController@getPartner');
     Route::get('/index-partner', 'App\Http\Controllers\PartnerController@indexPartner');
+    Route::get('/get-partner-active', 'App\Http\Controllers\PartnerController@activePartner');
 });
 
 // Program routes for program management
@@ -75,5 +74,3 @@ Route::prefix('program')->group(function () {
     Route::get('/get-program/{id}', 'App\Http\Controllers\ProgramController@getProgram');
     Route::get('/index-program', 'App\Http\Controllers\ProgramController@indexProgram');
 });
-
-Route::get('/get-files', 'App\Http\Controllers\PartnerController@fileData');
