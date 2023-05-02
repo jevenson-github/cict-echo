@@ -351,18 +351,27 @@ export class FacultyAdminComponent implements OnInit {
     });
   }
 
+  updateLoading: boolean = false;
+  updateToast: boolean = false;
+
   updateInfoVerifiedFaculty() {
 
     var formData = new FormData();
-    formData.append("first_name", this.editFirstName);
-    formData.append("last_name", this.editLastName);
     formData.append("department", this.editDepartment);
     formData.append("designation", this.editDesignation);
-    formData.append("profile_image", this.imageToUpdate, this.imageToUpdate.name);
 
+    this.updateLoading = true;
     this.http.post("http://127.0.0.1:8000/api/user/update-info/" + this.updateModalParam, formData).subscribe((resultData: any) => {
       console.log(resultData);
       this.updateModal = false;
+
+      this.updateModal = false;
+      this.updateLoading = false;
+      this.updateToast = true;
+
+      // Call showToast() function to start the timer
+      this.showToast();
+      this.ngOnInit();
     });
   }
 
@@ -488,15 +497,15 @@ export class FacultyAdminComponent implements OnInit {
     });
   }
 
+  adminFaculty: any[] = [];
+
   makeAdmin(data: any) {
-    this.addLoading = true;
+
     this.http.post("http://127.0.0.1:8000/api/user/make-admin/" + data.id, '').subscribe((resultData: any) => {
       console.log(resultData);
       this.addAdminModal = false;
-      this.addLoading = false;
       this.addToast = true;
 
-      // Call showToast() function to start the timer
       this.showToast();
       this.ngOnInit();
     });
@@ -511,8 +520,6 @@ export class FacultyAdminComponent implements OnInit {
     this.createPasswordForm();
     this.getNoneAdminFaculty();
   }
-
-
 
   filteredVerifiedFaculty: any;
   filteredResignedFaculty: any;
@@ -551,7 +558,7 @@ export class FacultyAdminComponent implements OnInit {
 
   showToast() {
     if (this.resignToast === true || this.reactivateToast === true || this.rejectToast === true || this.acceptToast === true ||
-        this.deleteToast === true || this.undoToast === true || this.removeToast === true || this.addToast === true) {
+      this.deleteToast === true || this.undoToast === true || this.removeToast === true || this.addToast === true || this.updateToast === true) {
       setTimeout(() => {
         this.resignToast = false;
         this.reactivateToast = false;
@@ -561,6 +568,7 @@ export class FacultyAdminComponent implements OnInit {
         this.undoToast = false;
         this.removeToast = false;
         this.addToast = false;
+        this.updateToast = false;
       }, 5000);
     }
   }

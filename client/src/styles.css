@@ -119,7 +119,7 @@
   }
 
   .modal-bg {
-    @apply fixed top-0 left-0 right-0 z-50 h-screen w-screen bg-neutral-500 backdrop-blur-sm bg-opacity-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0
+    @apply fixed top-0 left-0 right-0 z-50 h-screen w-screen bg-neutral-500 backdrop-blur-sm bg-opacity-50 p-10 overflow-x-hidden overflow-y-auto md:inset-0
   }
 
   .modal {
@@ -136,6 +136,10 @@
 
   .action-icon-action {
     @apply h-6 w-6 hover:text-blue-700 m-2
+  }
+
+  .info-label {
+    @apply mb-0.5 font-medium text-sm
   }
 
 }

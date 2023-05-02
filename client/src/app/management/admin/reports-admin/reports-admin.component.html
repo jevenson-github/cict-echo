@@ -1,0 +1,45 @@
+<header class="flex flex-row w-full justify-between">
+    <div>
+        <h2 class="font-semibold text-neutral-950 truncate text-3xl tracking-tight">Reports</h2>
+        <p class="text-neutral-700 mt-1">View and manage the accounts of all faculty members and administrators, as well
+            as
+            filter and search for specific accounts.</p>
+    </div>
+</header>
+
+<section class="w-full mt-8 grid grid-cols-4 gap-4">
+
+    <div class="border rounded-lg p-8">
+
+        <h3 class="font-medium text-xl">Extension program terminal report</h3>
+        <select class="mt-4" name="" id=""
+            onchange="window.open(this.value, 'popUpWindow','height=720,width=1280,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')">
+            <option value="">Select Here</option>
+            <option value="http://localhost:4200/report-program?programId={{program.id}}"
+                *ngFor="let program of programArray">
+                {{program.program_title}}
+            </option>
+        </select>
+
+    </div>
+
+    <div class="border rounded-lg p-8">
+
+        <h3 class="font-medium text-xl">Partner's extension <br>programs</h3>
+        <select class="mt-4" name="" id=""
+            onchange="window.open(this.value, 'popUpWindow','height=720,width=1280,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')">
+            <option value="http://localhost:4200/report-partner?partnerId={{partner.id}}"
+                *ngFor="let partner of partnerArray">{{partner.company_name}}</option>
+        </select>
+
+    </div>
+
+    <div class="border rounded-lg p-8">
+
+        <h3 class="font-medium text-xl">Partner's extension <br> programs</h3>
+        <a href="http://localhost:4200/report-partners" target="_blank" class="">
+        <button class="btn-base btn-secondary-outline mt-4 w-full">Print all extension partners</button></a>
+
+    </div>
+
+</section>

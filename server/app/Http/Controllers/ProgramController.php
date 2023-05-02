@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Partner;
 use App\Models\Program;
+use App\Models\Members;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,7 @@ class ProgramController extends Controller
         $id = substr("CICT-EXT-PROGRAM-{$currentYear}{$companyInitials}{$randomString}", 0, 27);
 
         // Create folder for partner programs
-        $partnerFolderPath = 'partners/' . $request->input('partner_id') . '/programs/' . $id;
+        $partnerFolderPath = storage_path('app/public/partners/' . $request->input('partner_id') . '/programs/' . $id);
         if (!File::exists($partnerFolderPath)) {
             File::makeDirectory($partnerFolderPath, 0755, true);
         }
@@ -98,6 +99,7 @@ class ProgramController extends Controller
         $program->location = $request->input('location', $program->location);
         $program->program_details = $request->input('program_details', $program->program_details);
         $program->program_lead_id = $request->input('program_lead_id', $program->program_lead_id);
+        // $program->program_members =  $request->input('program_members');
         $program->partner_id = $request->input('partner_id', $program->partner_id);
         $program->participants = $request->input('participants', $program->participants);
         $program->program_flow = $request->input('program_flow', $program->program_flow);
@@ -105,7 +107,26 @@ class ProgramController extends Controller
 
         $program->save();
 
+        //INSERT VALUE TO MEMBERS TABLE
+        // $members = new Members();
+        // $members->program_id = $id;
+        // $members->faculty_id =  $request->input('program_members');
+        // $members->role =  $request->input('member_role');
+        // $members->save();
+
         return response()->json(['message' => 'Program updated successfully'], 200);
+    }
+
+    public function addMemberRoleProgram(Request $request)
+    {
+        //INSERT VALUE TO MEMBERS TABLE
+        $members = new Members();
+        $members->program_id = $request->input('program_id');
+        $members->faculty_id =  $request->input('program_members');
+        $members->role =  $request->input('member_role');
+        $members->save();
+
+        return response()->json(['message' => 'Member added updated successfully'], 200);
     }
 
     public function postProgram($id)
@@ -131,20 +152,12 @@ class ProgramController extends Controller
                 $program->status = 'upcoming';
             } elseif ($program->end_date < $currentDate) {
                 $program->status = 'completed';
-            } 
-           
-            else {
+            } else {
                 $program->status = 'ongoing';
             }
 
             $program->save();
 
-            return response()->json(['message' => 'Program status updated']);
-        }
-        elseif($program->status == "upcoming" ) {
-
-            $program->status = 'ongoing';
-            $program->save();
             return response()->json(['message' => 'Program status updated']);
         }
 
@@ -163,7 +176,7 @@ class ProgramController extends Controller
         if ($program->status == 'draft') {
 
             // Delete program folder
-            $programFolderPath = 'partners/' . $program->partner_id . '/programs/' . $id;
+            $programFolderPath = storage_path('app/public/partners/' . $program->partner_id . '/programs/' . $id);
             if (File::exists($programFolderPath)) {
                 File::deleteDirectory($programFolderPath);
             }
@@ -189,11 +202,11 @@ class ProgramController extends Controller
 
         // Check if files are present in request
         if (!$request->hasFile('certificate_file') || !$request->hasFile('attendance_file') || !$request->hasFile('invitation_file')) {
-            return response()->json(['error' => 'Certificate, attendance, and invitation files are required'], 400);
+            return response()->json(['error' => 'Certificate, attendance, and invitation files are required'], 200);
         }
 
         // Create folder for program files
-        $programFolderPath = 'partners/' . $program->partner_id . '/programs/' . $id;
+        $programFolderPath = storage_path('app/public/partners/' . $program->partner_id . '/programs/' . $id);
 
         // Upload certificate file if present
         if ($request->hasFile('certificate_file')) {
@@ -236,23 +249,45 @@ class ProgramController extends Controller
         $programs = DB::table('programs')
         ->join('users', 'users.id', '=', 'programs.program_lead_id')
         ->join('partners', 'partners.id', '=', 'programs.partner_id')
-        ->select('programs.*', 'users.first_name', 'partners.company_name')
+        ->select('programs.*', 'users.id as user_id', 'users.first_name', 'users.last_name', 'users.designation', 'users.department' , 'partners.id as partner_id', 'partners.company_name', 'partners.email')
         ->get();
 
         return response()->json($programs, 200);
     }
 
-    public function getProgram(Request $request, $id)
+    public function getProgram($id)
     {
         // $program = Program::with(['programLead', 'partner'])
-        //     ->find($id);  4
+        //     ->find($id);
+
+        // if (!$program) {
+        //     return response()->json(['message' => 'Program not found'], 404);
+        // }
+
+        // return response()->json($program);
+
         $programs = DB::table('programs')
-        ->join('users', 'users.id', '=', 'programs.program_lead_id')
+        ->join('users as leads', 'leads.id', '=', 'programs.program_lead_id')
         ->join('partners', 'partners.id', '=', 'programs.partner_id')
-        ->select('programs.*', 'users.first_name', 'users.last_name', 'partners.company_name', 'partners.logo')
+        // ->join('members', 'members.program_id', '=', 'programs.id')
+        // ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
+        ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.company_name', 'partners.logo')
         ->where('programs.id', '=', $id)
+        // ->groupBy('members.program_id')
         ->get();
-        
+
+        $members = DB::table('members')
+        ->join('programs', 'programs.id', '=', 'members.program_id')
+        ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
+        ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role')
+        ->where('members.program_id', '=', $id)
+        ->get();
+
+
+        $response['programs']=$programs;
+        $response['members']=$members;
+
+
         // ->where('id', '=', $id)->get();
         // $programs = Program::where('id', '=', $id)->get();
 
@@ -260,6 +295,72 @@ class ProgramController extends Controller
             return response()->json(['message' => 'Program not found'], 404);
         }
 
-        return response()->json($programs,200);
+        return response()->json($response,200);
     }
+
+    public function displayTitleProgram (Request $request, $id) {
+        $programs = DB::table('programs')
+        ->join('users as leads', 'leads.id', '=', 'programs.program_lead_id')
+        ->join('partners', 'partners.id', '=', 'programs.partner_id')
+        // ->join('members', 'members.program_id', '=', 'programs.id')
+        // ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
+        ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.company_name', 'partners.logo')
+        ->where('programs.id', '=', $id)
+        // ->groupBy('members.program_id')
+        ->get();
+
+        $members = DB::table('members')
+        ->join('programs', 'programs.id', '=', 'members.program_id')
+        ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
+        ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role')
+        ->where('members.program_id', '=', $id)
+        ->get();
+
+
+        $response['programs']=$programs;
+        $response['members']=$members;
+
+        return response()->json($response,200);
+
+
+    }
+
+    public function displayProgram (Request $request, $id) {
+        $programs = DB::table('programs')
+        ->join('users as leads', 'leads.id', '=', 'programs.program_lead_id')
+        ->join('partners', 'partners.id', '=', 'programs.partner_id')
+        ->join('members', 'members.program_id', '=', 'programs.id')
+        ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
+        ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.company_name', 'partners.id as partner_id')
+        ->where('programs.program_lead_id', '=', $id)
+        ->orWhere('members.faculty_id', '=', $id)
+        // ->groupBy('programs.program_title')
+        ->distinct()
+        ->get();
+
+
+        // $members = DB::table('members')
+        // ->join('programs', 'programs.id', '=', 'members.program_id')
+        // ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
+        // ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role', 'programs.program_title')
+        // ->where('members.faculty_id', '=', $id)
+        // ->get();
+
+        $response['programs']=$programs;
+        // $response['members']=$members;
+
+        return response()->json($response,200);
+    }
+
+    public function getExpiringPartners()
+    {
+        $endDate = Carbon::now()->addDays(30)->format('Y-m-d');
+        
+        $partners = Partner::whereDate('end_date', '<=', $endDate)
+            ->select('id', 'company_name', 'end_date')
+            ->get();
+
+        return response()->json($partners);
+    }
+
 }

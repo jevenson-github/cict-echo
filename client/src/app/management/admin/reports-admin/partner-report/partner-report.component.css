@@ -1,0 +1,67 @@
+/* for media printing exporting to pdf  */
+@media print{
+    body{
+      visibility: hidden;
+  
+    }
+  
+    button{
+      display: none;
+    }
+    #contents{
+      display: block;
+    }
+  
+    .page-break{
+      page-break-after: always;
+    }
+  
+    }
+  
+    @page{
+      margin: 0;
+    }
+    /* viewing on default screen  */
+  
+  
+    .image_header {
+    height: auto;
+    width: 100%;
+    }
+  
+    .image_footer{
+    margin-top: 94%;
+    height: auto;
+    width: 100%;
+  
+    }
+  
+    .container1 {
+      position: absolute;
+      margin-left: 100px;
+      /* padding-left: 100px; */
+      margin-right: 100px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    .header_title{
+      /* text-align: center; */
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 20px;
+    }
+    .button_holder{
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+  
+    button{
+    background-color: orange;
+    color: black;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+  
+    }
+  

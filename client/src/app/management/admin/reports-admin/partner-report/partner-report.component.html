@@ -1,0 +1,47 @@
+  <div *ngFor="let partner of partnerArray" >
+  <!-- Page 1 -->
+  <div id="content" >
+  
+    <!-- Header Image -->
+    <img src="http://127.0.0.1:8000/report/CICT_Header.png" alt="" class="image_header">
+  
+    <div class="container1">
+  
+      <h3 class="header_title">EXTENSION COMMUNITY INVOLVEMENT TERMINAL REPORT </h3>
+      <br><br>
+  
+      <h4> <b>Company Name :</b>  {{partner.company_name}} </h4>
+  
+      <br><br>
+      <h4> <b>Description :</b>  </h4>
+      <br>
+      <h4>{{partner.description}}</h4>
+  
+      <br>
+      <h4>  <b>Start Date :</b>  {{partner.start_date |  date:"longDate"}} </h4>
+  
+      <br><br>
+      <h4> <b>End Date :</b>  {{partner.end_date |  date:"longDate" }} </h4>
+  
+  
+  
+  
+  
+  </div>
+  
+  
+    <!-- Footer Image -->
+    <img src="http://127.0.0.1:8000/report/CICT_Footer.png" alt="" class="image_footer ">
+  
+  
+  </div>
+  
+  
+  
+  
+  
+  </div>
+  
+  <!-- <div style="text-align: center;">
+    <input type="button" class="btn btn-danger text-dark" value="Convert" (click)="convertToPDF()" />
+  </div> -->

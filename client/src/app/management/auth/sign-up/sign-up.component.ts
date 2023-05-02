@@ -30,14 +30,14 @@ export class SignUpComponent implements OnInit {
 
   // Form models
 
-  id: string = '';
-  email: string = '';
-  firstName: string = '';
-  lastName: string = '';
-  department: string = '';
-  designation: string = '';
-  password: string = '';
-  confirmPassword: string = '';
+  id: any;
+  email: any;
+  firstName: any;
+  lastName: any;
+  department: any;
+  designation: any;
+  password: any;
+  confirmPassword: any;
 
   gotoStepOne() {
     this.step = 1;
@@ -71,8 +71,6 @@ export class SignUpComponent implements OnInit {
     this.step = 1;
   }
 
-
-
   submitRegistration() {
     const queryParams = {
       'signUpResponse': 'success',
@@ -80,6 +78,57 @@ export class SignUpComponent implements OnInit {
     };
 
     this.router.navigate(['/auth'], { queryParams: queryParams });
+
+  }
+
+  submitInfo(){
+    var formData = new FormData();
+    formData.append("id",  this.id);
+    formData.append("first_name",  this.firstName);
+    formData.append("last_name",  this.lastName);
+    formData.append("email", this.email);
+    formData.append("password", this.password);
+    formData.append("department",  this.department);
+    formData.append("designation",  this.designation);
+    formData.append("user_level", "faculty");
+    formData.append("status", "pending");
+    formData.append("profile_image",  this.image, this.image.name);
+
+    this.http.post("http://127.0.0.1:8000/api/auth/sign-up", formData).subscribe((resultData: any) => {
+      console.log(resultData);
+    });
+
+    console.log(this.id);
+    console.log(this.firstName);
+    console.log(this.lastName);
+    console.log(this.email);
+    console.log(this.department);
+    console.log(this.designation);
+    console.log(this.password);
+    console.log(this.image);
+  }
+
+  image: any;
+  imageSRC: any;
+
+  onFileSelected(event: any) {
+    // const file: File = event.target.files[0];
+    // if (file) {
+    //   this.fileToUpload = file;
+    //   this.imageUrl = URL.createObjectURL(file);
+    // }
+
+    this.image = event.target.files[0];
+    console.log(this.image);
+
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+
+      const reader = new FileReader();
+      reader.onload = e => this.imageSRC = reader.result;
+
+      reader.readAsDataURL(file);
+  }
   }
 
 }

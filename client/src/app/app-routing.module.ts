@@ -13,11 +13,18 @@ import { SignUpComponent } from './management/auth/sign-up/sign-up.component';
 import { AdminComponent } from './management/admin/admin.component';
 import { FacultyAdminComponent } from './management/admin/faculty-admin/faculty-admin.component';
 import { PartnersAdminComponent } from './management/admin/partners-admin/partners-admin.component';
+import { PartnerAdminComponent } from './management/admin/partner-admin/partner-admin.component';
+
 
 // Import components for FACULTY
 import { FacultyComponent } from './management/faculty/faculty.component';
 import { DashboardAdminComponent } from './management/admin/dashboard-admin/dashboard-admin.component';
 import { ResetPasswordComponent } from './management/auth/reset-password/reset-password.component';
+import { ProgramsAdminComponent } from './management/admin/programs-admin/programs-admin.component';
+import { ReportsAdminComponent } from './management/admin/reports-admin/reports-admin.component';
+import { ProgramReportComponent } from './management/admin/reports-admin/program-report/program-report.component';
+import { PartnerReportComponent } from './management/admin/reports-admin/partner-report/partner-report.component';
+import { PartnersReportComponent } from './management/admin/reports-admin/partners-report/partners-report.component';
 
 
 
@@ -32,9 +39,28 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardAdminComponent },
       { path: 'faculty', component: FacultyAdminComponent},
       { path: 'partners', component: PartnersAdminComponent},
+      { path: 'partners/:id', component: PartnerAdminComponent},
+      { path: 'programs', component: ProgramsAdminComponent},
+      { path: 'reports', component: ReportsAdminComponent},
     ],
   },
 
+  {
+    path: 'report-program',
+    component: ProgramReportComponent,
+  },
+
+  {
+    path: 'report-partner',
+    component: PartnerReportComponent,
+  },
+
+  {
+    path: 'report-partners',
+    component: PartnersReportComponent,
+  }
+  ,
+  
   {
     path: 'auth',
     component: AuthComponent,

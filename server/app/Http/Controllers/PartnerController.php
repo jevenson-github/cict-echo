@@ -64,13 +64,8 @@ class PartnerController extends Controller
         // Upload logo if provided
         if ($request->hasFile('logo')) {
             $logoFile = $request->file('logo');
-            $logoFileName = 'logo.webp';
-            $logoQuality = 100;
-            $logoFilePath = $partnerFolderPath . '/' . $logoFileName;
-            Image::make($logoFile)
-                ->encode('webp', $logoQuality)
-                ->save($logoFilePath);
-            $partner->logo = $logoFileName;
+            $partnerFolderPath = 'partners/' . $id;
+            $logoFile->move($partnerFolderPath, 'logo.webp');
         }
 
         $partner->save();
@@ -99,17 +94,11 @@ class PartnerController extends Controller
         $partner->contact_number = $request->input('contact_number') ?? $partner->contact_number;
         $partner->email = $request->input('email') ?? $partner->email;
 
-
         // Update logo if provided
         if ($request->hasFile('logo')) {
             $logoFile = $request->file('logo');
-            $logoFileName = 'logo.webp';
-            $logoQuality = 100;
-            $logoFilePath = 'partners/' . $partner->id . '/' . $logoFileName;
-            Image::make($logoFile)
-                ->encode('webp', $logoQuality)
-                ->save($logoFilePath);
-            $partner->logo = $logoFileName;
+            $partnerFolderPath = 'partners/' . $id;
+            $logoFile->move($partnerFolderPath, 'logo.webp');
         }
 
         $partner->save();
@@ -223,18 +212,87 @@ class PartnerController extends Controller
 
     public function getPartner($id)
     {
-        $partner = Partner::find($id);
+        $users = DB::table('partners')
+                ->where('id', '=', $id)
+                ->get();
 
-        if (!$partner) {
-            return response()->json(['message' => 'Partner not found'], 404);
-        }
 
-        return response()->json(['partner' => $partner]);
+        return response()->json($users, 200);
     }
 
     public function activePartner() {
         $partner = DB::table('partners')->where('status', '=', 'active')->get();
         return response()->json($partner, 200);
     }
+
+    public function getMoaFiles(Request $request, $id)
+    {
+        $baseUrl = $request->getSchemeAndHttpHost();
+        $directory = public_path('partners/' . $id . '/moa');
+        $files = [];
+        $latestMoaFile = null;
+    
+        if (file_exists($directory) && is_dir($directory)) {
+            $fileNames = scandir($directory);
+    
+            foreach ($fileNames as $fileName) {
+                if ($fileName !== '.' && $fileName !== '..') {
+                    $fileLocation = $baseUrl . '/partners/' . $id . '/moa/' . $fileName;
+    
+                    $startDateString = substr($fileName, 24, 6);
+                    $endDateString = substr($fileName, 31, 6);
+    
+                    $startDate = Carbon::createFromFormat('ymd', $startDateString)->format('F d, Y');
+                    $endDate = Carbon::createFromFormat('ymd', $endDateString)->format('F d, Y');
+    
+                    $fileData = [
+                        'location' => $fileLocation,
+                        'name' => $fileName,
+                        'start_date' => $startDate,
+                        'end_date' => $endDate,
+                    ];
+    
+                    // Check if the file name matches the moa_file value in the partners table
+                    $partner = Partner::find($id);
+                    if ($partner && $partner->moa_file === $fileName) {
+                        $fileData['latest'] = true;
+                        $latestMoaFile = $fileData;
+                    } else {
+                        $fileData['latest'] = false;
+                    }
+    
+                    $files[] = $fileData;
+                }
+            }
+        }
+    
+        // Sort the files in descending order based on their start_date
+        usort($files, function ($a, $b) {
+            return strtotime($b['start_date']) - strtotime($a['start_date']);
+        });
+    
+        // Place the latest MOA file on the first position
+        if ($latestMoaFile) {
+            $files = array_filter($files, function ($file) use ($latestMoaFile) {
+                return $file['name'] !== $latestMoaFile['name'];
+            });
+            array_unshift($files, $latestMoaFile);
+        }
+    
+        return response()->json($files);
+    }
+    
+    public function getExpiringPartners()
+    {
+        $endDate = Carbon::now()->addDays(30)->format('Y-m-d');
+        
+        $partners = Partner::whereDate('end_date', '<=', $endDate)
+            ->select('id', 'company_name', 'end_date')
+            ->get();
+
+        return response()->json($partners);
+    }
+    
+    
 }
 

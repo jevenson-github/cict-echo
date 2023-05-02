@@ -9,6 +9,7 @@ use App\Mail\EmailAddressUpdated;
 use App\Mail\PositionUpdated;
 use App\Mail\MakeAdmin;
 use App\Mail\MakeFaculty;
+use App\Mail\sendResetPasswordLink;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -22,12 +23,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
-
-
 use Illuminate\Contracts\Mail\Mailable;
-
-
-
 
 class UserController extends Controller
 {
@@ -70,24 +66,15 @@ class UserController extends Controller
 
         if ($request->hasFile('profile_image')) {
             $file = $request->file('profile_image');
-
-            //$originalName = $file->getClientOriginalName();
-            $fileName = $user->id . '.webp'; // Set filename to ID.webp
-
-            // // Convert and save image
-            // $image = Image::make($file);
-            // $image->encode(
-            //     'webp',
-            //     100
-            // );
+            $fileName = $user->id . '.webp';
             $file->move('users', $fileName);
-
             $user->profile_image = $fileName;
         }
 
         $user->save();
 
-        return response()->json(['message' => 'User created successfully',
+        return response()->json([
+            'message' => 'User created successfully',
         ], 201);
     }
 
@@ -144,15 +131,15 @@ class UserController extends Controller
             return response()->json(['error' => 'User not found.'], 404);
         }
 
-          // Update the user's status to "verified"
-          $user->status = 'rejected';
-          $user->save();
+        // Update the user's status to "verified"
+        $user->status = 'rejected';
+        $user->save();
 
         // Return a response indicating success
         return response()->json(['message' => 'User has been rejected and email has been sent.']);
     }
 
-     public function pendingUser(Request $request, $id) ///
+    public function pendingUser(Request $request, $id) ///
     {
         // Find the user by ID
         $user = User::find($id);
@@ -162,9 +149,9 @@ class UserController extends Controller
             return response()->json(['error' => 'User not found.'], 404);
         }
 
-          // Update the user's status to "verified"
-          $user->status = 'pending';
-          $user->save();
+        // Update the user's status to "verified"
+        $user->status = 'pending';
+        $user->save();
 
         // Return a response indicating success
         return response()->json(['message' => 'User has been rependingjected and email has been sent.']);
@@ -445,29 +432,6 @@ class UserController extends Controller
         return response()->json(['message' => 'Admin privileges have been removed.']);
     }
 
-    public function resetPassword(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json(['error' => 'Email address not found.'], 404);
-        }
-
-        // Generate a password reset token
-        $token = Password::createToken($user);
-
-        // Send email with password reset link
-        Mail::send('emails.passwordReset', ['token' => $token], function ($message) use ($user) {
-            $message->to($user->email)->subject('Password Reset Request');
-        });
-
-        return response()->json(['message' => 'Password reset email sent.']);
-    }
-
     public function signIn(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -498,6 +462,7 @@ class UserController extends Controller
             'profileImage' => $user->profile_image,
             'userLevel' => $user->user_level,
             'status' => $user->status,
+            'id' => $user->id,
         ])->attempt($credentials);
 
         $response['data'] = $token;
@@ -511,7 +476,7 @@ class UserController extends Controller
     public function getUser($id) ///
     {
         $user = User::select('id', 'first_name', 'last_name', 'email', 'department', 'designation', 'profile_image', 'user_level', 'status')
-        ->where('id', $id)
+            ->where('id', $id)
             ->first();
 
         if (!$user) {
@@ -563,4 +528,91 @@ class UserController extends Controller
         return response()->json($users, 200);
     }
 
+    
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            $response['status'] = 'Error';
+            // $response['message'] = 'Email address not found.';
+            return response()->json($response);
+            // return response()->json(['error' => 'Email address not found.'], 404);
+        } else {
+
+            $data = [
+                'email' => $request->email
+            ];
+            Mail::to($request->email)->send(new sendResetPasswordLink($data));
+
+            $response['status'] = 'Successful';
+            $response['message'] = 'Password reset email sent.';
+            return response()->json($response);
+        }
+
+        // Generate a password reset token
+        // $token = Password::createToken($user);
+
+        // Send email with password reset link
+        // Mail::send('emails.passwordReset', ['token' => $token], function ($message) use ($user) {
+        //     $message->to($user->email)->subject('Password Reset Request');
+        // });
+
+
+        // return response()->json(['message' => 'Password reset email sent.']);
+
+    }
+
+    public function resetPassword(Request $request, $email)
+    {
+        // Find the user by ID
+        // $user = User::find($email);
+        $user = User::where('email', '=', $email)->first();
+
+        if (!$user) {
+            // Return an error response indicating that the user was not found
+            // return response()->json(['error' => 'User not found.'], 404);
+            $response['status'] = 'Error';
+            $response['message'] = 'User not found';
+            return response()->json($response);
+        }
+
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            // Return a validation error response
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        // Update the user's password
+        $user->password = bcrypt($request->password);
+
+        // Save the updated user information
+        $result = $user->save();
+
+        if (!$result) {
+            // Return an error response indicating that the update failed
+            // return response()->json(['error' => 'Failed to update password.'], 500);
+            $response['status'] = 'Error';
+            $response['message'] = 'Failed to update password';
+            return response()->json($response);
+        }
+
+        // Send an email notification to the user
+        Mail::to($user->email)->send(new PasswordUpdated($user));
+
+        // Return a response indicating success
+        // return response()->json(['message' => 'Password has been updated and email sent.']);
+        $response['status'] = 'Successful';
+        $response['message'] = 'Password has been updated';
+        return response()->json($response);
+    }
 }

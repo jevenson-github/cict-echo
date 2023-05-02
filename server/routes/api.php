@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\StatisticsController;
+
 
 
 
@@ -22,11 +24,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/counts', 'App\Http\Controllers\StatisticsController@getCounts');
+Route::get('/chart-data', 'App\Http\Controllers\StatisticsController@getChartData');
+Route::get('/statistic-data', 'App\Http\Controllers\StatisticsController@statisticData');
+
 // User routes for authentication
 Route::prefix('auth')->group(function () {
     Route::post('/sign-up', 'App\Http\Controllers\UserController@signUp');
     Route::post('/sign-in', 'App\Http\Controllers\UserController@signIn');
-    Route::post('/reset-password', 'App\Http\Controllers\UserController@resetPassword');
+    Route::post('/send-reset-link', 'App\Http\Controllers\UserController@sendResetLink');
+
 });
 
 // User routes for user management
@@ -47,6 +54,7 @@ Route::prefix('user')->group(function () {
     Route::get('/verified-user', 'App\Http\Controllers\UserController@getAllVerifiedUser');
     Route::get('/pending-user', 'App\Http\Controllers\UserController@getAllPendingUser');
     Route::get('/resigned-user', 'App\Http\Controllers\UserController@getAllResignedUser');
+    Route::post('/reset-password/{email}', 'App\Http\Controllers\UserController@resetPassword');
     Route::get('/rejected-user', 'App\Http\Controllers\UserController@getAllRejectedUser');
     Route::get('/get-admin', 'App\Http\Controllers\UserController@getAllAdmins');
     Route::get('/get-faculty', 'App\Http\Controllers\UserController@getAllFaculty');
@@ -61,7 +69,10 @@ Route::prefix('partner')->group(function () {
     Route::delete('/delete/{id}', 'App\Http\Controllers\PartnerController@deletePartner');
     Route::get('/get-partner/{id}', 'App\Http\Controllers\PartnerController@getPartner');
     Route::get('/index-partner', 'App\Http\Controllers\PartnerController@indexPartner');
+    Route::get('/get-moa-files/{id}', 'App\Http\Controllers\PartnerController@getMoaFiles');
     Route::get('/get-partner-active', 'App\Http\Controllers\PartnerController@activePartner');
+    Route::get('/expiring-partners', 'App\Http\Controllers\PartnerController@getExpiringPartners');
+
 });
 
 // Program routes for program management
@@ -72,5 +83,8 @@ Route::prefix('program')->group(function () {
     Route::delete('/delete/{id}', 'App\Http\Controllers\ProgramController@deleteProgram');
     Route::post('/complete/{id}', 'App\Http\Controllers\ProgramController@completeProgram');
     Route::get('/get-program/{id}', 'App\Http\Controllers\ProgramController@getProgram');
-    Route::get('/index-program', 'App\Http\Controllers\ProgramController@indexProgram');
+    Route::get('/display-program/{id}', 'App\Http\Controllers\ProgramController@displayProgram');
+    Route::get('/display-program-title/{id}', 'App\Http\Controllers\ProgramController@displayTitleProgram');
+    Route::get('/index-program', 'App\Http\Controllers\ProgramController@indexProgram');    
+    Route::post('/add-member-role', 'App\Http\Controllers\ProgramController@addMemberRoleProgram');
 });

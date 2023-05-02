@@ -6,7 +6,7 @@
   </div>
 
   <div class="flex flex-row items-end gap-x-2">
-    <button class="btn-base btn-primary ">     
+    <button (click)="addPartnerModal()" class="btn-base btn-primary ">
       Add partner
     </button>
     <div class="">
@@ -46,7 +46,8 @@
         <ng-container *ngIf="partners && partners.length > 0; else noPartner">
           <ng-container *ngIf="(partners | filter: filteredPartnerArray) as filteredResults">
             <ng-container *ngIf="filteredResults.length > 0; else noResults">
-              <tr *ngFor="let partner of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}" class="hover:bg-neutral-50">
+              <tr *ngFor="let partner of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}"
+                class="hover:bg-neutral-50">
                 <th scope="row" class="px-6 py-4 text-neutral-900">
                   <div class="flex items-center">
                     <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
@@ -70,8 +71,11 @@
                     class="bg-green-100 text-green-700 text-sm font-medium mr-2 px-2.5 py-1 rounded-full">{{
                     partner.status
                     }}</span>
-                  <span
-                    *ngIf="partner.status === 'terminated' || partner.status === 'expired' || partner.status === 'draft'"
+                  <span *ngIf="partner.status === 'draft'"
+                    class="bg-neutral-100 text-neutral-700 text-sm font-medium mr-2 px-2.5 py-1 rounded-full">{{
+                    partner.status
+                    }}</span>
+                  <span *ngIf="partner.status === 'terminated' || partner.status === 'expired'"
                     class="bg-red-100 text-red-700 text-sm font-medium mr-2 px-2.5 py-1 rounded-full">{{
                     partner.status
                     }}</span>
@@ -82,29 +86,34 @@
                 </td>
 
                 <td class="px-6 py-3 ">
-                  {{ partner.start_date | date:'MMMM dd, yyyy' }}
+                  {{ partner.start_date ? (partner.start_date | date:'MMMM dd, yyyy') : 'Not set' }}
                 </td>
 
 
                 <td class="px-6 py-3 ">
-                  {{ partner.end_date | date:'MMMM dd, yyyy' }}
+                  {{ partner.end_date ? (partner.end_date | date:'MMMM dd, yyyy') : 'Not set' }}
                 </td>
 
                 <td class="px-6 py-3 ">
                   <p *ngIf="partner.status === 'upcoming'">Active in {{ computeDuration(partner.start_date,
-                    partner.end_date)
-                    }}</p>
+                    partner.end_date) }}</p>
                   <p *ngIf="partner.status === 'active'">Expires in {{ computeDuration(getCurrentDate(),
                     partner.end_date) }}
                   </p>
-                  <p
-                    *ngIf="partner.status === 'terminated' || partner.status === 'expired' || partner.status === 'draft' || partner.status === 'archived'">
-                    {{ partner.status }} {{ computeDuration(partner.updated_at, getCurrentDate()) }} ago</p>
+                  <p *ngIf="partner.status === 'terminated' || partner.status === 'expired'">
+                    <span class="capitalize">{{ partner.status }}</span> {{ computeDuration(partner.end_date,
+                    getCurrentDate()) }} ago
+                  </p>
+                  <p *ngIf="partner.status === 'draft' || partner.status === 'archived'">
+                    <span class="capitalize">{{ partner.status }}</span> {{ computeDuration(partner.end_date,
+                    getCurrentDate()) }} ago
+                  </p>
                 </td>
 
                 <td class="px-6 py-3 flex gap-x-1 justify-end">
 
-                  <svg class="action-icon-action" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg (click)="viewPartnerModal(partner)" class="action-icon-action" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
                     <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
                       stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                     <path d="M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -303,7 +312,7 @@
             stroke-linejoin="round" />
         </svg>
       </div>
-      <h4 class="mt-2 text-lg font-semibold text-center">Delete parnter</h4>
+      <h4 class="mt-2 text-lg font-semibold text-center">Delete partner</h4>
       <p class="text-neutral-700 text-sm text-center mx-2">Are you sure you want to delete this partner? This action
         cannot be undone?
       </p>
@@ -403,7 +412,7 @@
 <div *ngIf="renewModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="renewModal = false">
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-md">
       <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
         <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -415,35 +424,42 @@
           <title>Renew</title>
         </svg>
       </div>
-      <h4 class="mt-2 text-lg font-semibold">Renew parnter</h4>
+      <h4 class="mt-2 text-lg font-semibold">Renew partner</h4>
       <p class="text-neutral-700 text-sm">Update the partner's contract.
       </p>
 
       <form (ngSubmit)="renewPartner()" [formGroup]="form2">
-        <div class="mt-4 flex flex-col gap-y-4">
+        <div class="mt-5 flex flex-col gap-y-4">
 
           <div>
-            <label>Date start:</label>
-            <input type="date" formControlName="start_date" name="start_date" placeholder="Select date start"
-              [ngClass]="{'is-invalid' : submitMoa && u['start_date'].errors}">
-            <div *ngIf="submitMoa && u['start_date'].errors">
-              <div *ngIf="u['start_date'].errors['required']">Start date is required</div>
-            </div>
-          </div>
+            <label>Duration:</label>
+            <div class="flex items-center w-full gap-3">
 
-          <div>
-            <label>Date end:</label>
-            <input type="date" formControlName="end_date" name="end_date" placeholder="Select date end"
-              [ngClass]="{'is-invalid' : submitMoa && u['end_date'].errors}">
-            <div *ngIf="submitMoa && u['end_date'].errors">
-              <div *ngIf="u['end_date'].errors['required']">Start date is required</div>
+              <div class="grow">
+                <input type="date" formControlName="start_date" name="start_date" placeholder="Select date start"
+                  [ngClass]="{'is-invalid' : submitMoa && u['start_date'].errors}">
+                <div *ngIf="submitMoa && u['start_date'].errors">
+                  <div *ngIf="u['start_date'].errors['required']">Start date is required</div>
+                </div>
+              </div>
+
+              <p>to</p>
+
+              <div class="grow">
+                <input type="date" formControlName="end_date" name="end_date" placeholder="Select date end"
+                  [ngClass]="{'is-invalid' : submitMoa && u['end_date'].errors}">
+                <div *ngIf="submitMoa && u['end_date'].errors">
+                  <div *ngIf="u['end_date'].errors['required']">Start date is required</div>
+                </div>
+              </div>
+
             </div>
           </div>
 
           <div>
             <label>MoA file:</label>
             <input
-              class="block w-full text-sm border border-gray-300 rounded-lg cursor-pointer bg-neutral-50 focus:outline-none"
+              class="block w-full text-sm border border-neutral-300 rounded-lg cursor-pointer bg-neutral-50 focus:outline-none"
               (change)="moaUpload($event)" formControlName="moa_file" type="file" name="moa_file" accept=".pdf">
             <div *ngIf="submitMoa && u['moa_file'].errors">
               <div *ngIf="u['moa_file'].errors['required']">MOA file is required</div>
@@ -455,7 +471,7 @@
 
         <div class="grid grid-cols-2 mt-6 space-x-3">
           <button (click)="renewModal = false" class="btn-small btn-secondary-outline">Cancel</button>
-          <button type="submit" [disabled]="renewLoading" class="btn-small btn-solid-negative">
+          <button type="submit" [disabled]="renewLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!renewLoading">Renew</ng-container>
             <ng-container *ngIf="renewLoading">
               <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -508,43 +524,66 @@
             stroke-linejoin="round" />
         </svg>
       </div>
-      <h4 class="mt-2 text-lg font-semibold">Update parnter</h4>
+      <h4 class="mt-2 text-lg font-semibold">Update partner</h4>
       <p class="text-neutral-700 text-sm">Update the partner's details.
       </p>
 
-      <div class="flex flex-col gap-4 mt-6">
+      <div class="flex flex-col gap-4 mt-5">
+
+        <div class="flex w-full justify-between space-x-3">
+          <ngx-avatar class=" rounded-full object-cover object-top flex-none"
+            [src]=" imagePreview ||  'http://127.0.0.1:8000/partners/' + viewPartnerID + '/logo.webp'"
+            [name]="company_name.charAt(0)" [size]="64" [bgColor]>
+          </ngx-avatar>
+
+          <div class="flex items-center justify-center w-full">
+            <label for="profile_picture"
+              class="flex flex-col items-center justify-center w-full h-32 border-2 border-neutral-300 border-dashed rounded-lg cursor-pointer bg-neutral-50">
+              <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <p class="mb-2 text-sm text-neutral-500 dark:text-neutral-400"><span class="font-semibold">Click to
+                    upload</span> or drag and drop</p>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400">SVG, PNG, JPG or GIF</p>
+              </div>
+              <input id="profile_picture" name="logo" class="hidden" type="file" #fileInput
+                (change)="onFileSelected($event)">
+            </label>
+          </div>
+
+        </div>
+
 
         <div class="grid grid-cols-2 space-x-3">
+
           <div>
             <label>Partner name:</label>
-            <input type="text">
+            <input type="text" [(ngModel)]="company_name" [ngModelOptions]="{standalone:true}">
           </div>
 
           <div>
             <label>Email address:</label>
-            <input type="email">
+            <input type="email" [(ngModel)]="email" [ngModelOptions]="{standalone:true}">
           </div>
         </div>
 
         <div>
           <label>Description:</label>
-          <textarea></textarea>
+          <textarea [(ngModel)]="description" [ngModelOptions]="{standalone:true}"></textarea>
         </div>
 
         <div>
           <label>Address:</label>
-          <input type="text">
+          <input type="text" [(ngModel)]="address" [ngModelOptions]="{standalone:true}">
         </div>
 
         <div class="grid grid-cols-2 space-x-3">
           <div>
             <label>Contact person:</label>
-            <input type="text">
+            <input type="text" [(ngModel)]="contact_person" [ngModelOptions]="{standalone:true}">
           </div>
 
           <div>
             <label>Contact number:</label>
-            <input type="text">
+            <input type="text" [(ngModel)]="contact_number" [ngModelOptions]="{standalone:true}">
           </div>
         </div>
 
@@ -553,7 +592,7 @@
 
       <div class="grid grid-cols-2 mt-6 space-x-3">
         <button (click)="updateModal = false" class="btn-small btn-secondary-outline">Cancel</button>
-        <button type="submit" [disabled]="updateLoading" class="btn-small btn-solid-negative">
+        <button (click)="updatePartner()" [disabled]="updateLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!updateLoading">Update</ng-container>
           <ng-container *ngIf="updateLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -585,4 +624,332 @@
       fill="currentColor" />
   </svg>
   <div class="pl-3">Partner updated successfully.</div>
+</div>
+
+<!-- Add Modal -->
+<div *ngIf="addModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="addModal = false">
+  <div class="flex w-full h-full">
+    <!-- Modal content -->
+    <div class="modal max-w-lg">
+      <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
+        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.26 3.59997L5.04997 12.29C4.73997 12.62 4.43997 13.27 4.37997 13.72L4.00997 16.96C3.87997 18.13 4.71997 18.93 5.87997 18.73L9.09997 18.18C9.54997 18.1 10.18 17.77 10.49 17.43L18.7 8.73997C20.12 7.23997 20.76 5.52997 18.55 3.43997C16.35 1.36997 14.68 2.09997 13.26 3.59997Z"
+            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path d="M11.89 5.05005C12.32 7.81005 14.56 9.92005 17.34 10.2" stroke="currentColor" stroke-width="1.5"
+            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M3 22H21" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h4 class="mt-2 text-lg font-semibold">Add partner</h4>
+      <p class="text-neutral-700 text-sm">Add the partner's details.
+      </p>
+
+      <form (ngSubmit)="addPartner()" [formGroup]="form">
+        <div class="flex flex-col gap-4 mt-5">
+
+          <div class="flex w-full justify-between space-x-3">
+            <ngx-avatar class=" rounded-full object-cover object-top flex-none"
+              [src]="imagePreview"
+              [name]="'??' || company_name.charAt(0)" [size]="64" [bgColor]>
+            </ngx-avatar>
+
+            <div class="flex items-center justify-center w-full">
+              <label for="profile_picture"
+                class="flex flex-col items-center justify-center w-full h-32 border-2 border-neutral-300 border-dashed rounded-lg cursor-pointer bg-neutral-50">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                  <p class="mb-2 text-sm text-neutral-500 dark:text-neutral-400"><span class="font-semibold">Click to
+                      upload</span> or drag and drop</p>
+                  <p class="text-xs text-neutral-500 dark:text-neutral-400">SVG, PNG, JPG or GIF</p>
+                </div>
+                <input id="profile_picture" name="logo" class="hidden" type="file" #fileInput
+                  (change)="onFileSelected($event)">
+              </label>
+            </div>
+
+          </div>
+
+
+          <div class="grid grid-cols-2 space-x-3">
+
+            <div>
+              <label>Partner name:</label>
+              <input type="text" formControlName="company_name" name="company_name"
+                [ngClass]="{'is-invalid' : submitPartner && f['company_name'].errors}">
+              <div *ngIf="submitPartner && f['company_name'].errors">
+                <div *ngIf="f['company_name'].errors['required']">Company name is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Email address:</label>
+              <input type="email" formControlName="email" name="email"
+                [ngClass]="{'is-invalid' : submitPartner && f['email'].errors}">
+              <div *ngIf="submitPartner && f['email'].errors">
+                <div *ngIf="f['email'].errors['required']">Email is required</div>
+                <div *ngIf="f['email'].errors['email']">Email must be in proper format</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label>Description:</label>
+            <textarea formControlName="description" name="description"
+              [ngClass]="{'is-invalid' : submitPartner && f['description'].errors}"></textarea>
+            <div *ngIf="submitPartner && f['description'].errors">
+              <div *ngIf="f['description'].errors['required']">Description is required</div>
+            </div>
+          </div>
+
+          <div>
+            <label>Address:</label>
+            <input type="text" formControlName="address" name="address"
+              [ngClass]="{'is-invalid' : submitPartner && f['address'].errors}">
+            <div *ngIf="submitPartner && f['address'].errors">
+              <div *ngIf="f['address'].errors['required']">Address is required</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 space-x-3">
+            <div>
+              <label>Contact person:</label>
+              <input type="text" formControlName="contact_person" name="contact_person"
+                [ngClass]="{'is-invalid' : submitPartner && f['contact_person'].errors}">
+              <div *ngIf="submitPartner && f['contact_person'].errors">
+                <div *ngIf="f['contact_person'].errors['required']">Contact person is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Contact number:</label>
+              <input type="text" formControlName="contact_number" name="contact_number"
+                [ngClass]="{'is-invalid' : submitPartner && f['contact_number'].errors}">
+              <div *ngIf="submitPartner && f['contact_number'].errors">
+                <div *ngIf="f['contact_number'].errors['required']">Contact number is required</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="grid grid-cols-2 mt-6 space-x-3">
+          <button (click)="addModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button type="submit" [disabled]="addLoading" class="btn-small btn-primary">
+            <ng-container *ngIf="!addLoading">Add</ng-container>
+            <ng-container *ngIf="addLoading">
+              <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4"
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor" />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentColor" />
+              </svg>
+              Adding...
+            </ng-container>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add toast -->
+<div *ngIf="addToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3">Partner added successfully.</div>
+</div>
+
+<!-- View modal -->
+<div *ngIf="viewModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="viewModal = false">
+  <div class="flex h-full w-full">
+    <!-- Modal content -->
+    <div class="modal max-w-3xl">
+
+      <!-- Header -->
+      <div class="max-w-3xl  bg-gradient-to-br from-orange-500 to-orange-400 rounded-t-lg -m-6 p-6">
+
+        <div class="flex flex-row justify-between text-white text-xs tracking-widest">
+          <h6 class="opacity-75">{{partnerID}}</h6>
+          <button (click)="viewModal = false" type="button"
+            class="text-neutral-100 bg-transparent h-fit hover:bg-orange-400  hover:text-neutral-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex mt-8 items-end">
+          <ngx-avatar class="object-cover rounded-full  object-top flex-none"
+            [src]=" imagePreview ||  'http://127.0.0.1:8000/partners/' + partnerID + '/logo.webp'"
+            [name]="partnerName.charAt(0)" [size]="64" [bgColor]>
+          </ngx-avatar>
+
+          <div class="ml-3 text-white">
+            <div class="flex flex-row ">
+              <h4 class="text-xl font-semibold text-white">{{ partnerName }}</h4>
+              <div class="ml-2">
+                <span *ngIf="partnerStatus === 'upcoming'"
+                  class="bg-blue-100 text-blue-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded-3xl">
+                  Active in <span>{{ computeDuration(partnerStartDate, partnerEndDate) }}</span>
+                </span>
+                <span *ngIf="partnerStatus === 'active'"
+                  class="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
+                  Expires in <span>{{ computeDuration(getCurrentDate(), partnerEndDate) }}</span>
+                </span>
+                <span *ngIf="partnerStatus === 'terminated' || partnerStatus === 'expired'"
+                  class="bg-red-100 text-red-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded-lg">
+                  <span class="capitalize">{{ partnerStatus }} </span> <span>{{ computeDuration(partnerEndDate,
+                    getCurrentDate()) }}</span> ago
+                </span>
+                <span *ngIf="partnerStatus === 'draft' || partnerStatus === 'archived'"
+                  class="bg-neutral-100 text-neutral-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
+                  <span class="capitalize">{{ partnerStatus }} </span> <span>{{ computeDuration(partnerEndDate,
+                    getCurrentDate()) }}</span> ago
+                </span>
+              </div>
+            </div>
+
+            <div class="flex flex-row  opacity-95 gap-x-2">
+
+              <div class="flex items-center">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M17 3.5H7C4 3.5 2 5 2 8.5V15.5C2 19 4 20.5 7 20.5H17C20 20.5 22 19 22 15.5V8.5C22 5 20 3.5 17 3.5ZM17.47 9.59L14.34 12.09C13.68 12.62 12.84 12.88 12 12.88C11.16 12.88 10.31 12.62 9.66 12.09L6.53 9.59C6.21 9.33 6.16 8.85 6.41 8.53C6.67 8.21 7.14 8.15 7.46 8.41L10.59 10.91C11.35 11.52 12.64 11.52 13.4 10.91L16.53 8.41C16.85 8.15 17.33 8.2 17.58 8.53C17.84 8.85 17.79 9.33 17.47 9.59Z"
+                    fill="currentColor" />
+                </svg>
+                <p class=" text-sm ml-0.5">{{partnerEmailAddress}}</p>
+              </div>
+
+              <div class="flex items-center">
+                <svg class="h-4 w-4 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M20.6211 8.45C19.5711 3.83 15.5411 1.75 12.0011 1.75C12.0011 1.75 12.0011 1.75 11.9911 1.75C8.46107 1.75 4.42107 3.82 3.37107 8.44C2.20107 13.6 5.36107 17.97 8.22107 20.72C9.28107 21.74 10.6411 22.25 12.0011 22.25C13.3611 22.25 14.7211 21.74 15.7711 20.72C18.6311 17.97 21.7911 13.61 20.6211 8.45ZM12.0011 13.46C10.2611 13.46 8.85107 12.05 8.85107 10.31C8.85107 8.57 10.2611 7.16 12.0011 7.16C13.7411 7.16 15.1511 8.57 15.1511 10.31C15.1511 12.05 13.7411 13.46 12.0011 13.46Z"
+                    fill="currentColor" />
+                </svg>
+                <p class=" text-sm ml-0.5">{{partnerAddress}}</p>
+              </div>
+
+              <div class="flex items-center">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12 2C9.38 2 7.25 4.13 7.25 6.75C7.25 9.32 9.26 11.4 11.88 11.49C11.96 11.48 12.04 11.48 12.1 11.49C12.12 11.49 12.13 11.49 12.15 11.49C12.16 11.49 12.16 11.49 12.17 11.49C14.73 11.4 16.74 9.32 16.75 6.75C16.75 4.13 14.62 2 12 2Z"
+                    fill="currentColor" />
+                  <path
+                    d="M17.0809 14.1489C14.2909 12.2889 9.74094 12.2889 6.93094 14.1489C5.66094 14.9989 4.96094 16.1489 4.96094 17.3789C4.96094 18.6089 5.66094 19.7489 6.92094 20.5889C8.32094 21.5289 10.1609 21.9989 12.0009 21.9989C13.8409 21.9989 15.6809 21.5289 17.0809 20.5889C18.3409 19.7389 19.0409 18.5989 19.0409 17.3589C19.0309 16.1289 18.3409 14.9889 17.0809 14.1489Z"
+                    fill="currentColor" />
+                </svg>
+                <p class=" text-sm ml-0.5">{{partnerContactPerson}} ({{partnerContactNumber}})</p>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Body -->
+      <div class="mt-6 pt-6 ">
+        <h5 class="info-label">About</h5>
+        <p class="text-sm text-neutral-700">{{partnerDescription}}</p>
+      </div>
+
+      <!-- Footer -->
+      <div class="space-y-4 flex flex-col mt-5">
+
+
+        <div>
+          <h5 class="info-label mb-1">MOA history</h5>
+          <div *ngIf="moa.length > 0" class=" overflow-x-auto border rounded-lg max-h-36 overflow-y-auto">
+            <table class="w-full text-left text-sm text-neutral-500">
+              <tbody>
+                <tr *ngFor="let file of moa" class="border-b">
+                  <th scope="row" class="p-4 text-neutral-900 flex flex-row justify-between">
+                    <div class="flex items-center">
+                      <div class="bg-blue-100 p-2 w-fit rounded-full mx-auto">
+                        <svg class="h-6 w-6 text-blue-700" viewBox="0 0 24 24" fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M12.3291 21.3399C11.2391 21.3399 10.1491 20.9299 9.31906 20.0999C7.65906 18.4399 7.65906 15.7499 9.31906 14.0899L11.7991 11.6199C12.0891 11.3299 12.5691 11.3299 12.8591 11.6199C13.1491 11.9099 13.1491 12.3899 12.8591 12.6799L10.3791 15.1499C9.30906 16.2199 9.30906 17.9699 10.3791 19.0399C11.4491 20.1099 13.1991 20.1099 14.2691 19.0399L18.1591 15.1499C19.3391 13.9699 19.9891 12.3999 19.9891 10.7299C19.9891 9.05986 19.3391 7.48986 18.1591 6.30986C15.7191 3.86986 11.7591 3.86986 9.31906 6.30986L5.07906 10.5499C4.08906 11.5399 3.53906 12.8599 3.53906 14.2599C3.53906 15.6599 4.08906 16.9799 5.07906 17.9699C5.36906 18.2599 5.36906 18.7399 5.07906 19.0299C4.78906 19.3199 4.30906 19.3199 4.01906 19.0299C2.74906 17.7499 2.03906 16.0599 2.03906 14.2599C2.03906 12.4599 2.73906 10.7599 4.01906 9.48986L8.25906 5.24986C11.2791 2.22986 16.1991 2.22986 19.2191 5.24986C20.6791 6.70986 21.4891 8.65986 21.4891 10.7299C21.4891 12.7999 20.6791 14.7499 19.2191 16.2099L15.3291 20.0999C14.4991 20.9299 13.4191 21.3399 12.3291 21.3399Z"
+                            fill="currentColor" />
+                        </svg>
+
+                      </div>
+
+                      <div class="pl-3">
+                        <div
+                          class="font-semibold text-sm hover:underline underline-offset-2 decoration-neutral-500  flex flex-row items-center">
+                          <a href="{{file.location}}"> {{file.name }}</a> <span *ngIf="file.latest"
+                            class="text-green-700 bg-green-100 rounded text-xs px-1 py-0.5 ml-2 ">LATEST</span>
+                        </div>
+                        <div class="font-normal text-neutral-500 text-xs">
+                          {{file.start_date}} to {{file.end_date}}
+                        </div>
+                      </div>
+
+                    </div>
+                    <a href="{{file.location}}">
+                      <button class="btn-small btn-secondary-outline">
+                        Download
+                      </button>
+                    </a>
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="moa.length === 0" class="px-6 py-4 text-neutral-900 text-center border rounded-lg text-sm">
+            <div class="flex flex-col w-fit mx-auto h-fit">
+              <div class="mx-auto w-fit rounded-full bg-orange-100 p-4">
+                <svg class="h-8 w-8 text-orange-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4"
+                    d="M20.5 10.19H17.61C15.24 10.19 13.31 8.26 13.31 5.89V3C13.31 2.45 12.86 2 12.31 2H8.07C4.99 2 2.5 4 2.5 7.57V16.43C2.5 20 4.99 22 8.07 22H15.93C19.01 22 21.5 20 21.5 16.43V11.19C21.5 10.64 21.05 10.19 20.5 10.19Z"
+                    fill="currentColor" />
+                  <path
+                    d="M15.7997 2.20999C15.3897 1.79999 14.6797 2.07999 14.6797 2.64999V6.13999C14.6797 7.59999 15.9197 8.80999 17.4297 8.80999C18.3797 8.81999 19.6997 8.81999 20.8297 8.81999C21.3997 8.81999 21.6997 8.14999 21.2997 7.74999C19.8597 6.29999 17.2797 3.68999 15.7997 2.20999Z"
+                    fill="currentColor" />
+                  <path
+                    d="M13.5 13.75H7.5C7.09 13.75 6.75 13.41 6.75 13C6.75 12.59 7.09 12.25 7.5 12.25H13.5C13.91 12.25 14.25 12.59 14.25 13C14.25 13.41 13.91 13.75 13.5 13.75Z"
+                    fill="currentColor" />
+                  <path
+                    d="M11.5 17.75H7.5C7.09 17.75 6.75 17.41 6.75 17C6.75 16.59 7.09 16.25 7.5 16.25H11.5C11.91 16.25 12.25 16.59 12.25 17C12.25 17.41 11.91 17.75 11.5 17.75Z"
+                    fill="currentColor" />
+                </svg>
+              </div>
+              <div class="max-w-lg">
+                <h4 class="mt-4 text-lg font-semibold text-center">No MOA files found</h4>
+                <p class="my-auto mt-1 text-sm text-center">
+                  You can easily resolve
+                  this by uploading your MOA files and bring this section to life. Start collaborating and make your
+                  extension program a success!
+                </p>
+                <button (click)="renewPartnerModal(partnerID)" class="btn-small btn-primary mt-4">
+                  Issue MOA
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </div>

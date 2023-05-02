@@ -1,0 +1,93 @@
+<div *ngFor="let details of detailsHolder">
+    <!-- Page 1 -->
+    <div id="content">
+
+        <!-- Header Image -->
+        <img src="http://127.0.0.1:8000/report/CICT_Header.png" alt="" class="image_header">
+
+        <div class="container1">
+            <h3 class="header_title">EXTENSION COMMUNITY INVOLVEMENT TERMINAL REPORT </h3>
+            <br>
+            <h4> <b>Name of Activity/Project : </b><span>{{details.program_title}}</span> </h4>
+            <br>
+            <h4><b> Date and Place Completed : </b> <span>{{details.start_date | date:"longDate"}}</span> </h4>
+
+            <br>
+            <h4> <b>Faculty Involved :</b> </h4>
+            <p *ngFor="let members of membersHolder">
+                {{members.member_first_name + ' ' + members.member_last_name + ' - ' + members.member_role}}
+            </p>
+
+
+            <br>
+            <h4> <b>Beneficiaries:</b> </h4>
+            <h4>{{details.participants}} </h4>
+
+            <br>
+            <h4> <b>Report on the flow of the Activity / Project Conducted:</b> </h4>
+            <h4>{{details.program_details}}</h4>
+
+
+            <br><br>
+            <h4> <b>Program Flow :</b> </h4>
+            <h4>{{details.program_flow}}</h4>
+
+        </div>
+
+
+        <!-- Footer Image -->
+        <img src="http://127.0.0.1:8000/report/CICT_Footer.png" alt="" class="image_footer ">
+
+
+    </div>
+
+    <!-- for breaking pages in pdf viewer  -->
+    <div class="page-break">
+
+    </div>
+
+
+    <!-- Page 2 -->
+    <div id="content2">
+
+
+        <img src="http://127.0.0.1:8000/report/CICT_Header.png" alt="" class="image_header">
+
+
+        <div class="container2">
+            <h4> <b>Additional Details :</b></h4>
+            <br>
+            <h4>{{details.additional_details}}</h4>
+
+            <br>
+            <h4> <b>Prepared By :</b> </h4>
+            <br>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Signature</th>
+                </tr>
+                <tr *ngFor="let members of membersHolder">
+                    <td> {{members.member_first_name + ' ' + members.member_last_name + ' - ' + members.member_role}}
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <br><br><br>
+            <p>Conforme : </p>
+            <br>
+            <h4><b>DR. KENO C. PIAD</b></h4>
+            <h4>Dean CICT</h4>
+
+
+        </div>
+        <img src="http://127.0.0.1:8000/report/CICT_Footer.png" alt="" class="image_footer ">
+    </div>
+
+
+</div>
+
+<!-- <div style="text-align: center;">
+    <input type="button" class="btn btn-danger text-dark" value="Convert" (click)="convertToPDF()" />
+  </div> -->
