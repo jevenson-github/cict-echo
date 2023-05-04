@@ -11,7 +11,10 @@
                     <button type="button"
                         class="flex rounded-full bg-neutral-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-800">
                         <span class="sr-only">Open user menu</span>
-                        <img class="h-8 w-8 rounded-full" src="http://127.0.0.1:8000/users/{{faculty_id}}.webp" alt="" />
+                        <ngx-avatar class="h-8 w-8 rounded-full object-cover object-top flex-none"
+                        [src]="'http://127.0.0.1:8000/users/' + faculty_id+ '.webp'" [name]="first_name.charAt(0) + last_name.charAt(0)"
+                        [size]="32" [bgColor]>
+                      </ngx-avatar>
                     </button>
                 </div>
                 <!-- MENU DROPDOWN -->
@@ -103,11 +106,11 @@
                             <div class="ml-2">
                                 <span *ngIf="details.status === 'upcoming'"
                                     class="bg-yellow-100 text-yellow-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded-3xl">
-                                    Active in <span>{{ computeDuration(details.start_date, details.end_date) }}</span>
+                                    Ongoing in <span>{{ computeDuration(details.start_date, details.end_date) }}</span>
                                 </span>
                                 <span *ngIf="details.status === 'ongoing'"
                                     class="bg-blue-100 text-blue-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
-                                    Expires in <span>{{ computeDuration(getCurrentDate(), details.end_date) }}</span>
+                                    Ends in <span>{{ computeDuration(getCurrentDate(), details.end_date) }}</span>
                                 </span>
                                 <span *ngIf="details.status === 'completed'"
                                     class="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">

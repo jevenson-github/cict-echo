@@ -332,11 +332,11 @@
               <div class="ml-2">
                 <span *ngIf="details.status === 'upcoming'"
                   class="bg-yellow-100 text-yellow-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded-3xl">
-                  Active in <span>{{ computeDuration(details.start_date, details.end_date) }}</span>
+                  Ongoing in <span>{{ computeDuration(details.start_date, details.end_date) }}</span>
                 </span>
                 <span *ngIf="details.status === 'ongoing'"
                   class="bg-blue-100 text-blue-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
-                  Expires in <span>{{ computeDuration(getCurrentDate(), details.end_date) }}</span>
+                  Eneded in <span>{{ computeDuration(getCurrentDate(), details.end_date) }}</span>
                 </span>
                 <span *ngIf="details.status === 'completed'"
                   class="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
@@ -400,10 +400,10 @@
       </div>
 
       <!-- Body -->
-      <div class="mt-6 pt-6 ">
+      <div class="mt-6 pt-6">
 
-        <div class="flex ">
-          <div class="grow flex flex-col gap-y-2">
+        <div class="flex gap-6">
+          <div class="grow flex flex-col gap-4">
             <div>
               <h5 class="info-label">Details</h5>
               <p class="text-sm text-neutral-700">{{details.program_details}}</p>
