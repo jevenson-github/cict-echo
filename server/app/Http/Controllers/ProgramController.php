@@ -332,22 +332,18 @@ class ProgramController extends Controller
         ->join('members', 'members.program_id', '=', 'programs.id')
         ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
         ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.company_name', 'partners.id as partner_id')
-        ->where('programs.program_lead_id', '=', $id)
-        ->orWhere('members.faculty_id', '=', $id)
-        // ->groupBy('programs.program_title')
+        ->where(function ($query) use ($id) {
+            $query->where('programs.program_lead_id', '=', $id) 
+                  ->orWhere('members.faculty_id', '=', $id);
+        })
+        ->where('programs.status', '!=', 'draft')
         ->distinct()
         ->get();
 
 
-        // $members = DB::table('members')
-        // ->join('programs', 'programs.id', '=', 'members.program_id')
-        // ->join('users as members_users', 'members_users.id', '=', 'members.faculty_id')
-        // ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role', 'programs.program_title')
-        // ->where('members.faculty_id', '=', $id)
-        // ->get();
+
 
         $response['programs']=$programs;
-        // $response['members']=$members;
 
         return response()->json($response,200);
     }
