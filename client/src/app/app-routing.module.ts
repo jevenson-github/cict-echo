@@ -4,27 +4,30 @@ import { AppComponent } from './app.component';
 import { AuthGuard } from './auth.guard';
 
 // Import components for AUTH
-import { AuthComponent } from './management/auth/auth.component';
-import { SignInComponent } from './management/auth/sign-in/sign-in.component';
-import { ForgotPasswordComponent } from './management/auth/forgot-password/forgot-password.component';
-import { SignUpComponent } from './management/auth/sign-up/sign-up.component';
+import { AuthComponent } from './auth/auth.component';
+import { SignInComponent } from './auth/sign-in/sign-in.component';
+import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { SignUpComponent } from './auth/sign-up/sign-up.component';
 
 // Import components for ADMIN
-import { AdminComponent } from './management/admin/admin.component';
-import { FacultyAdminComponent } from './management/admin/faculty-admin/faculty-admin.component';
-import { PartnersAdminComponent } from './management/admin/partners-admin/partners-admin.component';
-import { PartnerAdminComponent } from './management/admin/partner-admin/partner-admin.component';
-
+import { AdminComponent } from './admin/admin.component';
+import { FacultyAdminComponent } from './admin/faculty-admin/faculty-admin.component';
+import { PartnersAdminComponent } from './admin/partners-admin/partners-admin.component';
 
 // Import components for FACULTY
-import { FacultyComponent } from './management/faculty/faculty.component';
-import { DashboardAdminComponent } from './management/admin/dashboard-admin/dashboard-admin.component';
-import { ResetPasswordComponent } from './management/auth/reset-password/reset-password.component';
-import { ProgramsAdminComponent } from './management/admin/programs-admin/programs-admin.component';
-import { ReportsAdminComponent } from './management/admin/reports-admin/reports-admin.component';
-import { ProgramReportComponent } from './management/admin/reports-admin/program-report/program-report.component';
-import { PartnerReportComponent } from './management/admin/reports-admin/partner-report/partner-report.component';
-import { PartnersReportComponent } from './management/admin/reports-admin/partners-report/partners-report.component';
+import { FacultyComponent } from './faculty/faculty.component';
+import { DashboardAdminComponent } from './admin/dashboard-admin/dashboard-admin.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { ProgramsAdminComponent } from './admin/programs-admin/programs-admin.component';
+import { ReportsAdminComponent } from './admin/reports-admin/reports-admin.component';
+import { ProgramReportComponent } from './admin/reports-admin/program-report/program-report.component';
+import { PartnerReportComponent } from './admin/reports-admin/partner-report/partner-report.component';
+import { PartnersReportComponent } from './admin/reports-admin/partners-report/partners-report.component';
+import { HomeAdminComponent } from './admin/home-admin/home-admin.component';
+import { ViewProgramAdminComponent } from './admin/programs-admin/view-program-admin/view-program-admin.component';
+import { EditProgramAdminComponent } from './admin/programs-admin/edit-program-admin/edit-program-admin.component';
+import { ViewPartnerAdminComponent } from './admin/partners-admin/view-partner-admin/view-partner-admin.component';
+import { EditPartnerAdminComponent } from './admin/partners-admin/edit-partner-admin/edit-partner-admin.component';
 
 
 
@@ -36,11 +39,15 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: DashboardAdminComponent },
+      { path: 'home', component: HomeAdminComponent},
       { path: 'dashboard', component: DashboardAdminComponent },
       { path: 'faculty', component: FacultyAdminComponent},
       { path: 'partners', component: PartnersAdminComponent},
-      { path: 'partners/:id', component: PartnerAdminComponent},
+      { path: 'partners/view', component: ViewPartnerAdminComponent},
+      { path: 'partners/edit', component: EditPartnerAdminComponent},
       { path: 'programs', component: ProgramsAdminComponent},
+      { path: 'programs/view', component: ViewProgramAdminComponent},
+      { path: 'programs/edit', component: EditProgramAdminComponent},
       { path: 'reports', component: ReportsAdminComponent},
     ],
   },
@@ -78,21 +85,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [{ path: '', component: FacultyComponent }],
   },
-
-  // {
-  //   path: 'auth',
-  //   component: AuthComponent,
-  //   children: [
-  //     { path: '', component: SignInComponent },
-  //     { path: 'forgot', component: ForgotComponent },
-  //     { path: 'sign-up', component: StepOneComponent },
-  //     { path: 'sign-up/step-two', component: StepTwoComponent },
-  //     { path: 'sign-up/step-three', component: StepThreeComponent},
-  //     { path: 'sign-up/step-four', component: StepFourComponent},
-  //     { path: 'sign-up/step-five', component: StepFiveComponent},
-  //     { path: 'sign-up/setup-complete', component: SetupCompleteComponent},
-  //   ],
-  // },
 
   {
     path: '',

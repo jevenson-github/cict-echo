@@ -1,0 +1,1167 @@
+<header class="w-full gradient">
+  <div class="h-16"></div>
+  <div class="container mx-auto p-8">
+    <div class="flex flex-row w-full justify-between">
+      <div>
+        <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">Programs
+        </h2>
+        <p class="text-neutral-100 mt-1">View and manage the accounts of all faculty members and administrators, as well
+          as
+          filter and search for specific accounts.</p>
+      </div>
+      <div class="flex flex-row items-end gap-x-2">
+        <button (click)="addProgramModal()" class="btn-base btn-primary ">
+          Add program
+        </button>
+        <div class="">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg class="w-5 h-5 text-neutral-500" aria-hidden="true" fill="white" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+            <input type="search" placeholder="Search for partners" [(ngModel)]="filteredProgramArray">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="h-16"></div>
+</header>
+
+<!-- Content area -->
+<main class="gap-4 container mx-auto px-8 -m-12">
+  <div class=" overflow-x-auto border sm:rounded-lg mt-4 shadow">
+    <table class="w-full text-left text-sm text-neutral-500">
+      <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
+        <tr>
+          <th scope="col" class="px-6 py-3 font-medium">Program</th>
+          <td scope="col" class="px-6 py-3 font-medium">Status</td>
+          <th scope="col" class="px-6 py-3 font-medium">Start date</th>
+          <th scope="col" class="px-6 py-3 font-medium">End date</th>
+          <th scope="col" class="px-6 py-3 font-medium">Partner</th>
+          <th scope="col" class="px-6 py-3 font-medium"></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngIf="programs && programs.length > 0; else noPartner">
+          <ng-container *ngIf="(programs | filter: filteredProgramArray) as filteredResults">
+            <ng-container *ngIf="filteredResults.length > 0; else noResults">
+              <tr *ngFor="let program of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}"
+                class="hover:bg-neutral-50  border-b border-neutral-200">
+                <th scope="row" class="px-6 py-4 text-neutral-900">
+                  <div class="flex items-center">
+                    <!-- <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                      [name]="program.title.charAt(0)" [size]="40" [bgColor]>
+                    </ngx-avatar> -->
+                    <div class="pl-3">
+                      <div class="font-semibold">{{ program.title}}</div>
+                      <div class="font-normal text-neutral-500 hidden">{{ program.id }}</div>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="px-6 py-3 capitalize">
+                  <span *ngIf="program.status === 'upcoming'"
+                    class="bg-yellow-100 text-yellow-700 text-sm font-medium mr-2 px-2.5 py-1 rounded capitalize h-fit">{{
+                    program.status
+                    }}</span>
+                  <span *ngIf="program.status === 'ongoing'"
+                    class="bg-blue-100 text-blue-700 text-sm font-medium mr-2 px-2.5 py-1 rounded capitalize h-fit">{{
+                    program.status
+                    }}</span>
+                  <span *ngIf="program.status === 'completed'"
+                    class="bg-green-100 text-green-700 text-sm font-medium mr-2 px-2.5 py-1 rounded capitalize h-fit">{{
+                    program.status
+                    }}</span>
+                  <span *ngIf="program.status === 'ended'"
+                    class="bg-red-100 text-red-700 text-sm font-medium mr-2 px-2.5 py-1 rounded capitalize h-fit">{{
+                    program.status
+                    }}</span>
+                  <span *ngIf="program.status === 'archived' || program.status === 'draft'"
+                    class="bg-neutral-100 text-neutral-700 text-sm font-medium mr-2 px-2.5 py-1 rounded capitalize h-fit">{{
+                    program.status
+                    }}</span>
+                </td>
+
+                <td class="px-6 py-3 ">
+                  {{ program.start_date | date:'MMMM dd, yyyy' }}
+                </td>
+
+                <td class="px-6 py-3 ">
+                  {{ program.end_date | date:'MMMM dd, yyyy' }}
+                </td>
+
+                <th scope="row" class="px-6 py-4 text-neutral-900">
+                  <div class="flex items-center">
+                    <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                      [src]="'http://127.0.0.1:8000/partners/' + program.partner + '/logo.webp'"
+                      [name]="program.name.charAt(0)" [size]="40" [bgColor]>
+                    </ngx-avatar>
+                    <div class="pl-3">
+                      <div class="font-semibold">{{ program.name}}</div>
+                      <div class="font-normal text-neutral-500">{{ program.email }}</div>
+                    </div>
+                  </div>
+                </th>
+
+                <td class="px-6 py-3 flex gap-x-1 justify-end">
+
+                  <svg routerLink="/management/programs/view" [queryParams]="{ programID: program.id }"
+                    class="action-icon-action" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path d="M18 10V6H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path d="M6 14V18H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <title>View</title>
+                  </svg>
+
+                  <svg routerLink="/management/programs/edit" [queryParams]="{ programID: program.id }"
+                    class="action-icon-action"
+                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M13.26 3.59997L5.04997 12.29C4.73997 12.62 4.43997 13.27 4.37997 13.72L4.00997 16.96C3.87997 18.13 4.71997 18.93 5.87997 18.73L9.09997 18.18C9.54997 18.1 10.18 17.77 10.49 17.43L18.7 8.73997C20.12 7.23997 20.76 5.52997 18.55 3.43997C16.35 1.36997 14.68 2.09997 13.26 3.59997Z"
+                      stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path d="M11.89 5.05005C12.32 7.81005 14.56 9.92005 17.34 10.2" stroke="currentColor"
+                      stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M3 22H21" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"
+                      stroke-linecap="round" stroke-linejoin="round" />
+                    <title>Update</title>
+                  </svg>
+
+
+                  <svg (click)="addMemberRoleProgramModal(program)"
+                    *ngIf="program.status === 'draft' || program.status ==='upcoming'" class="action-icon-action"
+                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.5 19.5H14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path d="M16.5 21.5V17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path
+                      d="M12.16 10.87C12.06 10.86 11.94 10.86 11.83 10.87C9.44997 10.79 7.55997 8.84 7.55997 6.44C7.54997 3.99 9.53997 2 11.99 2C14.44 2 16.43 3.99 16.43 6.44C16.43 8.84 14.53 10.79 12.16 10.87Z"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                      d="M11.99 21.8101C10.17 21.8101 8.36004 21.3501 6.98004 20.4301C4.56004 18.8101 4.56004 16.1701 6.98004 14.5601C9.73004 12.7201 14.24 12.7201 16.99 14.5601"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <title>Add Members and Role</title>
+                  </svg>
+
+
+                  <svg (click)="markAsCompleteProgramModal(program)" *ngIf="program.status === 'ongoing'"
+                    class="action-icon-destructive" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="currentColor" stroke-width="1.5"
+                      stroke-linecap="round" stroke-linejoin="round" />
+                    <title>Mark as complete</title>
+                  </svg>
+
+                  <svg (click)="postProgramModal(program)" *ngIf="program.status === 'draft'" class="action-icon-action"
+                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M7.39999 6.32003L15.89 3.49003C19.7 2.22003 21.77 4.30003 20.51 8.11003L17.68 16.6C15.78 22.31 12.66 22.31 10.76 16.6L9.91999 14.08L7.39999 13.24C1.68999 11.34 1.68999 8.23003 7.39999 6.32003Z"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10.11 13.6501L13.69 10.0601" stroke="currentColor" stroke-width="1.5"
+                      stroke-linecap="round" stroke-linejoin="round" />
+                    <title>Post</title>
+                  </svg>
+
+
+                  <svg (click)="deleteProgramModal(program)" *ngIf="program.status === 'draft'"
+                    class="action-icon-destructive" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M21 5.97998C17.67 5.64998 14.32 5.47998 10.98 5.47998C9 5.47998 7.02 5.57998 5.04 5.77998L3 5.97998"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M8.5 4.97L8.72 3.66C8.88 2.71 9 2 10.69 2H13.31C15 2 15.13 2.75 15.28 3.67L15.5 4.97"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                      d="M18.85 9.14001L18.2 19.21C18.09 20.78 18 22 15.21 22H8.79002C6.00002 22 5.91002 20.78 5.80002 19.21L5.15002 9.14001"
+                      stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M10.33 16.5H13.66" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <path d="M9.5 12.5H14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                    <title>Delete</title>
+                  </svg>
+
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-template #noPartner>
+          <tr>
+            <td colspan="6" class="">
+              <div
+                class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                <div class="h-fit my-auto">
+                  <div class="bg-orange-100 p-4 w-fit rounded-full mx-auto">
+                    <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path opacity="0.4"
+                        d="M12.5007 7.40986V21.9999H4.0807C2.9207 21.9999 1.9707 21.0699 1.9707 19.9299V5.08986C1.9707 2.46986 3.9307 1.27986 6.3207 2.44986L10.7507 4.63986C11.7107 5.10986 12.5007 6.35986 12.5007 7.40986Z"
+                        fill="currentColor" />
+                      <path
+                        d="M8.97 9.75H5.5C5.09 9.75 4.75 9.41 4.75 9C4.75 8.59 5.09 8.25 5.5 8.25H8.97C9.38 8.25 9.72 8.59 9.72 9C9.72 9.41 9.39 9.75 8.97 9.75Z"
+                        fill="currentColor" />
+                      <path
+                        d="M8.97 13.75H5.5C5.09 13.75 4.75 13.41 4.75 13C4.75 12.59 5.09 12.25 5.5 12.25H8.97C9.38 12.25 9.72 12.59 9.72 13C9.72 13.41 9.39 13.75 8.97 13.75Z"
+                        fill="currentColor" />
+                      <path opacity="0.6"
+                        d="M22 15.0499V19.4999C22 20.8799 20.88 21.9999 19.5 21.9999H12.5V10.4199L12.97 10.5199L17.01 11.4199L17.49 11.5299L19.53 11.9899C20.02 12.0899 20.47 12.2599 20.86 12.5099C20.86 12.5199 20.87 12.5199 20.87 12.5199C20.97 12.5899 21.07 12.6699 21.16 12.7599C21.62 13.2199 21.92 13.8899 21.99 14.8699C21.99 14.9299 22 14.9899 22 15.0499Z"
+                        fill="currentColor" />
+                      <path
+                        d="M12.5 10.4199V16.4199C12.96 17.0299 13.68 17.4199 14.5 17.4199C15.89 17.4199 17.01 16.2999 17.01 14.9199V11.4299L12.97 10.5299L12.5 10.4199Z"
+                        fill="currentColor" />
+                      <path
+                        d="M21.9898 14.8699C21.9198 13.8899 21.6198 13.2199 21.1598 12.7599C21.0698 12.6699 20.9698 12.5899 20.8698 12.5199C20.8698 12.5199 20.8598 12.5199 20.8598 12.5099C20.4698 12.2599 20.0198 12.0899 19.5298 11.9899L17.4898 11.5299L17.0098 11.4199V14.9199C17.0098 16.2899 18.1198 17.4199 19.5098 17.4199C20.8498 17.4199 21.9198 16.3699 21.9998 15.0599V15.0499C21.9998 14.9899 21.9898 14.9299 21.9898 14.8699Z"
+                        fill="currentColor" />
+                    </svg>
+                  </div>
+                  <div class="max-w-sm">
+                    <h4 class="text-lg font-semibold mt-4">Welcome to programs table</h4>
+                    <p class="my-auto text-sm mt-1">See and manage your programs here. Add their details, MOA
+                      files, and partnership dates. Ready to go? Click below and add your first partners.</p>
+                    <div class="mt-4">
+                      <button class="btn-small btn-primary">
+                        <svg class="inline w-4 h-4 mr-1 text-white" viewBox="0 0 24 24" fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 12H18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                          <path d="M12 18V6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        </svg>
+                        Add programs
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #noResults>
+          <tr>
+            <td colspan="6" class="">
+              <div
+                class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
+                <div class="h-fit my-auto">
+                  <div class="bg-orange-100 p-4 w-fit rounded-full mx-auto">
+                    <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M14.5 10.75H8.5C8.09 10.75 7.75 10.41 7.75 10C7.75 9.59 8.09 9.25 8.5 9.25H14.5C14.91 9.25 15.25 9.59 15.25 10C15.25 10.41 14.91 10.75 14.5 10.75Z"
+                        fill="currentColor" />
+                      <path
+                        d="M11.5 13.75H8.5C8.09 13.75 7.75 13.41 7.75 13C7.75 12.59 8.09 12.25 8.5 12.25H11.5C11.91 12.25 12.25 12.59 12.25 13C12.25 13.41 11.91 13.75 11.5 13.75Z"
+                        fill="currentColor" />
+                      <path opacity="0.4"
+                        d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
+                        fill="currentColor" />
+                      <path
+                        d="M21.3005 22.0001C21.1205 22.0001 20.9405 21.9301 20.8105 21.8001L18.9505 19.9401C18.6805 19.6701 18.6805 19.2301 18.9505 18.9501C19.2205 18.6801 19.6605 18.6801 19.9405 18.9501L21.8005 20.8101C22.0705 21.0801 22.0705 21.5201 21.8005 21.8001C21.6605 21.9301 21.4805 22.0001 21.3005 22.0001Z"
+                        fill="currentColor" />
+                    </svg>
+                  </div>
+                  <div class="max-w-md">
+
+                    <h4 class="text-lg font-semibold mt-4 line-clamp-2">No results found for "{{filteredProgramArray}}"
+                    </h4>
+                    <p class="my-auto text-sm mt-1">We couldn’t find any partners that match your search term. Try using
+                      a different keyword or check your spelling. You can also browse all your partners by clicking the
+                      button below.</p>
+                    <div class="mt-4 space-x-2">
+                      <button (click)="clearSearch()" class="btn-small btn-secondary-outline">Clear search</button>
+                      <button class="btn-small btn-primary">
+                        <svg class="inline w-4 h-4 mr-1 text-white" viewBox="0 0 24 24" fill="none"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 12H18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                          <path d="M12 18V6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        </svg>
+                        Add partners
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+
+      <tfoot *ngIf="programs.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
+        <span></span>
+        <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
+      </tfoot>
+
+    </table>
+  </div>
+</main>
+
+
+<!-- View modal -->
+<div *ngIf="viewModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="viewModal = false">
+  <div class="flex h-full w-full">
+    <!-- Modal content -->
+    <div class="modal max-w-5xl" *ngFor="let details of detailsArray">
+
+      <!-- Header -->
+      <div class="max-w-5xl  bg-gradient-to-br from-orange-500 to-orange-400 rounded-t-lg -m-6 p-6">
+
+        <div class="flex flex-row justify-between text-white text-xs tracking-widest">
+          <div class="flex flex-row ">
+            <h6 class="opacity-75">{{details.id}}</h6>
+            <div class="ml-2">
+              <span *ngIf="details.status === 'upcoming'"
+                class="bg-yellow-100 text-yellow-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded-3xl">
+                Ongoing in <span>{{ computeDuration(details.start_date, details.end_date) }}</span>
+              </span>
+              <span *ngIf="details.status === 'ongoing'"
+                class="bg-blue-100 text-blue-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
+                Eneded in <span>{{ computeDuration(getCurrentDate(), details.end_date) }}</span>
+              </span>
+              <span *ngIf="details.status === 'completed'"
+                class="bg-green-100 text-green-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
+                Completed <span>{{ computeDuration(details.end_date, getCurrentDate()) }}</span> ago
+              </span>
+              <span *ngIf="details.status === 'ended'"
+                class="bg-red-100 text-red-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded-lg">
+                <span class="capitalize">{{ details.status }}</span> <span>{{
+                  computeDuration(details.end_date, getCurrentDate()) }}</span> ago
+              </span>
+              <span *ngIf="details.status === 'draft' || details.status === 'archived'"
+                class="bg-neutral-100 text-neutral-700 text-xs font-medium mr-2 px-2.5 py-1 h-fit rounded">
+                <span class="capitalize">{{ details.status }} </span> <span>{{
+                  computeDuration(details.end_date, getCurrentDate()) }}</span> ago
+              </span>
+            </div>
+
+          </div>
+
+          <button (click)="viewModal = false" type="button"
+            class="text-neutral-100 bg-transparent h-fit hover:bg-orange-400  hover:text-neutral-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex mt-8 items-end">
+
+          <div class="text-white">
+            <div class="flex flex-row ">
+              <h4 class="text-xl font-semibold text-white">{{ details.title }}</h4>
+
+            </div>
+
+            <div class="flex flex-row  opacity-95 gap-x-2">
+
+              <div class="flex items-center">
+                <svg class="h-4 w-4 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M20.6211 8.45C19.5711 3.83 15.5411 1.75 12.0011 1.75C12.0011 1.75 12.0011 1.75 11.9911 1.75C8.46107 1.75 4.42107 3.82 3.37107 8.44C2.20107 13.6 5.36107 17.97 8.22107 20.72C9.28107 21.74 10.6411 22.25 12.0011 22.25C13.3611 22.25 14.7211 21.74 15.7711 20.72C18.6311 17.97 21.7911 13.61 20.6211 8.45ZM12.0011 13.46C10.2611 13.46 8.85107 12.05 8.85107 10.31C8.85107 8.57 10.2611 7.16 12.0011 7.16C13.7411 7.16 15.1511 8.57 15.1511 10.31C15.1511 12.05 13.7411 13.46 12.0011 13.46Z"
+                    fill="currentColor" />
+                </svg>
+                <p class=" text-sm ml-0.5">{{details.location}}</p>
+              </div>
+
+              <div class="flex items-center">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M8.25 5.75C7.84 5.75 7.5 5.41 7.5 5V2C7.5 1.59 7.84 1.25 8.25 1.25C8.66 1.25 9 1.59 9 2V5C9 5.41 8.66 5.75 8.25 5.75Z"
+                    fill="currentColor" />
+                  <path
+                    d="M15.75 5.75C15.34 5.75 15 5.41 15 5V2C15 1.59 15.34 1.25 15.75 1.25C16.16 1.25 16.5 1.59 16.5 2V5C16.5 5.41 16.16 5.75 15.75 5.75Z"
+                    fill="currentColor" />
+                  <path
+                    d="M11.9996 14.09C12.5196 14.09 12.8996 13.78 12.8996 13.29C12.8996 12.79 12.5196 12.5 11.9996 12.5C11.4796 12.5 11.0996 12.79 11.0996 13.29C11.0996 13.78 11.4796 14.09 11.9996 14.09Z"
+                    fill="currentColor" />
+                  <path
+                    d="M11.9994 17.0006C12.629 17.0006 13.1394 16.5842 13.1394 16.0706C13.1394 15.557 12.629 15.1406 11.9994 15.1406C11.3698 15.1406 10.8594 15.557 10.8594 16.0706C10.8594 16.5842 11.3698 17.0006 11.9994 17.0006Z"
+                    fill="currentColor" />
+                  <path
+                    d="M19.57 4.5C18.91 4.01 17.96 4.48 17.96 5.31V5.41C17.96 6.58 17.12 7.66 15.95 7.78C14.6 7.92 13.46 6.86 13.46 5.54V4.5C13.46 3.95 13.01 3.5 12.46 3.5H11.54C10.99 3.5 10.54 3.95 10.54 4.5V5.54C10.54 6.33 10.13 7.03 9.51 7.42C9.42 7.48 9.32 7.53 9.22 7.58C9.13 7.63 9.03 7.67 8.92 7.7C8.8 7.74 8.67 7.77 8.53 7.78C8.37 7.8 8.21 7.8 8.05 7.78C7.91 7.77 7.78 7.74 7.66 7.7C7.56 7.67 7.46 7.63 7.36 7.58C7.26 7.53 7.16 7.48 7.07 7.42C6.44 6.98 6.04 6.22 6.04 5.41V5.31C6.04 4.54 5.22 4.08 4.57 4.41C4.56 4.42 4.55 4.42 4.54 4.43C4.5 4.45 4.47 4.47 4.43 4.5C4.4 4.53 4.36 4.55 4.33 4.58C4.05 4.8 3.8 5.05 3.59 5.32C3.48 5.44 3.39 5.57 3.31 5.7C3.3 5.71 3.29 5.72 3.28 5.74C3.19 5.87 3.11 6.02 3.04 6.16C3.02 6.18 3.01 6.19 3.01 6.21C2.95 6.33 2.89 6.45 2.85 6.58C2.82 6.63 2.81 6.67 2.79 6.72C2.73 6.87 2.69 7.02 2.65 7.17C2.61 7.31 2.58 7.46 2.56 7.61C2.54 7.72 2.53 7.83 2.52 7.95C2.51 8.09 2.5 8.23 2.5 8.37V17.13C2.5 19.82 4.68 22 7.37 22H16.63C19.32 22 21.5 19.82 21.5 17.13V8.37C21.5 6.78 20.74 5.39 19.57 4.5ZM12 18.25C10.45 18.25 9.5 17.48 9.5 16.24C9.5 15.56 9.85 14.97 10.46 14.62C10.02 14.31 9.73 13.85 9.73 13.22C9.73 11.92 10.77 11.25 12 11.25C13.23 11.25 14.26 11.92 14.26 13.22C14.26 13.85 13.98 14.31 13.53 14.62C14.15 14.97 14.5 15.56 14.5 16.24C14.5 17.48 13.54 18.25 12 18.25Z"
+                    fill="currentColor" />
+                </svg>
+                <p class=" text-sm ml-0.5">
+                  {{ details.start_date ? (details.start_date | date:'MMMM dd, yyyy') : 'Not set' }}
+                  -
+                  {{ details.end_date ? (details.end_date | date:'MMMM dd, yyyy') : 'Not set' }}
+                </p>
+              </div>
+
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Body -->
+      <div class="mt-6 pt-6">
+
+        <div class="flex gap-6">
+          <div class="grow flex flex-col gap-4">
+            <div>
+              <h5 class="info-label">Details</h5>
+              <p class="text-sm text-neutral-700">{{details.details}}</p>
+            </div>
+            <div>
+              <h5 class="info-label">Program flow</h5>
+              <p class="text-sm text-neutral-700">{{details.project_flow}}</p>
+            </div>
+            <div>
+              <h5 class="info-label">Additional details</h5>
+              <p class="text-sm text-neutral-700">{{details.additional_details}}</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-y-1.5 flex-none w-fit pr-12">
+            <h5 class="info-label">Partner</h5>
+            <div class="flex flex-row">
+              <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                [src]="'http://127.0.0.1:8000/partners/' + details.partner + '/logo.webp'"
+                [name]="details.name.charAt(0)" [size]="40" [bgColor]>
+              </ngx-avatar>
+              <div class="flex flex-col ml-2 h-fit my-auto">
+                <p class="text-sm font-medium text-neutral-900">
+                  {{details.name}}
+                </p>
+              </div>
+
+            </div>
+
+            <h5 class="info-label mt-2">Members</h5>
+            <div class="flex flex-row">
+              <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                [src]="'http://127.0.0.1:8000/users/' + details.lead + '.webp'"
+                [name]="details.lead_first_name.charAt(0) + details.lead_last_name.charAt(0)" [size]="40" [bgColor]>
+              </ngx-avatar>
+              <div class="flex flex-col ml-2 h-fit my-auto">
+                <p class="text-sm font-medium text-neutral-900">
+                  {{details.lead_first_name + ' ' + details.lead_last_name}}
+                </p>
+                <p class="text-xs text-neutral-700">
+                  Team leader
+                </p>
+              </div>
+
+            </div>
+
+            <div class="flex flex-row" *ngFor="let members of membersArray">
+              <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
+                [src]="'http://127.0.0.1:8000/users/' + members.faculty + '.webp'"
+                [name]="members.member_first_name.charAt(0) + members.member_last_name.charAt(0)" [size]="40" [bgColor]>
+              </ngx-avatar>
+              <div class="flex flex-col ml-2 h-fit my-auto">
+                <p class="text-sm font-medium text-neutral-900">
+                  {{members.member_first_name + ' ' + members.member_last_name}}
+                </p>
+                <p class="text-xs text-neutral-700">
+                  {{members.member_role}}
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div *ngIf="details.status === 'completed'" class="gap-x-4 grid grid-cols-3 mt-5">
+        <div class="p-4 text-neutral-900 flex flex-row justify-between border rounded-lg">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-2 w-fit rounded-full mx-auto">
+              <svg class="h-6 w-6 text-blue-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12.3291 21.3399C11.2391 21.3399 10.1491 20.9299 9.31906 20.0999C7.65906 18.4399 7.65906 15.7499 9.31906 14.0899L11.7991 11.6199C12.0891 11.3299 12.5691 11.3299 12.8591 11.6199C13.1491 11.9099 13.1491 12.3899 12.8591 12.6799L10.3791 15.1499C9.30906 16.2199 9.30906 17.9699 10.3791 19.0399C11.4491 20.1099 13.1991 20.1099 14.2691 19.0399L18.1591 15.1499C19.3391 13.9699 19.9891 12.3999 19.9891 10.7299C19.9891 9.05986 19.3391 7.48986 18.1591 6.30986C15.7191 3.86986 11.7591 3.86986 9.31906 6.30986L5.07906 10.5499C4.08906 11.5399 3.53906 12.8599 3.53906 14.2599C3.53906 15.6599 4.08906 16.9799 5.07906 17.9699C5.36906 18.2599 5.36906 18.7399 5.07906 19.0299C4.78906 19.3199 4.30906 19.3199 4.01906 19.0299C2.74906 17.7499 2.03906 16.0599 2.03906 14.2599C2.03906 12.4599 2.73906 10.7599 4.01906 9.48986L8.25906 5.24986C11.2791 2.22986 16.1991 2.22986 19.2191 5.24986C20.6791 6.70986 21.4891 8.65986 21.4891 10.7299C21.4891 12.7999 20.6791 14.7499 19.2191 16.2099L15.3291 20.0999C14.4991 20.9299 13.4191 21.3399 12.3291 21.3399Z"
+                  fill="currentColor" />
+              </svg>
+
+            </div>
+
+            <div class="pl-3">
+              <div
+                class="font-semibold text-sm hover:underline underline-offset-2 decoration-neutral-500  flex flex-row items-center">
+                <a
+                  href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.attendance}}">
+                  Attendance</a>
+              </div>
+              <div class="font-normal text-neutral-500 text-xs">
+              </div>
+
+            </div>
+
+          </div>
+          <a
+            href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.attendance}}">
+            <button class="btn-small btn-secondary-outline">
+              Download
+            </button>
+          </a>
+        </div>
+        <div class="p-4 text-neutral-900 flex flex-row justify-between border rounded-lg">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-2 w-fit rounded-full mx-auto">
+              <svg class="h-6 w-6 text-blue-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12.3291 21.3399C11.2391 21.3399 10.1491 20.9299 9.31906 20.0999C7.65906 18.4399 7.65906 15.7499 9.31906 14.0899L11.7991 11.6199C12.0891 11.3299 12.5691 11.3299 12.8591 11.6199C13.1491 11.9099 13.1491 12.3899 12.8591 12.6799L10.3791 15.1499C9.30906 16.2199 9.30906 17.9699 10.3791 19.0399C11.4491 20.1099 13.1991 20.1099 14.2691 19.0399L18.1591 15.1499C19.3391 13.9699 19.9891 12.3999 19.9891 10.7299C19.9891 9.05986 19.3391 7.48986 18.1591 6.30986C15.7191 3.86986 11.7591 3.86986 9.31906 6.30986L5.07906 10.5499C4.08906 11.5399 3.53906 12.8599 3.53906 14.2599C3.53906 15.6599 4.08906 16.9799 5.07906 17.9699C5.36906 18.2599 5.36906 18.7399 5.07906 19.0299C4.78906 19.3199 4.30906 19.3199 4.01906 19.0299C2.74906 17.7499 2.03906 16.0599 2.03906 14.2599C2.03906 12.4599 2.73906 10.7599 4.01906 9.48986L8.25906 5.24986C11.2791 2.22986 16.1991 2.22986 19.2191 5.24986C20.6791 6.70986 21.4891 8.65986 21.4891 10.7299C21.4891 12.7999 20.6791 14.7499 19.2191 16.2099L15.3291 20.0999C14.4991 20.9299 13.4191 21.3399 12.3291 21.3399Z"
+                  fill="currentColor" />
+              </svg>
+
+            </div>
+
+            <div class="pl-3">
+              <div
+                class="font-semibold text-sm hover:underline underline-offset-2 decoration-neutral-500  flex flex-row items-center">
+                <a
+                  href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.certificate}}">
+                  Certificate</a>
+              </div>
+              <div class="font-normal text-neutral-500 text-xs">
+              </div>
+            </div>
+          </div>
+          <a
+            href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.certificate}}">
+            <button class="btn-small btn-secondary-outline">
+              Download
+            </button>
+          </a>
+        </div>
+        <div class="p-4 text-neutral-900 flex flex-row justify-between border rounded-lg">
+          <div class="flex items-center">
+            <div class="bg-blue-100 p-2 w-fit rounded-full mx-auto">
+              <svg class="h-6 w-6 text-blue-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12.3291 21.3399C11.2391 21.3399 10.1491 20.9299 9.31906 20.0999C7.65906 18.4399 7.65906 15.7499 9.31906 14.0899L11.7991 11.6199C12.0891 11.3299 12.5691 11.3299 12.8591 11.6199C13.1491 11.9099 13.1491 12.3899 12.8591 12.6799L10.3791 15.1499C9.30906 16.2199 9.30906 17.9699 10.3791 19.0399C11.4491 20.1099 13.1991 20.1099 14.2691 19.0399L18.1591 15.1499C19.3391 13.9699 19.9891 12.3999 19.9891 10.7299C19.9891 9.05986 19.3391 7.48986 18.1591 6.30986C15.7191 3.86986 11.7591 3.86986 9.31906 6.30986L5.07906 10.5499C4.08906 11.5399 3.53906 12.8599 3.53906 14.2599C3.53906 15.6599 4.08906 16.9799 5.07906 17.9699C5.36906 18.2599 5.36906 18.7399 5.07906 19.0299C4.78906 19.3199 4.30906 19.3199 4.01906 19.0299C2.74906 17.7499 2.03906 16.0599 2.03906 14.2599C2.03906 12.4599 2.73906 10.7599 4.01906 9.48986L8.25906 5.24986C11.2791 2.22986 16.1991 2.22986 19.2191 5.24986C20.6791 6.70986 21.4891 8.65986 21.4891 10.7299C21.4891 12.7999 20.6791 14.7499 19.2191 16.2099L15.3291 20.0999C14.4991 20.9299 13.4191 21.3399 12.3291 21.3399Z"
+                  fill="currentColor" />
+              </svg>
+
+            </div>
+
+            <div class="pl-3">
+              <div
+                class="font-semibold text-sm hover:underline underline-offset-2 decoration-neutral-500  flex flex-row items-center">
+                <a
+                  href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.invitation}}">
+                  Invitation</a>
+              </div>
+              <div class="font-normal text-neutral-500 text-xs">
+              </div>
+
+            </div>
+
+          </div>
+          <a
+            href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.invitation}}">
+            <button class="btn-small btn-secondary-outline">
+              Download
+            </button>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update modal -->
+<div *ngIf="updateModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="updateModal = false">
+  <div class="flex w-full h-full">
+    <!-- Modal content -->
+    <div class="modal max-w-xl">
+      <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
+        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path opacity="0.4"
+            d="M21 22H3C2.59 22 2.25 21.66 2.25 21.25C2.25 20.84 2.59 20.5 3 20.5H21C21.41 20.5 21.75 20.84 21.75 21.25C21.75 21.66 21.41 22 21 22Z"
+            fill="currentColor" />
+          <path opacity="0.4"
+            d="M19.0206 3.48016C17.0806 1.54016 15.1806 1.49016 13.1906 3.48016L11.9806 4.69016C11.8806 4.79016 11.8406 4.95016 11.8806 5.09016C12.6406 7.74016 14.7606 9.86016 17.4106 10.6202C17.4506 10.6302 17.4906 10.6402 17.5306 10.6402C17.6406 10.6402 17.7406 10.6002 17.8206 10.5202L19.0206 9.31016C20.0106 8.33016 20.4906 7.38016 20.4906 6.42016C20.5006 5.43016 20.0206 4.47016 19.0206 3.48016Z"
+            fill="currentColor" />
+          <path
+            d="M15.6103 11.5298C15.3203 11.3898 15.0403 11.2498 14.7703 11.0898C14.5503 10.9598 14.3403 10.8198 14.1303 10.6698C13.9603 10.5598 13.7603 10.3998 13.5703 10.2398C13.5503 10.2298 13.4803 10.1698 13.4003 10.0898C13.0703 9.8098 12.7003 9.4498 12.3703 9.0498C12.3403 9.0298 12.2903 8.9598 12.2203 8.8698C12.1203 8.7498 11.9503 8.5498 11.8003 8.3198C11.6803 8.1698 11.5403 7.9498 11.4103 7.7298C11.2503 7.4598 11.1103 7.1898 10.9703 6.9098C10.8303 6.6098 10.7203 6.3198 10.6203 6.0498L4.34032 12.3298C4.21032 12.4598 4.09032 12.7098 4.06032 12.8798L3.52032 16.7098C3.42032 17.3898 3.61032 18.0298 4.03032 18.4598C4.39032 18.8098 4.89032 18.9998 5.43032 18.9998C5.55032 18.9998 5.67032 18.9898 5.79032 18.9698L9.63032 18.4298C9.81032 18.3998 10.0603 18.2798 10.1803 18.1498L16.4603 11.8698C16.1803 11.7698 15.9103 11.6598 15.6103 11.5298Z"
+            fill="currentColor" />
+        </svg>
+
+      </div>
+      <h4 class="mt-2 text-lg font-semibold">Update program</h4>
+      <p class="text-neutral-700 text-sm ">Update the program's details</p>
+
+      <div class="flex flex-col gap-4 mt-5">
+        <input type="hidden" [(ngModel)]="programID" [ngModelOptions]="{standalone:true}">
+
+        <div class="grid grid-cols-2 space-x-3">
+          <div>
+            <label>Program title</label>
+            <input type="text" [(ngModel)]="programTitle" [ngModelOptions]="{standalone:true}">
+          </div>
+          <div>
+            <input type="hidden" [(ngModel)]="programLead" [ngModelOptions]="{standalone:true}">
+            <label for="lead">Lead</label>
+            <select id="lead" name="lead" name="lead" [(ngModel)]="programLead" [ngModelOptions]="{standalone:true}">
+              <option value="{{user.id}}" *ngFor="let user of userArray">{{user.first_name + ' ' + user.last_name}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 space-x-3">
+          <div>
+            <label>Start date</label>
+            <input type="date" [(ngModel)]="startDate" [ngModelOptions]="{standalone:true}">
+          </div>
+
+          <div>
+            <label>End date</label>
+            <input type="date" [(ngModel)]="endDate" [ngModelOptions]="{standalone:true}">
+          </div>
+        </div>
+
+
+
+        <div class="grid grid-cols-2 space-x-3">
+          <div>
+            <label>Location</label>
+            <input type="text" [(ngModel)]="location" [ngModelOptions]="{standalone:true}">
+          </div>
+          <div>
+            <label>Partner</label>
+            <input type="hidden" [(ngModel)]="partnerCompany" [ngModelOptions]="{standalone:true}">
+            <select id="partner" name="partner" name="partner" [(ngModel)]="partnerCompany"
+              [ngModelOptions]="{standalone:true}">
+              <!-- <option value="">Select Partner Company</option> -->
+              <option value="{{partner.id}}" *ngFor="let partner of partnerArray">{{partner.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label>Details</label>
+          <textarea [(ngModel)]="programDetails" [ngModelOptions]="{standalone:true}"></textarea>
+        </div>
+
+        <div>
+          <label>Participants</label>
+          <textarea [(ngModel)]="programParticipants" [ngModelOptions]="{standalone:true}"></textarea>
+        </div>
+
+        <div>
+          <label>Flow</label>
+          <textarea [(ngModel)]="flow" [ngModelOptions]="{standalone:true}"></textarea>
+        </div>
+
+        <div>
+          <label>Additional details</label>
+          <textarea [(ngModel)]="additionalDetails" [ngModelOptions]="{standalone:true}"></textarea>
+        </div>
+
+
+
+        <div class="grid grid-cols-2 mt-6 space-x-3">
+          <button (click)="updateModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="updateProgram()" [disabled]="updateLoading" class="btn-small btn-primary">
+            <ng-container *ngIf="!updateLoading">Update</ng-container>
+            <ng-container *ngIf="updateLoading">
+              <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4"
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor" />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentColor" />
+              </svg>
+              Updating...
+            </ng-container>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update toast -->
+<div *ngIf="updateToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3">Partner updated successfully.</div>
+</div>
+
+<!-- Delete modal -->
+<div *ngIf="deleteModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="deleteModal = false">
+  <div class="flex w-full h-full">
+    <!-- Modal content -->
+    <div class="modal max-w-sm">
+      <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
+        <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M21.0697 5.23C19.4597 5.07 17.8497 4.95 16.2297 4.86V4.85L16.0097 3.55C15.8597 2.63 15.6397 1.25 13.2997 1.25H10.6797C8.34967 1.25 8.12967 2.57 7.96967 3.54L7.75967 4.82C6.82967 4.88 5.89967 4.94 4.96967 5.03L2.92967 5.23C2.50967 5.27 2.20967 5.64 2.24967 6.05C2.28967 6.46 2.64967 6.76 3.06967 6.72L5.10967 6.52C10.3497 6 15.6297 6.2 20.9297 6.73C20.9597 6.73 20.9797 6.73 21.0097 6.73C21.3897 6.73 21.7197 6.44 21.7597 6.05C21.7897 5.64 21.4897 5.27 21.0697 5.23Z"
+            fill="currentColor" />
+          <path opacity="0.3991"
+            d="M19.2297 8.14C18.9897 7.89 18.6597 7.75 18.3197 7.75H5.67975C5.33975 7.75 4.99975 7.89 4.76975 8.14C4.53975 8.39 4.40975 8.73 4.42975 9.08L5.04975 19.34C5.15975 20.86 5.29975 22.76 8.78975 22.76H15.2097C18.6997 22.76 18.8398 20.87 18.9497 19.34L19.5697 9.09C19.5897 8.73 19.4597 8.39 19.2297 8.14Z"
+            fill="currentColor" />
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M9.58008 17C9.58008 16.5858 9.91586 16.25 10.3301 16.25H13.6601C14.0743 16.25 14.4101 16.5858 14.4101 17C14.4101 17.4142 14.0743 17.75 13.6601 17.75H10.3301C9.91586 17.75 9.58008 17.4142 9.58008 17Z"
+            fill="currentColor" />
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M8.75 13C8.75 12.5858 9.08579 12.25 9.5 12.25H14.5C14.9142 12.25 15.25 12.5858 15.25 13C15.25 13.4142 14.9142 13.75 14.5 13.75H9.5C9.08579 13.75 8.75 13.4142 8.75 13Z"
+            fill="currentColor" />
+        </svg>
+
+      </div>
+      <h4 class="mt-2 text-lg font-semibold text-center">Delete program</h4>
+      <p class="text-neutral-700 text-sm text-center mx-2">Are you sure you want to delete this program? This action
+        cannot be undone.
+      </p>
+      <div class="grid grid-cols-2 mt-6 space-x-3">
+        <button (click)="deleteModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="deleteProgram()" [disabled]="deleteLoading" class="btn-small btn-solid-negative">
+          <ng-container *ngIf="!deleteLoading">Delete</ng-container>
+          <ng-container *ngIf="deleteLoading">
+            <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path opacity="0.4"
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor" />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentColor" />
+            </svg>
+            Deleting...
+          </ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete toast -->
+<div *ngIf="deleteToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3">Program deleted successfully.</div>
+</div>
+
+<!-- Post modal -->
+<div *ngIf="postModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="postModal = false">
+  <div class="flex w-full h-full">
+    <!-- Modal content -->
+    <div class="modal max-w-sm">
+      <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col mx-auto">
+        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path opacity="0.4"
+            d="M7.11039 5.96003L16.1304 2.95003C20.1804 1.60003 22.3804 3.81003 21.0404 7.86003L18.0304 16.88C16.0104 22.95 12.6904 22.95 10.6704 16.88L9.78039 14.2L7.10039 13.31C1.04039 11.3 1.04039 7.99003 7.11039 5.96003Z"
+            fill="currentColor" />
+          <path d="M12.1191 11.6301L15.9291 7.81006L12.1191 11.6301Z" fill="currentColor" />
+          <path
+            d="M12.1205 12.38C11.9305 12.38 11.7405 12.31 11.5905 12.16C11.3005 11.87 11.3005 11.39 11.5905 11.1L15.3905 7.28C15.6805 6.99 16.1605 6.99 16.4505 7.28C16.7405 7.57 16.7405 8.05 16.4505 8.34L12.6505 12.16C12.5005 12.3 12.3105 12.38 12.1205 12.38Z"
+            fill="currentColor" />
+        </svg>
+
+      </div>
+      <h4 class="mt-2 text-lg font-semibold text-center">Post program</h4>
+      <p class="text-neutral-700 text-sm text-center mx-2">Are you sure you want to post this program?</p>
+      <div class="grid grid-cols-2 mt-6 space-x-3">
+        <button (click)="postModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="postProgram()" [disabled]="postLoading" class="btn-small btn-primary">
+          <ng-container *ngIf="!postLoading">Post</ng-container>
+          <ng-container *ngIf="postLoading">
+            <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path opacity="0.4"
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor" />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentColor" />
+            </svg>
+            Posting...
+          </ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Post toast -->
+<div *ngIf="postToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3">Program posted successfully.</div>
+</div>
+
+<!-- Add modal -->
+<div *ngIf="addModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="addModal = false">
+  <div class="flex w-full h-full">
+    <!-- Modal content -->
+    <div class="modal max-w-lg">
+      <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
+        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M13.26 3.59997L5.04997 12.29C4.73997 12.62 4.43997 13.27 4.37997 13.72L4.00997 16.96C3.87997 18.13 4.71997 18.93 5.87997 18.73L9.09997 18.18C9.54997 18.1 10.18 17.77 10.49 17.43L18.7 8.73997C20.12 7.23997 20.76 5.52997 18.55 3.43997C16.35 1.36997 14.68 2.09997 13.26 3.59997Z"
+            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path d="M11.89 5.05005C12.32 7.81005 14.56 9.92005 17.34 10.2" stroke="currentColor" stroke-width="1.5"
+            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M3 22H21" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h4 class="mt-2 text-lg font-semibold">Add program</h4>
+      <p class="text-neutral-700 text-sm">Add the program's details.
+      </p>
+
+      <form (ngSubmit)="addProgram()" [formGroup]="form">
+        <div class="flex flex-col gap-4 mt-5">
+
+          <div class="grid grid-cols-2 gap-3">
+
+            <div class="col-span-2">
+              <label>Partner name:</label>
+              <input type="text" placeholder="" formControlName="title" name="title"
+                [ngClass]="{'is-invalid' : submitProgram && f['title'].errors}">
+              <div *ngIf="submitProgram && f['title'].errors">
+                <div *ngIf="f['title'].errors['required']">Program title is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Start date:</label>
+              <input type="date" placeholder="sDate" formControlName="sDate" name="sDate"
+                [ngClass]="{'is-invalid' : submitProgram && f['sDate'].errors}">
+              <div *ngIf="submitProgram && f['sDate'].errors">
+                <div *ngIf="f['sDate'].errors['required']">Start date is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>End date:</label>
+              <input type="date" placeholder="eDate" formControlName="eDate" name="eDate"
+                [ngClass]="{'is-invalid' : submitProgram && f['eDate'].errors}">
+              <div *ngIf="submitProgram && f['eDate'].errors">
+                <div *ngIf="f['eDate'].errors['required']">Start date is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Location:</label>
+              <input type="text" placeholder="" formControlName="loc" name="loc"
+                [ngClass]="{'is-invalid' : submitProgram && f['loc'].errors}">
+              <div *ngIf="submitProgram && f['loc'].errors">
+                <div *ngIf="f['loc'].errors['required']">Location is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Program details:</label>
+              <input type="text" placeholder="" formControlName="details" name="details"
+                [ngClass]="{'is-invalid' : submitProgram && f['details'].errors}">
+              <div *ngIf="submitProgram && f['details'].errors">
+                <div *ngIf="f['details'].errors['required']">Program Details is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Program Participants:</label>
+              <input type="text" placeholder="" formControlName="particip" name="particip"
+                [ngClass]="{'is-invalid' : submitProgram && f['particip'].errors}">
+              <div *ngIf="submitProgram && f['particip'].errors">
+                <div *ngIf="f['particip'].errors['required']">Participants is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Program flow:</label>
+              <input type="text" placeholder="" formControlName="flow" name="flow"
+                [ngClass]="{'is-invalid' : submitProgram && f['flow'].errors}">
+              <div *ngIf="submitProgram && f['flow'].errors">
+                <div *ngIf="f['flow'].errors['required']">Program flow is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label>Additional Details:</label>
+              <input type="text" placeholder="" formControlName="addDetails" name="addDetails"
+                [ngClass]="{'is-invalid' : submitProgram && f['addDetails'].errors}">
+              <div *ngIf="submitProgram && f['addDetails'].errors">
+                <div *ngIf="f['addDetails'].errors['required']">Additional Details is required</div>
+              </div>
+            </div>
+
+            <div>
+              <label for="progLeadID">Select program lead</label>
+              <select id="progLeadID" name="progLeadID" formControlName="progLeadID"
+                [ngClass]="{'is-invalid' : submitProgram && f['progLeadID'].errors}">
+                <option value="" selected>Select Program Lead</option>
+                <option value="{{user.id}}" *ngFor="let user of userArray">{{user.first_name + ' ' + user.last_name}}
+                </option>
+              </select>
+              <div *ngIf="submitProgram && f['progLeadID'].errors">
+                <div *ngIf="f['progLeadID'].errors['required']">Program lead is required</div>
+              </div>
+            </div>
+
+            <div class="col-span-2">
+              <label for="partID">Select partner</label>
+              <select id="partID" name="partID" formControlName="partID" name="partID"
+                [ngClass]="{'is-invalid' : submitProgram && f['partID'].errors}">
+                <option value="">Select Partner Company</option>
+                <option value="{{partner.id}}" *ngFor="let partner of partnerArray">{{partner.name}}</option>
+              </select>
+              <div *ngIf="submitProgram && f['partID'].errors">
+                <div *ngIf="f['partID'].errors['required']">Program partner is required</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="grid grid-cols-2 mt-8 space-x-3">
+          <button (click)="addModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button type="submit" [disabled]="addLoading" class="btn-small btn-primary">
+            <ng-container *ngIf="!addLoading">Add</ng-container>
+            <ng-container *ngIf="addLoading">
+              <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4"
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor" />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentColor" />
+              </svg>
+              Adding...
+            </ng-container>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Add toast -->
+<div *ngIf="addToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3">Program added successfully.</div>
+</div>
+
+
+<!-- Mark as complete modal-->
+<div *ngIf="markAsCompleteModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="markAsCompleteModal = false">
+  <div class="flex h-full w-full">
+    <!-- Modal content -->
+    <div class="modal max-w-md">
+      <div class="flex w-fit flex-col rounded-full border-8 border-orange-50 bg-orange-100 p-2">
+        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <title>Mark as complete</title>
+        </svg>
+      </div>
+      <h4 class="mt-2 text-lg font-semibold">Mark as complete</h4>
+      <p class="text-sm text-neutral-700">Mark as complete program.</p>
+
+      <form (ngSubmit)="markAsCompleteProgram()" [formGroup]="form2">
+        <div class="mt-5 flex flex-col gap-y-4">
+
+          <div>
+            <label>Attendance file:</label>
+            <input
+              class="block w-full cursor-pointer rounded-lg border border-neutral-300 bg-neutral-50 text-sm focus:outline-none"
+              (change)="programAttendanceUpload($event)" formControlName="attendance_file" type="file" name="moa_file"
+              accept=".pdf, .docx, .doc, .xls, .xlsx, .ppt, .pptx" />
+            <div *ngIf="submitProgramFiles && u['attendance_file'].errors">
+              <div *ngIf="u['attendance_file'].errors['required']">Attendance file is required</div>
+            </div>
+          </div>
+
+          <div>
+            <label>Certificate file:</label>
+            <input
+              class="block w-full cursor-pointer rounded-lg border border-neutral-300 bg-neutral-50 text-sm focus:outline-none"
+              (change)="programCertificateUpload($event)" formControlName="certificate_file" type="file" name="moa_file"
+              accept=".pdf, .docx, .doc, .xls, .xlsx, .ppt, .pptx" />
+            <div *ngIf="submitProgramFiles && u['certificate_file'].errors">
+              <div *ngIf="u['certificate_file'].errors['required']">Certificate file is required</div>
+            </div>
+          </div>
+
+          <div>
+            <label>Invitation file:</label>
+            <input
+              class="block w-full cursor-pointer rounded-lg border border-neutral-300 bg-neutral-50 text-sm focus:outline-none"
+              (change)="programInvitationUpload($event)" formControlName="invitation_file" type="file" name="moa_file"
+              accept=".pdf, .docx, .doc, .xls, .xlsx, .ppt, .pptx" />
+            <div *ngIf="submitProgramFiles && u['invitation_file'].errors">
+              <div *ngIf="u['invitation_file'].errors['required']">Invitation file is required</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-2 space-x-3">
+          <button (click)="markAsCompleteModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button type="submit" [disabled]="markAsCompleteLoading" class="btn-small btn-primary">
+            <ng-container *ngIf="!markAsCompleteLoading">Mark as complete</ng-container>
+            <ng-container *ngIf="markAsCompleteLoading">
+              <svg aria-hidden="true" role="status" class="mr-1 inline h-4 w-4 animate-spin text-white"
+                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4"
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor" />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentColor" />
+              </svg>
+              Processing...
+            </ng-container>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Marl as complete toast -->
+<div *ngIf="markAsCompleteToast=== true" class="toast">
+  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3">Program Completed successfully.</div>
+</div>
+
+<!-- Add Members and Role Modal -->
+<div *ngIf="addMemberRoleModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="addMemberRoleModal = false">
+  <div class="flex w-full h-full">
+    <!-- Modal content -->
+    <div class="modal max-w-md">
+      <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
+        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12 2C9.38 2 7.25 4.13 7.25 6.75C7.25 9.32 9.26 11.4 11.88 11.49C11.96 11.48 12.04 11.48 12.1 11.49C12.12 11.49 12.13 11.49 12.15 11.49C12.16 11.49 12.16 11.49 12.17 11.49C14.73 11.4 16.74 9.32 16.75 6.75C16.75 4.13 14.62 2 12 2Z"
+            fill="currentColor" />
+          <path opacity="0.4"
+            d="M17.0809 14.1499C14.2909 12.2899 9.74094 12.2899 6.93094 14.1499C5.66094 14.9999 4.96094 16.1499 4.96094 17.3799C4.96094 18.6099 5.66094 19.7499 6.92094 20.5899C8.32094 21.5299 10.1609 21.9999 12.0009 21.9999C13.8409 21.9999 15.6809 21.5299 17.0809 20.5899C18.3409 19.7399 19.0409 18.5999 19.0409 17.3599C19.0309 16.1299 18.3409 14.9899 17.0809 14.1499Z"
+            fill="currentColor" />
+          <path
+            d="M14 16.6299H12.75V15.3799C12.75 14.9699 12.41 14.6299 12 14.6299C11.59 14.6299 11.25 14.9699 11.25 15.3799V16.6299H10C9.59 16.6299 9.25 16.9699 9.25 17.3799C9.25 17.7899 9.59 18.1299 10 18.1299H11.25V19.3799C11.25 19.7899 11.59 20.1299 12 20.1299C12.41 20.1299 12.75 19.7899 12.75 19.3799V18.1299H14C14.41 18.1299 14.75 17.7899 14.75 17.3799C14.75 16.9699 14.41 16.6299 14 16.6299Z"
+            fill="currentColor" />
+        </svg>
+
+      </div>
+      <h4 class="mt-2 text-lg font-semibold">Add members and role</h4>
+      <p class="text-neutral-700 text-sm ">Add members and role's details</p>
+
+      <div class="flex flex-col gap-4 mt-5">
+
+        <div>
+          <label for="addProgramMember">Select program member</label>
+          <select id="addProgramMember" name="addProgramMember" [(ngModel)]="addProgramMember"
+            [ngModelOptions]="{standalone:true}">
+            <option value="{{user.id}}" *ngFor="let user of userArray">{{user.first_name + ' ' + user.last_name}}
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label for="addProgramRole">Select member role</label>
+          <select id="addProgramRole" name="addProgramRole" [(ngModel)]="addProgramRole"
+            [ngModelOptions]="{standalone:true}">
+            <option value="Technical">Technical</option>
+            <option value="Speaker">Speaker</option>
+            <option value="Moderator">Moderator</option>
+            <option value="Invitation">Invitation</option>
+            <option value="Report">Report</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 mt-6 space-x-3">
+          <button (click)="addMemberRoleModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="addMemberRoleProgram()" [disabled]="addMemberRoleLoading" class="btn-small btn-primary">
+            <ng-container *ngIf="!addMemberRoleLoading">Add</ng-container>
+            <ng-container *ngIf="addMemberRoleLoading">
+              <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path opacity="0.4"
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor" />
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="currentColor" />
+              </svg>
+              Adding...
+            </ng-container>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Members and Role toast -->
+<div *ngIf="addMemberRoleToast === true" class="toast">
+  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path opacity="0.4"
+      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+      fill="currentColor" />
+    <path
+      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+      fill="currentColor" />
+  </svg>
+  <div class="pl-3">Member Added successfully.</div>
+</div>

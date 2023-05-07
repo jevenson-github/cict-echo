@@ -2,10 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\PartnerController;
-use App\Http\Controllers\StatisticsController;
 
+use App\Models\Program;
 
 
 
@@ -24,22 +22,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/counts', 'App\Http\Controllers\StatisticsController@getCounts');
-Route::get('/chart-data', 'App\Http\Controllers\StatisticsController@getChartData');
-Route::get('/statistic-data', 'App\Http\Controllers\StatisticsController@statisticData');
-
 // User routes for authentication
 Route::prefix('auth')->group(function () {
     Route::post('/sign-up', 'App\Http\Controllers\UserController@signUp');
     Route::post('/sign-in', 'App\Http\Controllers\UserController@signIn');
     Route::post('/send-reset-link', 'App\Http\Controllers\UserController@sendResetLink');
-
 });
 
 // User routes for user management
 Route::prefix('user')->group(function () {
     Route::post('/verify/{id}', 'App\Http\Controllers\UserController@verifyUser');
-    Route::post('/resign/{id}', 'App\Http\Controllers\UserController@resignUser');
+    Route::post('/deactivate/{id}', 'App\Http\Controllers\UserController@deactivateUser');
     Route::post('/reject/{id}', 'App\Http\Controllers\UserController@rejectUser');
     Route::post('/pending/{id}', 'App\Http\Controllers\UserController@pendingUser');
     Route::delete('/delete/{id}', 'App\Http\Controllers\UserController@deleteUser');
@@ -53,7 +46,7 @@ Route::prefix('user')->group(function () {
     Route::get('/index-user', 'App\Http\Controllers\UserController@indexUser');
     Route::get('/verified-user', 'App\Http\Controllers\UserController@getAllVerifiedUser');
     Route::get('/pending-user', 'App\Http\Controllers\UserController@getAllPendingUser');
-    Route::get('/resigned-user', 'App\Http\Controllers\UserController@getAllResignedUser');
+    Route::get('/deactivated-user', 'App\Http\Controllers\UserController@getAllResignedUser');
     Route::post('/reset-password/{email}', 'App\Http\Controllers\UserController@resetPassword');
     Route::get('/rejected-user', 'App\Http\Controllers\UserController@getAllRejectedUser');
     Route::get('/get-admin', 'App\Http\Controllers\UserController@getAllAdmins');
@@ -75,6 +68,11 @@ Route::prefix('partner')->group(function () {
 
 });
 
+Route::prefix('dashboard')->group(function () {
+    Route::get('/stats-count', 'App\Http\Controllers\DashboardController@statsCount');
+    Route::get('/program-chart', 'App\Http\Controllers\DashboardController@programChart');
+});
+
 // Program routes for program management
 Route::prefix('program')->group(function () {
     Route::post('/create', 'App\Http\Controllers\ProgramController@createProgram');
@@ -85,6 +83,9 @@ Route::prefix('program')->group(function () {
     Route::get('/get-program/{id}', 'App\Http\Controllers\ProgramController@getProgram');
     Route::get('/display-program/{id}', 'App\Http\Controllers\ProgramController@displayProgram');
     Route::get('/display-program-title/{id}', 'App\Http\Controllers\ProgramController@displayTitleProgram');
-    Route::get('/index-program', 'App\Http\Controllers\ProgramController@indexProgram');    
+    Route::get('/index', 'App\Http\Controllers\ProgramController@indexProgram');    
     Route::post('/add-member-role', 'App\Http\Controllers\ProgramController@addMemberRoleProgram');
 });
+
+
+

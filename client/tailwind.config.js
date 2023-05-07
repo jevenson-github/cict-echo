@@ -16,6 +16,5 @@ module.exports = {
     require("@tailwindcss/aspect-ratio"),
     require("tailwindcss"),
     require("autoprefixer"),
-    require('flowbite/plugin'),
   ],
 };

@@ -5,23 +5,23 @@
 
 @layer base {
   body {
-    @apply bg-white
+    @apply bg-neutral-50 overflow-y-scroll
   }
 
   label {
     @apply block mb-2 text-sm font-medium text-neutral-900
   }
 
-  input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], select, textarea {
-    @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5;
+  input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="date"], select, textarea, editor {
+    @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5;
   }
 
   input[type="search"] {
-    @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full pl-10 p-2.5;
+    @apply bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full pl-10 p-2.5;
   }
 
   input[type="submit"] {
-    @apply text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:ring-orange-400 font-medium rounded-lg text-sm px-5 py-2.5
+    @apply text-white bg-orange-600 hover:bg-orange-600 focus:ring-4 focus:ring-orange-400 font-medium rounded-lg text-sm px-5 py-2.5
   }
 
   select {
@@ -30,6 +30,16 @@
 
   caption {
     @apply text-xs text-neutral-500 tracking-widest uppercase text-left
+  }
+
+  [contenteditable="true"]:empty:before {
+    content: attr(placeholder);
+    pointer-events: none;
+    color: gray;
+  }
+  
+  [contenteditable] {
+    outline: 0px solid transparent;
   }
 }
 
@@ -42,8 +52,16 @@
     @apply text-sm px-3 py-2 font-medium rounded-lg
   }
 
+  .btn-primary-header {
+    @apply text-orange-700 bg-orange-50 hover:bg-orange-100 
+  }
+  
+  .btn-icon-header {
+    @apply rounded border text-white
+  }
+
   .btn-primary {
-    @apply text-white bg-orange-500 hover:bg-orange-600 
+    @apply text-white bg-orange-600 hover:bg-orange-600 
   }
 
   .btn-secondary {
@@ -79,11 +97,11 @@
   }
 
   .nav-link {
-    @apply text-neutral-700 rounded-md px-3 py-2 font-medium hover:bg-neutral-100
+    @apply rounded-md px-3 py-2 font-medium hover:bg-neutral-100 hover:bg-opacity-25 text-neutral-50
   }
 
   .nav-link-active {
-    @apply bg-orange-100 text-orange-500 hover:bg-orange-100
+    @apply bg-orange-100 text-orange-600 hover:bg-orange-100 bg-opacity-75
   }
 
   .tab-link {
@@ -91,7 +109,7 @@
   }
 
   .tab-link-active {
-    @apply bg-orange-100 text-orange-500 hover:bg-orange-100
+    @apply bg-orange-100 text-orange-600 hover:bg-orange-100
   }
 
   .tab-link-badge {
@@ -107,7 +125,7 @@
   }
 
   .link-primary {
-    @apply text-orange-500 hover:text-orange-600 font-medium hover:underline underline-offset-2 hover:cursor-pointer
+    @apply text-orange-600 hover:text-orange-600 font-medium hover:underline underline-offset-2 hover:cursor-pointer
   }
 
   .link-secondary {
@@ -177,3 +195,83 @@ line-height: 1.25rem !important;
   right: 0 !important;
   transform: translateX(100%) !important;
 }
+
+header.gradient {
+  background: linear-gradient(to right, #f97316, #ea580c);
+  background-size: 200% 200%;
+  animation: gradientAnimation 5s ease-in-out infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Hide the scrollbar track */
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+/* Customize the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  background-color: #bfbfbf; /* Set the color of the scrollbar thumb */
+  border-radius: 10px; /* Set the border radius of the scrollbar thumb */
+}
+
+/* Make the scrollbar thumb thinner */
+::-webkit-scrollbar-thumb {
+  width: 5px;
+}
+
+/* Hide the scrollbar buttons (up and down arrows) */
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Hide the scrollbar when not in use */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background-color: transparent;
+}
+
+
+/* .aurora-bg {
+  overflow-x: hidden;
+  position: relative;
+  height: 100vh;
+}
+
+.aurora-bg::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -25%;
+  width: 150%;
+
+  background: url('') repeat,
+    linear-gradient(83.21deg, #3245ff 0%, #bc52ee 100%);
+  background-blend-mode: overlay;
+
+  --webkit-mask-image: radial-gradient(
+rgba (0, 0, 0, 0.5),
+transparent 70%
+  );
+
+  mask-image: radial-gradient(
+rgba (0, 0, 0, 0.5),
+transparent 70%
+  );
+
+} */

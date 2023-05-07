@@ -1,0 +1,54 @@
+<header class="w-full gradient">
+    <div class="h-16"></div>
+    <div class="container mx-auto p-8">
+        <div class="flex flex-row w-full justify-between">
+            <div>
+                <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">Reports
+                </h2>
+                <p class="text-neutral-100 mt-1">View and manage the accounts of all faculty members and administrators,
+                    as well
+                    as
+                    filter and search for specific accounts.</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="h-16"></div>
+</header>
+
+<!-- Content area -->
+<main class="grid grid-cols-4 gap-4 container mx-auto px-8 -m-12">
+    <div class="border rounded-lg p-8">
+
+        <h3 class="font-medium text-xl">Extension program terminal report</h3>
+        <select class="mt-4" name="" id=""
+            onchange="window.open(this.value, 'popUpWindow','height=720,width=1280,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')">
+            <option value="">Select Here</option>
+            <option value="http://localhost:4200/report-program?programId={{program.id}}"
+                *ngFor="let program of programArray">
+                {{program.title}}
+            </option>
+        </select>
+
+    </div>
+
+    <div class="border rounded-lg p-8">
+
+        <h3 class="font-medium text-xl">Partner's extension <br>programs</h3>
+        <select class="mt-4" name="" id=""
+            onchange="window.open(this.value, 'popUpWindow','height=720,width=1280,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')">
+            <option value="http://localhost:4200/report-partner?partnerId={{partner.id}}"
+                *ngFor="let partner of partnerArray">{{partner.name}}</option>
+        </select>
+
+    </div>
+
+    <div class="border rounded-lg p-8">
+
+        <h3 class="font-medium text-xl">Partner's extension <br> programs</h3>
+        <a href="http://localhost:4200/report-partners" target="_blank" class="">
+            <button class="btn-base btn-secondary-outline mt-4 w-full">Print all extension partners</button></a>
+
+    </div>
+
+</main>

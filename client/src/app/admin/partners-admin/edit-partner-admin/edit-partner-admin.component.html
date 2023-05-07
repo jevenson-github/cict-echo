@@ -1,0 +1,74 @@
+<header class="w-full gradient h-64 max-h-64">
+    <div class="h-16"></div>
+    <div class="container mx-auto p-8" *ngFor="let partner of partnerArray">
+        <div class="flex flex-row w-full justify-between items-end">
+            <div>
+                <p class="text-neutral-100 mt-1 opacity-75 tracking-widest">EDIT PROGRAM DETAILS</p>
+                <div class="flex items-center">
+                    <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">{{partner.name}}
+                    </h2>
+                </div>
+
+            </div>
+
+            <div class="flex gap-2">
+
+            </div>
+        </div>
+
+    </div>
+    <div class="h-16"></div>
+</header>
+
+<!-- Content area -->
+<main class="gap-4 container mx-auto px-8 -m-12" *ngFor="let partner of partnerArray">
+    <section class="grid rounded-lg shadow grid-cols-4 p-8 bg-white gap-x-16 gap-y-8 h-fit">
+        <div>
+            <h4 class="font-semibold">Basic information</h4>
+            <p class="text-sm text-neutral-700">Use a permanent address where you can receive mail. </p>
+        </div>
+        <div class="col-span-3 grid grid-cols-2 gap-4">
+            <div>
+                <label>Program title</label>
+                <input type="text" id="title" [(ngModel)]="partner.title" [ngModelOptions]="{standalone:true}">
+            </div>
+            <div>
+                <label>Partner</label>
+                <input type="hidden" [(ngModel)]="partner.name" [ngModelOptions]="{standalone:true}">
+                <select id="partner" name="partner" name="partner" [(ngModel)]="partner.name"
+                    [ngModelOptions]="{standalone:true}">
+                    <option value="{{partner.id}}" *ngFor="let partner of partnerArray">{{partner.name}}</option>
+                </select>
+            </div>
+            <div>
+                <label>Start date</label>
+                <input type="date" [(ngModel)]="partner.start_date" pattern="\d{4}-\d{2}-\d{2}"
+                    placeholder="MMMM dd yyyy" [ngModelOptions]="{standalone:true}">
+            </div>
+            <div>
+                <label>End date</label>
+                <input type="date" [(ngModel)]="partner.end_date" pattern="\d{4}-\d{2}-\d{2}" placeholder="MMMM dd yyyy"
+                    [ngModelOptions]="{standalone:true}">
+            </div>
+            <div class="col-span-2">
+                <label>Location</label>
+                <input type="text" [(ngModel)]="partner.location" [ngModelOptions]="{standalone:true}">
+            </div>
+        </div>
+
+        <hr class="col-span-4">
+
+        <div class="h-4 block col-span-4"></div>
+
+        <div class="col-span-4 flex flex-row-reverse gap-4">
+            <button class="btn-base btn-primary w-fit">Save changes</button>
+            <button class="btn-base btn-secondary-outline w-fit" routerLink="./..">Discard</button>
+        </div>
+
+    </section>
+
+    <div class="h-16"></div>
+
+
+
+</main>

@@ -1,0 +1,380 @@
+<header class="w-full gradient">
+    <div class="h-16"></div>
+    <div class="container mx-auto px-6 py-8">
+        <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">{{ greeting }}, {{firstName}}!
+        </h2>
+        <p class="text-neutral-100 mt-1">View and manage the accounts of all faculty members and administrators, as well
+            as
+            filter and search for specific accounts.</p>
+    </div>
+    <div class="h-16"></div>
+</header>
+
+<!-- Content area -->
+<main class="grid grid-cols-4 gap-4 container mx-auto px-8 -m-12">
+
+    <section class="col-span-3 flex flex-col">
+
+        <div class="bg-white divide-x grid grid-cols-3 rounded shadow">
+            <div class="px-8 py-6">
+                <h2 class="text-sm font-medium mb-2 text-neutral-500">Active programs</h2>
+                <p class="text-4xl font-semibold text-neutral-950">{{stats.total_programs_count}}</p>
+            </div>
+
+            <div class="px-8 py-6">
+                <h2 class="text-sm font-medium mb-2 text-neutral-500">Active partners</h2>
+                <p class="text-4xl font-semibold text-neutral-950">{{stats.active_partners_count}}</p>
+            </div>
+
+            <div class="px-8 py-6">
+                <h2 class="text-sm font-medium mb-2 text-neutral-500">Active faculty</h2>
+                <p class="text-4xl font-semibold text-neutral-950">{{stats.verified_users_count}}</p>
+            </div>
+        </div>
+
+
+
+    </section>
+
+
+    <!-- Table -->
+    <div class="mt-10">
+        <h2 class="text-lg font-bold mb-4">Recent Orders</h2>
+        <table class="table-auto w-full">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="px-4 py-2">#</th>
+                    <th class="px-4 py-2">Customer Name</th>
+                    <th class="px-4 py-2">Order Date</th>
+                    <th class="px-4 py-2">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">1</td>
+                    <td class="border px-4 py-2">John Doe</td>
+                    <td class="border px-4 py-2">May 1, 2023</td>
+                    <td class="border px-4 py-2">$500</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">2</td>
+                    <td class="border px-4 py-2">Jane Doe</td>
+                    <td class="border px-4 py-2">May 2, 2023</td>
+                    <td class="border px-4 py-2">$1,000</td>
+                </tr>
+                <tr>
+                    <td class="border px-4 py-2">3</td>
+                    <td class="border px-4 py-2">Bob Smith</td>
+                    <td class="border px-4 py-2">May 3, 2023</td>
+                    <td class="border px-4 py-2">$750</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>

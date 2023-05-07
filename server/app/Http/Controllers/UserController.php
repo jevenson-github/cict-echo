@@ -42,7 +42,7 @@ class UserController extends Controller
                 'designation' => 'required|string',
                 'profile_image' => 'image',
                 'user_level' => 'required|in:admin,faculty',
-                'status' => 'required|in:verified,pending,rejected,resigned',
+                'status' => 'required|in:verified,pending,rejected,deactivated',
             ]);
         } catch (ValidationException $e) {
             return response()->json([
@@ -99,7 +99,7 @@ class UserController extends Controller
         return response()->json(['message' => 'User has been verified.']);
     }
 
-    public function resignUser(Request $request, $id) ///
+    public function deactivateUser(Request $request, $id) ///
     {
         // Find the user by ID
         $user = User::find($id);
@@ -110,7 +110,7 @@ class UserController extends Controller
         }
 
         // Update the user's status to "verified"
-        $user->status = 'resigned';
+        $user->status = 'deactivated';
         $user->user_level = 'faculty';
         $user->save();
 
@@ -118,7 +118,7 @@ class UserController extends Controller
         Mail::to($user->email)->send(new UserVerified($user));
 
         // Return a response indicating success
-        return response()->json(['message' => 'User has been resigned.']);
+        return response()->json(['message' => 'User has been deactivated.']);
     }
 
     public function rejectUser(Request $request, $id) ///
@@ -219,8 +219,6 @@ class UserController extends Controller
             //     100
             // );
             $file->move('users', $fileName);
-
-            $user->profile_image = $fileName;
         }
 
         // Save the updated user information
@@ -438,20 +436,21 @@ class UserController extends Controller
 
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                $response['status'] = 'Invalid';
-                $response['message'] = 'Invalid credentials';
+                $response['status'] = 'invalid';
                 return response()->json($response);
-                // return response()->json(['error' => 'Invalid credentials'], 401);
-
             }
         } catch (JWTException $e) {
-            $response['status'] = 'Invalid';
-            $response['message'] = 'Invalid credentials';
+            $response['status'] = 'invalid';
             return response()->json($response);
-            // return response()->json(['error' => 'Could not create token'], 500);
         }
 
         $user = auth()->user();
+
+        if ($user->status === 'deactivated' || $user->status === 'pending') {
+            $response['status'] = $user -> status;
+            return response()->json($response);
+        }
+
         $token = JWTAuth::claims([
             'id' => $user->id,
             'emailAddress' => $user->email,
@@ -459,15 +458,10 @@ class UserController extends Controller
             'lastName' => $user->last_name,
             'department' => $user->department,
             'designation' => $user->designation,
-            'profileImage' => $user->profile_image,
-            'userLevel' => $user->user_level,
-            'status' => $user->status,
-            'id' => $user->id,
         ])->attempt($credentials);
 
         $response['data'] = $token;
-        $response['status'] = 'Valid';
-        $response['message'] = 'Login Successful';
+        $response['status'] = 'verified';
         $response['role'] = $user->user_level;
 
         return response()->json($response);
@@ -506,7 +500,7 @@ class UserController extends Controller
 
     public function getAllResignedUser()
     {
-        $users = DB::table('users')->where('status', '=', "resigned")->get();
+        $users = DB::table('users')->where('status', '=', "deactivated")->get();
         return response()->json($users, 200);
     }
 
@@ -528,7 +522,7 @@ class UserController extends Controller
         return response()->json($users, 200);
     }
 
-    
+
 
     public function sendResetLink(Request $request)
     {

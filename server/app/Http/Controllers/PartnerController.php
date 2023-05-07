@@ -24,7 +24,7 @@ class PartnerController extends Controller
     {
         $partner = new Partner;
 
-        $partner->company_name = $request->input('company_name');
+        $partner->name = $request->input('name');
         $partner->description = $request->input('description');
         $partner->address = $request->input('address');
         $partner->contact_person = $request->input('contact_person');
@@ -32,7 +32,7 @@ class PartnerController extends Controller
         $partner->email = $request->input('email');
 
         // Remove articles in the company name
-        $companyName = preg_replace('/\b(a|an|and|the|of|in)\b/i', '', $partner->company_name);
+        $companyName = preg_replace('/\b(a|an|and|the|of|in)\b/i', '', $partner->name);
         $companyInitials = '';
         foreach (explode(' ', $companyName) as $word) {
             $companyInitials .= strtoupper(substr($word, 0, 1));
@@ -87,7 +87,7 @@ class PartnerController extends Controller
         }
 
         // Update partner info
-        $partner->company_name = $request->input('company_name') ?? $partner->company_name;
+        $partner->name = $request->input('name') ?? $partner->name;
         $partner->description = $request->input('description') ?? $partner->description;
         $partner->address = $request->input('address') ?? $partner->address;
         $partner->contact_person = $request->input('contact_person') ?? $partner->contact_person;
@@ -212,15 +212,29 @@ class PartnerController extends Controller
 
     public function getPartner($id)
     {
-        $users = DB::table('partners')
-                ->where('id', '=', $id)
-                ->get();
+        $partner = DB::table('partners')
+            ->where('id', '=', $id)
+            ->first();
 
+        if (!$partner) {
+            return response()->json(['message' => 'Partner not found'], 404);
+        }
 
-        return response()->json($users, 200);
+        $programs = DB::table('programs')
+            ->join('partners', 'partners.id', '=', 'programs.partner')
+            ->select('programs.id', 'programs.title', 'programs.status', 'programs.initiative')
+            ->where('partners.id', '=', $id)
+            ->get();
+
+        $response['partner']=[$partner];
+        $response['programs']=$programs;
+
+        return response()->json($response, 200);
     }
 
-    public function activePartner() {
+
+    public function activePartner()
+    {
         $partner = DB::table('partners')->where('status', '=', 'active')->get();
         return response()->json($partner, 200);
     }
@@ -231,27 +245,27 @@ class PartnerController extends Controller
         $directory = public_path('partners/' . $id . '/moa');
         $files = [];
         $latestMoaFile = null;
-    
+
         if (file_exists($directory) && is_dir($directory)) {
             $fileNames = scandir($directory);
-    
+
             foreach ($fileNames as $fileName) {
                 if ($fileName !== '.' && $fileName !== '..') {
                     $fileLocation = $baseUrl . '/partners/' . $id . '/moa/' . $fileName;
-    
+
                     $startDateString = substr($fileName, 24, 6);
                     $endDateString = substr($fileName, 31, 6);
-    
+
                     $startDate = Carbon::createFromFormat('ymd', $startDateString)->format('F d, Y');
                     $endDate = Carbon::createFromFormat('ymd', $endDateString)->format('F d, Y');
-    
+
                     $fileData = [
                         'location' => $fileLocation,
                         'name' => $fileName,
                         'start_date' => $startDate,
                         'end_date' => $endDate,
                     ];
-    
+
                     // Check if the file name matches the moa_file value in the partners table
                     $partner = Partner::find($id);
                     if ($partner && $partner->moa_file === $fileName) {
@@ -260,17 +274,17 @@ class PartnerController extends Controller
                     } else {
                         $fileData['latest'] = false;
                     }
-    
+
                     $files[] = $fileData;
                 }
             }
         }
-    
+
         // Sort the files in descending order based on their start_date
         usort($files, function ($a, $b) {
             return strtotime($b['start_date']) - strtotime($a['start_date']);
         });
-    
+
         // Place the latest MOA file on the first position
         if ($latestMoaFile) {
             $files = array_filter($files, function ($file) use ($latestMoaFile) {
@@ -278,21 +292,18 @@ class PartnerController extends Controller
             });
             array_unshift($files, $latestMoaFile);
         }
-    
+
         return response()->json($files);
     }
-    
+
     public function getExpiringPartners()
     {
         $endDate = Carbon::now()->addDays(30)->format('Y-m-d');
-        
+
         $partners = Partner::whereDate('end_date', '<=', $endDate)
-            ->select('id', 'company_name', 'end_date')
+            ->select('id', 'name', 'end_date')
             ->get();
 
         return response()->json($partners);
     }
-    
-    
 }
-
