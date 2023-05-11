@@ -21,6 +21,12 @@ export class FacultyComponent implements OnInit{
   programArray: any[]=[];
   elementRef: any;
 
+  profile_image: any;
+  email: any;
+  password: any;
+  comfirmPassword: any;
+  id: any;
+
   computeDuration(startDate: string, endDate: string): string {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -109,7 +115,6 @@ export class FacultyComponent implements OnInit{
 
   isMenuOpen = false;
   isNotificationOpen = false;
-  profile_image: any;
 
 
   @HostListener('document:click', ['$event'])

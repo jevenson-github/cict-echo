@@ -52,6 +52,10 @@
     @apply text-sm px-3 py-2 font-medium rounded-lg
   }
 
+  .btn-report-card {
+    @apply rounded-lg text-left border p-4 h-48 flex flex-col
+  }
+
   .btn-primary-header {
     @apply text-orange-700 bg-orange-50 hover:bg-orange-100 
   }
@@ -160,14 +164,13 @@
     @apply mb-0.5 font-medium text-sm
   }
 
+  .btn-header {
+    @apply bg-white backdrop-opacity-50 text-orange-600 hover:bg-orange-100 hover:text-orange-600 hover:opacity-100 font-medium
+  }
+
 }
 
-.avatar-content {
-  font-family: Inter var !important;
-  font-weight: 500 !important;
-  font-size: 1rem !important;
-  user-select: none !important;
-} 
+
 
 .ngx-pagination .current {
   font-size: 1rem !important;

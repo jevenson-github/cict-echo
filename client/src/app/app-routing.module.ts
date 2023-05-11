@@ -28,6 +28,7 @@ import { ViewProgramAdminComponent } from './admin/programs-admin/view-program-a
 import { EditProgramAdminComponent } from './admin/programs-admin/edit-program-admin/edit-program-admin.component';
 import { ViewPartnerAdminComponent } from './admin/partners-admin/view-partner-admin/view-partner-admin.component';
 import { EditPartnerAdminComponent } from './admin/partners-admin/edit-partner-admin/edit-partner-admin.component';
+import { AddProgramAdminComponent } from './admin/programs-admin/add-program-admin/add-program-admin.component';
 
 
 
@@ -48,6 +49,7 @@ const routes: Routes = [
       { path: 'programs', component: ProgramsAdminComponent},
       { path: 'programs/view', component: ViewProgramAdminComponent},
       { path: 'programs/edit', component: EditProgramAdminComponent},
+      { path: 'programs/add', component: AddProgramAdminComponent},
       { path: 'reports', component: ReportsAdminComponent},
     ],
   },

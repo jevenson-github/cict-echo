@@ -13,7 +13,9 @@ import { AvatarModule } from 'ngx-avatar';
 import { NgChartsModule } from 'ng2-charts';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
+import { CommonModule } from '@angular/common';
 import { EditorModule, TINYMCE_SCRIPT_SRC  } from '@tinymce/tinymce-angular';
+
 
 
 
@@ -46,12 +48,13 @@ import { ViewProgramAdminComponent } from './admin/programs-admin/view-program-a
 import { EditProgramAdminComponent } from './admin/programs-admin/edit-program-admin/edit-program-admin.component';
 import { ViewPartnerAdminComponent } from './admin/partners-admin/view-partner-admin/view-partner-admin.component';
 import { EditPartnerAdminComponent } from './admin/partners-admin/edit-partner-admin/edit-partner-admin.component';
+import { AddProgramAdminComponent } from './admin/programs-admin/add-program-admin/add-program-admin.component';
 const avatarColors = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6"];
 
 
 @NgModule({
-  declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, ResetPasswordComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, FacultyAdminComponent, PartnersAdminComponent, ProgramsAdminComponent, ReportsAdminComponent, ProgramReportComponent, PartnerReportComponent, PartnersReportComponent, HomeAdminComponent, HeaderAdminComponent, ViewProgramAdminComponent, EditProgramAdminComponent, ViewPartnerAdminComponent, EditPartnerAdminComponent],
-  imports: [BrowserModule, NgChartsModule, EditorModule, FormsModule, AvatarModule.forRoot({ colors: avatarColors }), AppRoutingModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([]),     NgxEchartsModule.forRoot({
+  declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, ResetPasswordComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, FacultyAdminComponent, PartnersAdminComponent, ProgramsAdminComponent, ReportsAdminComponent, ProgramReportComponent, PartnerReportComponent, PartnersReportComponent, HomeAdminComponent, HeaderAdminComponent, ViewProgramAdminComponent, EditProgramAdminComponent, ViewPartnerAdminComponent, EditPartnerAdminComponent, AddProgramAdminComponent],
+  imports: [BrowserModule, NgChartsModule, CommonModule, NgChartsModule, EditorModule, FormsModule, AvatarModule.forRoot({ colors: avatarColors }), AppRoutingModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([]),     NgxEchartsModule.forRoot({
     echarts: () => import('echarts')
   })],
   providers: [

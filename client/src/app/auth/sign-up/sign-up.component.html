@@ -3,31 +3,30 @@
     <!-- STEP ONE -->
     <section *ngIf="step === 1">
         <div class="mb-8 flex flex-col gap-y-1">
-            <caption class="">Step 1 of 5</caption>
+            <caption class="">Step 1 of 7</caption>
             <h3 class="text-2xl font-semibold">Let's get started</h3>
             <p class="text-sm text-neutral-700">To sign up, please enter your employee ID and email address. We’ll
                 verify them in a
                 snap and take you to the next step.</p>
         </div>
-
+  
         <!-- FORM -->
         <div class="flex flex-col gap-y-4">
             <div>
                 <label for="">Employee ID</label>
-                <input id="" type="number" [(ngModel)]="id" required />
-                <p class="helper-text-error hidden">ID must not blank</p>
+                <input id="" type="text" [(ngModel)]="id" required />
+                <p class="helper-text-error" [hidden]="!showIdError">{{ idErrorMessage }}</p>
             </div>
             <div>
                 <label for="">Email address</label>
-                <input id="" type="email" [(ngModel)]="email" required
-                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
-                <p class="helper-text-error  hidden">Email must not blank</p>
+                <input id="" type="email" [(ngModel)]="email" required />
+                <p class="helper-text-error" [hidden]="!showEmailError">{{ emailErrorMessage }}</p>
             </div>
-
+  
             <button (click)="gotoStepTwo()" class="mt-2 btn-base btn-primary" [disabled]="stepOneloading">
                 <ng-container *ngIf="!stepOneloading">Next step</ng-container>
                 <ng-container *ngIf="stepOneloading">
-                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-neutral-50 animate-spin"
                         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path opacity="0.4"
                             d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
@@ -41,69 +40,74 @@
             </button>
             <a class="link-secondary text-sm mx-auto" routerLink="./..">Back to sign in</a>
         </div>
-
+  
     </section>
-
+  
     <!-- STEP TWO -->
     <section *ngIf="step === 2">
         <div class="mb-8 flex flex-col gap-y-1">
-            <caption>Step 2 of 5</caption>
+            <caption>Step 2 of 7</caption>
             <h3 class="text-2xl font-semibold">Let’s get to know you better</h3>
             <p class="text-sm text-neutral-700">Enter your first and last name so we can personalize your experience and
                 connect you
                 with others.</p>
         </div>
-
+  
         <!-- FORM -->
         <div class="flex flex-col gap-y-4">
             <div>
                 <label for="firstName">First name</label>
-                <input id="firstName" type="text" [(ngModel)]="firstName" />
-                <p class="helper-text-error  hidden">First name cannot be empty.</p>
+                <input id="firstName" type="text" [(ngModel)]="firstName" required pattern="^(?!\s*$).+"
+                    (blur)="firstNameTouched = true" />
+                <p class="helper-text-error" [hidden]="!firstNameTouched || firstName">First name cannot be empty.</p>
             </div>
             <div>
                 <label for="lastName">Last name</label>
-                <input id="lastName" type="text" [(ngModel)]="lastName" />
-                <p class="helper-text-error hidden">Last name cannot be empty.</p>
+                <input id="lastName" type="text" [(ngModel)]="lastName" required pattern="^(?!\s*$).+"
+                    (blur)="lastNameTouched = true" />
+                <p class="helper-text-error" [hidden]="!lastNameTouched || lastName">Last name cannot be empty.</p>
             </div>
-
+  
             <button (click)="gotoStepThree()" class="mt-2 btn-base btn-primary">Next step</button>
             <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
         </div>
+  
+  
+  
     </section>
-
+  
     <!-- STEP THREE -->
     <section *ngIf="step === 3">
         <div class="mb-8 flex flex-col gap-y-1">
-            <caption>Step 3 of 5</caption>
+            <caption>Step 3 of 7</caption>
             <h3 class="text-2xl font-semibold">Nice to meet you, {{ firstName }}!</h3>
             <p class="text-sm text-neutral-700">Tell us your designation and department so we can customize your
                 dashboard and show
                 you relevant content and opportunities.</p>
         </div>
-
+  
         <!-- FORM -->
         <div class="flex flex-col gap-y-4">
             <div>
                 <label for="">Department</label>
-                <select id="" name="department" [(ngModel)]="department" required>
-                    <option value="">Please select your department</option>
+                <select id="" name="department" [(ngModel)]="department" #departmentCtrl="ngModel" required>
                     <option value="Allied">Allied</option>
                     <option value="BLIS">BLIS</option>
+                    <option value="BSIS">BSIS</option>
                     <option value="BSIT">BSIT</option>
                 </select>
-                <p class="helper-text-error hidden">Please select your department.</p>
+                <p class="helper-text-error" *ngIf="departmentCtrl.errors?.['required'] && departmentCtrl.touched">
+                    Please select your department.
+                </p>
             </div>
             <div>
                 <label for="">Designation</label>
-                <select id="" name="designation" [(ngModel)]="designation" required>
-                    <option value="">Please select your designation</option>
+                <select id="" name="designation" [(ngModel)]="designation" #designationCtrl="ngModel" required>
                     <option value="Alumni Coordinator">Alumni Coordinator</option>
                     <option value="BSIT Area Chair - Business Analytics">Area Chair: Business Analytics</option>
                     <option value="BSIT Area Chair - Service Management">Area Chair: Service Management</option>
                     <option value="BSIT Area Chair - Web and Mobile Application Development">Area Chair: Web and
-                        Mobile
-                        Application Development</option>
+                        Mobile Application Development</option>
                     <option value="College Extension and Services Unit Head">College Extension and Services Unit Head
                     </option>
                     <option value="College Faculty Union President">College Faculty Union President</option>
@@ -121,26 +125,29 @@
                     <option value="Secretary">Secretary</option>
                     <option value="Student Internship Coordinator">Student Internship Coordinator</option>
                 </select>
-                <p class="helper-text-error hidden">Please select your designation.</p>
+                <p class="helper-text-error" *ngIf="designationCtrl.errors?.['required'] && designationCtrl.touched">
+                    Please select your designation.
+                </p>
             </div>
-
-            <button (click)="gotoStepFour()" class="mt-2 btn-base btn-primary">Next
-                step</button>
+            <button (click)="gotoStepFour()" class="mt-2 btn-base btn-primary">Next step</button>
             <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
         </div>
+  
+  
+  
     </section>
-
+  
     <!-- STEP FOUR -->
     <section *ngIf="step === 4">
         <div class="mb-8 flex flex-col gap-y-1">
-            <caption>Step 4 of 5</caption>
+            <caption>Step 4 of 7</caption>
             <h3 class="text-2xl font-semibold">Set up your password</h3>
             <p class="text-sm text-neutral-700"> Your password must be at least 8 characters long and include at least
                 one upper and
                 lower case letter, a number and a special character. Make sure your password matches the confirm
                 password field.</p>
         </div>
-
+  
         <!-- FORM -->
         <div class="flex flex-col gap-y-4">
             <div>
@@ -154,71 +161,78 @@
                 <p class="helper-text-error hidden">Password must match.
                 <p>
             </div>
-
+  
             <button (click)="gotoStepFive()" class="mt-2 btn-base btn-primary">Next step</button>
             <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
         </div>
     </section>
-
+  
     <!-- STEP FIVE -->
     <section *ngIf="step === 5">
         <div class="mb-8 flex flex-col gap-y-1">
-            <span class="text-xs text-neutral-500 ">Step 5 of 5</span>
+            <span class="text-xs text-neutral-500 ">Step 5 of 7</span>
             <h3 class="text-2xl font-semibold">Upload a photo of yourself</h3>
             <p class="text-sm text-neutral-700"> Upload a photo of yourself that shows your face clearly and looks
-                professional. You
-                can skip this step if you don't have a photo ready.</p>
+                professional. You can skip this step if you don't have a photo ready.</p>
         </div>
-
+  
         <!-- FORM -->
-        <div class="flex flex-col gap-y-4">
-
-            <div>
-                <label class="mb-0.5">Profile Image:</label>
-                <ngx-avatar class=" rounded-full object-cover object-top flex-none" [src]="imageSRC"
-                    [name]="'??' || firstName.charAt(0) + lastName.charAt(0)" [size]="64" [bgColor]>
-                </ngx-avatar>
-
-                <div class="flex items-center justify-center w-full">
-                    <label for="profile_picture"
-                        class="flex flex-col items-center justify-center w-full h-32 border-2 border-neutral-300 border-dashed rounded-lg cursor-pointer bg-neutral-50">
-                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                            <p class="mb-2 text-sm text-neutral-500 dark:text-neutral-400"><span
-                                    class="font-semibold">Click to
-                                    upload</span> or drag and drop</p>
-                            <p class="text-xs text-neutral-500 dark:text-neutral-400">SVG, PNG, JPG or GIF</p>
-                        </div>
-                        <input id="profile_picture" name="logo" class="hidden" type="file" #fileInput
-                            (change)="onFileSelected($event)">
-                    </label>
-                </div>
+        <div class="flex flex-col gap-y-4 w-full">
+            <div class="w-fit mx-auto">
+                <label for="profile"><ngx-avatar class="w-full h-48 flex justify-center" [src]="imgPPsrc"
+                        [name]="firstName" [size]="192"></ngx-avatar></label>
+                <input id="profile" name="profile" hidden type="file" accept="image/*"
+                    (change)="onFileSelectedProfile($event)">
             </div>
-
-
-            <button (click)="gotoStepSix()" class="mt-2 btn-base btn-primary">Review</button>
+  
+            <button (click)="gotoStepSix()" class="mt-2 btn-base btn-primary">Next step</button>
             <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
         </div>
     </section>
-
+  
     <!-- STEP SIX -->
     <section *ngIf="step === 6">
         <div class="mb-8 flex flex-col gap-y-1">
-            <caption>Step 6 of 6</caption>
+          <caption>Step 6 of 7</caption>
+          <h3 class="text-2xl font-semibold">Upload your identification card to complete your sign up.</h3>
+          <p class="text-sm text-neutral-700">To complete your sign up process, please upload a clear and legible image of your identification card. This will help us confirm your identity and protect your account. ECHO will comply with the Republic Act 10173 or Data Privacy Act of 2012. The CESU head will be the only one who has access to see the photo, and once verified or rejected, the uploaded document will be deleted.</p>
+        </div>
+      
+        <!-- FORM -->
+        <div class="flex flex-col gap-y-4 text-neutral-950">
+      
+          <!-- Image upload -->
+          <div>
+            <label for="identification-card">Identification card</label>
+            <input type="file" id="identification-card" accept="image/*" (change)="onFileSelectedId($event)">
+            <div *ngIf="imgIDsrc">
+              <img [src]="imgIDsrc" alt="Identification card">
+            </div>
+          </div>
+      
+          <button (click)="gotoStepSeven()" class="mt-2 btn-base btn-primary">Review</button>
+          <a (click)="goBack()" class="link-secondary text-sm mx-auto">Go back</a>
+        </div>
+      </section>
+      
+  
+    <!-- STEP SEVEN -->
+    <section *ngIf="step === 7">
+        <div class="mb-8 flex flex-col gap-y-1">
+            <caption>Step 7 of 7</caption>
             <h3 class="text-2xl font-semibold">Review your details before submitting</h3>
             <p class="text-sm text-neutral-700"> You're almost done with the sign up form. Please review your details
                 carefully and make sure everything is correct before you submit.</p>
         </div>
-
+  
         <!-- FORM -->
         <div class="flex flex-col gap-y-4 text-neutral-950">
-
+  
             <div class="flex w-full justify-between space-x-3">
-                <ngx-avatar class=" rounded-full object-cover object-top flex-none" [src]="imageSRC"
-                    [name]="'??' || firstName.charAt(0) + lastName.charAt(0)" [size]="64" [bgColor]>
-                </ngx-avatar>
-
+  
+  
             </div>
-
+  
             <div>
                 <label class="mb-0.5">Name:</label>
                 <p>{{firstName}} {{lastName}}</p>
@@ -235,10 +249,10 @@
                 <label class="mb-0.5">Email address:</label>
                 <p>{{email}}</p>
             </div>
-
-            <button (click)="[submitRegistration(), submitInfo()]" class="mt-2 btn-base btn-primary">Submit</button>
+  
+            <button (click)="submitRegistration()" class="mt-2 btn-base btn-primary">Submit</button>
             <a (click)="reviewAgain()" class="link-secondary text-sm mx-auto">Review again</a>
         </div>
     </section>
-
-</div>
+  
+  </div>

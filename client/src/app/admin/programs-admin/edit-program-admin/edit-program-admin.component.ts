@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 interface Program {
@@ -16,6 +16,7 @@ interface Program {
   participants: string;
   flow: string;
   additional_details: string;
+  initiative: string;
 }
 
 
@@ -26,22 +27,15 @@ interface Program {
 })
 export class EditProgramAdminComponent implements OnInit {
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) { }
 
   detailsArray: Program[] = [];
   membersArray: any[] = [];
   partnerArray: any[] = [];
   userArray: any[] = [];
-
   editorConfig: any;
-
   programID: any;
-
-  content = '';
-
-  onContentChange() {
-    console.log('Content changed:', this.content);
-  }
+  editLoading: boolean = false;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -69,30 +63,38 @@ export class EditProgramAdminComponent implements OnInit {
       suffix: '.min',
       menubar: false,
       inline: true,
-      plugins: ['quickbars', 'table'],
+      plugins: ['quickbars', 'table', 'lists'],
       quickbars_selection_toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table' ,
       quickbars_insert_toolbar: false,
       toolbar: false,
+      table_default_attributes: {
+        border: '1',
+        width: '100%'
+      }
     };
   }
 
   updateProgram() {
+
     const programData = {
       title: this.detailsArray[0].title,
-      name: this.detailsArray[0].name,
       start_date: this.detailsArray[0].start_date,
       end_date: this.detailsArray[0].end_date,
       location: this.detailsArray[0].location,
       details: this.detailsArray[0].details,
       lead: this.detailsArray[0].lead,
-      partner: this.detailsArray[0].name,
+      partner: this.detailsArray[0].partner,
       participants: this.detailsArray[0].participants,
       flow: this.detailsArray[0].flow,
+      initiative: this.detailsArray[0].initiative,
       additional_details: this.detailsArray[0].additional_details
     };
     
+    this.editLoading = true;
     this.http.post(environment.apiUrl + '/program/update/' + this.programID, programData).subscribe((resultData: any) => {
+      this.editLoading = false;
       console.log(resultData);
+      this.router.navigate(['management/programs']);
     });
   }
   

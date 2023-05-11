@@ -18,15 +18,17 @@ class UserRejected extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $reason;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user, $reason)
     {
         $this->user = $user;
+        $this->reason = $reason;
     }
 
     /**
@@ -37,7 +39,7 @@ class UserRejected extends Mailable
     public function build()
     {
         return $this->subject('Your Account Has Been Rejected')
-            ->to($this->user->email_address)
+            ->to($this->user->email)
             ->view('emails.user_rejected');
     }
 }

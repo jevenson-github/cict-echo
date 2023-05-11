@@ -18,37 +18,258 @@
 
 <!-- Content area -->
 <main class="grid grid-cols-4 gap-4 container mx-auto px-8 -m-12">
-    <div class="border rounded-lg p-8">
 
-        <h3 class="font-medium text-xl">Extension program terminal report</h3>
-        <select class="mt-4" name="" id=""
-            onchange="window.open(this.value, 'popUpWindow','height=720,width=1280,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')">
-            <option value="">Select Here</option>
-            <option value="http://localhost:4200/report-program?programId={{program.id}}"
-                *ngFor="let program of programArray">
-                {{program.title}}
-            </option>
-        </select>
+    <section class="grid rounded-lg shadow col-span-4 p-8 bg-white gap-x-16 gap-y-8 h-fit">
+        <div>
+            <h4 class="font-semibold">Essential reports</h4>
+            <p class="text-sm text-neutral-700">Use a permanent address where you can receive mail. </p>
+        </div>
+        <div class="grid grid-cols-4 gap-4">
 
-    </div>
+            <button (click)="terminalModal = true" class="btn-report-card">
+                <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-orange-100">
+                    <svg class="h-8 w-8 text-orange-600" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4"
+                            d="M21.6509 10.03C21.2609 9.46997 20.5709 9.14997 19.7809 9.14997H15.6809C15.4109 9.14997 15.1609 9.03998 14.9909 8.83998C14.8109 8.63998 14.7409 8.35997 14.7809 8.06997L15.2909 4.78997C15.5109 3.80997 14.8609 2.70998 13.8809 2.37998C12.9709 2.03998 11.9009 2.49998 11.4709 3.14998L7.25086 9.41998L7.13086 9.61998V18.46L7.28086 18.61L10.4509 21.06C10.8709 21.48 11.8209 21.71 12.4909 21.71H16.3909C17.7309 21.71 19.0809 20.7 19.3809 19.47L21.8409 11.98C22.1009 11.27 22.0309 10.58 21.6509 10.03Z"
+                            fill="currentColor" />
+                        <path
+                            d="M5.21 6.37988H4.18C2.63 6.37988 2 6.97988 2 8.45988V18.5199C2 19.9999 2.63 20.5999 4.18 20.5999H5.21C6.76 20.5999 7.39 19.9999 7.39 18.5199V8.45988C7.39 6.97988 6.76 6.37988 5.21 6.37988Z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold text-neutral-900">Extension community involvement terminal report
+                    </h3>
+                    <p class="text-sm text-neutral-700 mt-1">View and manage the accounts .</p>
+                </div>
+            </button>
 
-    <div class="border rounded-lg p-8">
+            <button (click)="monthlyModal = true" class="btn-report-card">
+                <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-orange-100">
+                    <svg class="h-8 w-8 text-orange-600" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 15C15.7279 15 18.75 12.0899 18.75 8.5C18.75 4.91015 15.7279 2 12 2C8.27208 2 5.25 4.91015 5.25 8.5C5.25 12.0899 8.27208 15 12 15Z"
+                            fill="currentColor" />
+                        <path opacity="0.4"
+                            d="M7.51974 13.5201L7.50977 20.9001C7.50977 21.8001 8.13977 22.2401 8.91977 21.8701L11.5998 20.6001C11.8198 20.4901 12.1898 20.4901 12.4098 20.6001L15.0998 21.8701C15.8698 22.2301 16.5098 21.8001 16.5098 20.9001V13.3401"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold text-neutral-900">Monthly accomplishment report</h3>
+                    <p class="text-sm text-neutral-700 mt-1">View and manage the accounts .</p>
+                </div>
+            </button>
 
-        <h3 class="font-medium text-xl">Partner's extension <br>programs</h3>
-        <select class="mt-4" name="" id=""
-            onchange="window.open(this.value, 'popUpWindow','height=720,width=1280,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes')">
-            <option value="http://localhost:4200/report-partner?partnerId={{partner.id}}"
-                *ngFor="let partner of partnerArray">{{partner.name}}</option>
-        </select>
+            <button (click)="extensionModal=true" class="btn-report-card">
+                <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-orange-100">
+                    <svg class="h-8 w-8 text-orange-600" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4"
+                            d="M21.6509 10.03C21.2609 9.46997 20.5709 9.14997 19.7809 9.14997H15.6809C15.4109 9.14997 15.1609 9.03998 14.9909 8.83998C14.8109 8.63998 14.7409 8.35997 14.7809 8.06997L15.2909 4.78997C15.5109 3.80997 14.8609 2.70998 13.8809 2.37998C12.9709 2.03998 11.9009 2.49998 11.4709 3.14998L7.25086 9.41998L7.13086 9.61998V18.46L7.28086 18.61L10.4509 21.06C10.8709 21.48 11.8209 21.71 12.4909 21.71H16.3909C17.7309 21.71 19.0809 20.7 19.3809 19.47L21.8409 11.98C22.1009 11.27 22.0309 10.58 21.6509 10.03Z"
+                            fill="currentColor" />
+                        <path
+                            d="M5.21 6.37988H4.18C2.63 6.37988 2 6.97988 2 8.45988V18.5199C2 19.9999 2.63 20.5999 4.18 20.5999H5.21C6.76 20.5999 7.39 19.9999 7.39 18.5199V8.45988C7.39 6.97988 6.76 6.37988 5.21 6.37988Z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold text-neutral-900">List of extension partners</h3>
+                    <p class="text-sm text-neutral-700 mt-1">View and manage the accounts .</p>
+                </div>
+            </button>
 
-    </div>
+            <button (click)="facultyModal = true" class="btn-report-card">
+                <div class="flex items-center justify-center h-12 w-12 rounded-lg bg-orange-100">
+                    <svg class="h-8 w-8 text-orange-600" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path opacity="0.4"
+                            d="M19 9C19 10.45 18.57 11.78 17.83 12.89C16.75 14.49 15.04 15.62 13.05 15.91C12.71 15.97 12.36 16 12 16C11.64 16 11.29 15.97 10.95 15.91C8.96 15.62 7.25 14.49 6.17 12.89C5.43 11.78 5 10.45 5 9C5 5.13 8.13 2 12 2C15.87 2 19 5.13 19 9Z"
+                            fill="currentColor" />
+                        <path
+                            d="M21.2491 18.4699L19.5991 18.8599C19.2291 18.9499 18.9391 19.2299 18.8591 19.5999L18.5091 21.0699C18.3191 21.8699 17.2991 22.1099 16.7691 21.4799L11.9991 15.9999L7.2291 21.4899C6.6991 22.1199 5.6791 21.8799 5.4891 21.0799L5.1391 19.6099C5.0491 19.2399 4.7591 18.9499 4.3991 18.8699L2.7491 18.4799C1.9891 18.2999 1.7191 17.3499 2.2691 16.7999L6.1691 12.8999C7.2491 14.4999 8.9591 15.6299 10.9491 15.9199C11.2891 15.9799 11.6391 16.0099 11.9991 16.0099C12.3591 16.0099 12.7091 15.9799 13.0491 15.9199C15.0391 15.6299 16.7491 14.4999 17.8291 12.8999L21.7291 16.7999C22.2791 17.3399 22.0091 18.2899 21.2491 18.4699Z"
+                            fill="currentColor" />
+                        <path
+                            d="M12.58 5.98L13.17 7.15999C13.25 7.31999 13.46 7.48 13.65 7.51L14.72 7.68999C15.4 7.79999 15.56 8.3 15.07 8.79L14.24 9.61998C14.1 9.75998 14.02 10.03 14.07 10.23L14.31 11.26C14.5 12.07 14.07 12.39 13.35 11.96L12.35 11.37C12.17 11.26 11.87 11.26 11.69 11.37L10.69 11.96C9.96997 12.38 9.53997 12.07 9.72997 11.26L9.96997 10.23C10.01 10.04 9.93997 9.75998 9.79997 9.61998L8.96997 8.79C8.47997 8.3 8.63997 7.80999 9.31997 7.68999L10.39 7.51C10.57 7.48 10.78 7.31999 10.86 7.15999L11.45 5.98C11.74 5.34 12.26 5.34 12.58 5.98Z"
+                            fill="currentColor" />
+                    </svg>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-xl font-semibold text-neutral-900">List of extension programs per faculty</h3>
+                    <p class="text-sm text-neutral-700 mt-1">View and manage the accounts .</p>
+                </div>
+            </button>
 
-    <div class="border rounded-lg p-8">
-
-        <h3 class="font-medium text-xl">Partner's extension <br> programs</h3>
-        <a href="http://localhost:4200/report-partners" target="_blank" class="">
-            <button class="btn-base btn-secondary-outline mt-4 w-full">Print all extension partners</button></a>
-
-    </div>
+        </div>
+    </section>
 
 </main>
+
+<!-- Terminal modal -->
+<div *ngIf="terminalModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="terminalModal = false">
+    <div class="flex w-full h-full">
+        <!-- Modal content -->
+        <div class="modal max-w-md">
+            <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
+                <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <title>Renew</title>
+                </svg>
+            </div>
+            <h4 class="mt-2 text-lg font-semibold">Terminal report</h4>
+            <p class="text-neutral-700 text-sm">Update the partner's contract.
+            </p>
+
+            <div class="mt-5 flex flex-col gap-y-4">
+
+                
+                <select id="partner" name="partner">
+                    <option value="{{partner.id}}" *ngFor="let partner of programArray">{{partner.name}}</option>
+                </select>
+
+            </div>
+
+            <div class="grid grid-cols-2 mt-6 space-x-3">
+                <button (click)="terminalModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+                <button (click)="terminalDownload()" type="submit" class="btn-small btn-primary">
+                    Download
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Monthly modal -->
+<div *ngIf="monthlyModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="monthlyModal = false">
+    <div class="flex w-full h-full">
+        <!-- Modal content -->
+        <div class="modal max-w-md">
+            <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
+                <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <title>Renew</title>
+                </svg>
+            </div>
+            <h4 class="mt-2 text-lg font-semibold">Monthly accomplishment report</h4>
+            <p class="text-neutral-700 text-sm">Update the partner's contract.
+            </p>
+
+            <div class="mt-5 flex flex-col gap-y-4">
+                <select id="month" name="month" [(ngModel)]="selectedMonth">
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <select id="year" name="year" [(ngModel)]="selectedYear">
+                    <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+                </select>
+        
+            </div>
+            
+
+            <div class="grid grid-cols-2 mt-6 space-x-3">
+                <button (click)="monthlyModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+                <button (click)="monthlyDownload()" type="submit" class="btn-small btn-primary">
+                    Download
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Extension modal -->
+<div *ngIf="extensionModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="extensionModal = false">
+
+    <div class="flex w-full h-full">
+      <!-- Modal content -->
+      <div class="modal max-w-sm">
+        <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
+          <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+              d="M19.53 5.53L5.53 19.53C5.51 19.55 5.5 19.56 5.48 19.57C5.1 19.25 4.75 18.9 4.43 18.52C2.91 16.77 2 14.49 2 12C2 6.48 6.48 2 12 2C14.49 2 16.77 2.91 18.52 4.43C18.9 4.75 19.25 5.1 19.57 5.48C19.56 5.5 19.55 5.51 19.53 5.53Z"
+              fill="currentColor" />
+            <path opacity="0.4"
+              d="M21.9996 12.0001C21.9996 17.5201 17.5196 22.0001 11.9996 22.0001C10.0096 22.0001 8.15961 21.4201 6.59961 20.4001L20.3996 6.6001C21.4196 8.1601 21.9996 10.0101 21.9996 12.0001Z"
+              fill="currentColor" />
+            <path
+              d="M21.7709 2.22988C21.4709 1.92988 20.9809 1.92988 20.6809 2.22988L2.23086 20.6899C1.93086 20.9899 1.93086 21.4799 2.23086 21.7799C2.38086 21.9199 2.57086 21.9999 2.77086 21.9999C2.97086 21.9999 3.16086 21.9199 3.31086 21.7699L21.7709 3.30988C22.0809 3.00988 22.0809 2.52988 21.7709 2.22988Z"
+              fill="currentColor" />
+          </svg>
+  
+        </div>
+        <h4 class="mt-2 text-lg font-semibold text-center">List of extension partner</h4>
+        <p class="text-neutral-700 text-sm text-center mx-2">Do you want to generate list of extension partners report?
+        </p>
+        <div class="grid grid-cols-2 mt-6 space-x-3">
+          <button (click)="extensionModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="downloadExtensions()" class="btn-small btn-primary">
+            Download
+          </button>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+  <!-- Faculty modal -->
+<div *ngIf="facultyModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="facultyModal = false">
+    <div class="flex w-full h-full">
+        <!-- Modal content -->
+        <div class="modal max-w-md">
+            <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
+                <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <title>Renew</title>
+                </svg>
+            </div>
+            <h4 class="mt-2 text-lg font-semibold">Faculty report</h4>
+            <p class="text-neutral-700 text-sm">Update the partner's contract.
+            </p>
+
+            <div class="mt-5 flex flex-col gap-y-4">
+
+                
+                <select id="faculty" name="faculty">
+                    <option value="{{faculty.id}}" *ngFor="let faculty of facultyArray">{{faculty.first_name + ' ' + faculty.last_name}}</option>
+                </select>
+
+            </div>
+
+            <div class="grid grid-cols-2 mt-6 space-x-3">
+                <button (click)="facultyModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+                <button (click)="facultyDownload()" type="submit" class="btn-small btn-primary">
+                    Download
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

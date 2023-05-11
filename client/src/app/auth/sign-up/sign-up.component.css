@@ -1,0 +1,11 @@
+.avatar-content {
+    font-family: Inter var !important;
+    font-weight: 500 !important;
+    font-size: 3.75rem !important;
+    user-select: none !important;
+  } 
+
+  .avatar-container {
+    width: fit-content;
+    margin: auto;
+  }

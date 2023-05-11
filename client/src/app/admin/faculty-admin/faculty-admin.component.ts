@@ -76,10 +76,9 @@ export class FacultyAdminComponent implements OnInit {
     { label: 'Verified accounts', badge: this.verifiedFacultyCount },
     { label: 'Deactivated accounts', badge: this.deactivateedFaculty.length },
     { label: 'Pending accounts', badge: this.pendingFaculty.length },
-    { label: 'Rejected accounts', badge: this.rejectedFaculty.length },
     { label: 'Administrators', badge: this.administrators.length },
   ];
-  sections = ['faculty-section-verified', 'faculty-section-deactivateed', 'faculty-section-pending', 'faculty-section-rejected', 'faculty-section-administrators'];
+  sections = ['faculty-section-verified', 'faculty-section-deactivateed', 'faculty-section-pending', 'faculty-section-administrators'];
 
   setActiveTab(index: number) {
     this.activeTab = index;

@@ -27,6 +27,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/sign-up', 'App\Http\Controllers\UserController@signUp');
     Route::post('/sign-in', 'App\Http\Controllers\UserController@signIn');
     Route::post('/send-reset-link', 'App\Http\Controllers\UserController@sendResetLink');
+    Route::post('/credential-check', 'App\Http\Controllers\UserController@credentialCheck');
+
 });
 
 // User routes for user management
@@ -51,6 +53,7 @@ Route::prefix('user')->group(function () {
     Route::get('/rejected-user', 'App\Http\Controllers\UserController@getAllRejectedUser');
     Route::get('/get-admin', 'App\Http\Controllers\UserController@getAllAdmins');
     Route::get('/get-faculty', 'App\Http\Controllers\UserController@getAllFaculty');
+
 });
 
 // Partner routes for partner management
@@ -70,7 +73,8 @@ Route::prefix('partner')->group(function () {
 
 Route::prefix('dashboard')->group(function () {
     Route::get('/stats-count', 'App\Http\Controllers\DashboardController@statsCount');
-    Route::get('/program-chart', 'App\Http\Controllers\DashboardController@programChart');
+    Route::get('/program-chart', 'App\Http\Controllers\DashboardController@getProgramChartData');
+    Route::get('/expiring-partners', 'App\Http\Controllers\DashboardController@getPartnersEndingSoon');
 });
 
 // Program routes for program management
@@ -85,6 +89,15 @@ Route::prefix('program')->group(function () {
     Route::get('/display-program-title/{id}', 'App\Http\Controllers\ProgramController@displayTitleProgram');
     Route::get('/index', 'App\Http\Controllers\ProgramController@indexProgram');    
     Route::post('/add-member-role', 'App\Http\Controllers\ProgramController@addMemberRoleProgram');
+});
+
+Route::prefix('report')->group(function () {
+   Route::get('/partners', 'App\Http\Controllers\PartnerController@reportPartners');
+   Route::post('/accomplishment-monthly', 'App\Http\Controllers\ProgramController@reportMonthlyAccomplishment');
+    Route::post('/accomplishment-annual', 'App\Http\Controllers\ProgramController@getProgramsBySchoolYear');
+   Route::get('/terminal/{id}', 'App\Http\Controllers\ProgramController@reportTerminal');
+   Route::get('/extension-faculty/{id}', 'App\Http\Controllers\UserController@reportExtensionProgramsPerFaculty');
+
 });
 
 

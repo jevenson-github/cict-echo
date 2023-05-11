@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Partner;
 use App\Models\Program;
 use App\Models\Members;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 use Illuminate\Support\Facades\DB;
+use Dompdf\Dompdf;
+use PDF;
 
 
 class ProgramController extends Controller
@@ -90,6 +93,7 @@ class ProgramController extends Controller
         }
 
         $program->title = $request->input('title', $program->title);
+        $program->initiative = $request->input('initiative', $program->initiative);
         $program->start_date = $request->input('start_date', $program->start_date);
         $program->end_date = $request->input('end_date', $program->end_date);
         $program->location = $request->input('location', $program->location);
@@ -102,15 +106,47 @@ class ProgramController extends Controller
 
         $program->save();
 
-        //INSERT VALUE TO MEMBERS TABLE
-        // $members = new Members();
-        // $members->program = $id;
-        // $members->faculty_id =  $request->input('program_members');
-        // $members->role =  $request->input('member_role');
-        // $members->save();
-
         return response()->json(['message' => 'Program updated successfully'], 200);
     }
+
+    //     public function updateProgram(Request $request, $id)
+    // {
+    //     $program = Program::find($id);
+
+    //     if (!$program) {
+    //         return response()->json(['message' => 'Program not found', '' => $id], 404);
+    //     }
+
+    //     $program->title = $request->input('title', $program->title);
+    //     $program->initiative = $request->input('initiative', $program->initiative);
+    //     $program->start_date = $request->input('start_date', $program->start_date);
+    //     $program->end_date = $request->input('end_date', $program->end_date);
+    //     $program->location = $request->input('location', $program->location);
+    //     $program->details = $request->input('details', $program->details);
+    //     $program->lead = $request->input('lead', $program->lead);
+    //     $program->partner = $request->input('partner', $program->partner);
+    //     $program->participants = $request->input('participants', $program->participants);
+    //     $program->flow = $request->input('flow', $program->flow);
+    //     $program->additional_details = $request->input('additional_details', $program->additional_details);
+
+    //     $program->save();
+
+    //     // Delete previously selected members for the given program
+    //     Members::where('program', $program->id)->delete();
+
+    //     // Insert newly selected members
+    //     $members = $request->input('members', []);
+    //     foreach ($members as $member) {
+    //         $newMember = new Members();
+    //         $newMember->program = $program->id;
+    //         $newMember->faculty = $member['id'];
+    //         $newMember->role = $member['role'];
+    //         $newMember->save();
+    //     }
+
+    //     return response()->json(['message' => 'Program updated successfully'], 200);
+    // }
+
 
     public function addMemberRoleProgram(Request $request)
     {
@@ -242,10 +278,10 @@ class ProgramController extends Controller
         //     ->orderByDesc('created_at')
         //     ->get();
         $programs = DB::table('programs')
-        ->join('users', 'users.id', '=', 'programs.lead')
-        ->join('partners', 'partners.id', '=', 'programs.partner')
-        ->select('programs.*', 'users.id as user_id', 'users.first_name', 'users.last_name', 'users.designation', 'users.department' , 'partners.id as partner', 'partners.name', 'partners.email')
-        ->get();
+            ->join('users', 'users.id', '=', 'programs.lead')
+            ->join('partners', 'partners.id', '=', 'programs.partner')
+            ->select('programs.*', 'users.id as user_id', 'users.first_name', 'users.last_name', 'users.designation', 'users.department', 'partners.id as partner', 'partners.name', 'partners.email')
+            ->get();
 
         return response()->json($programs, 200);
     }
@@ -254,84 +290,84 @@ class ProgramController extends Controller
     {
 
         $programs = DB::table('programs')
-        ->join('users as leads', 'leads.id', '=', 'programs.lead')
-        ->join('partners', 'partners.id', '=', 'programs.partner')
-        ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.name')
-        ->where('programs.id', '=', $id)
-        ->get();
+            ->join('users as leads', 'leads.id', '=', 'programs.lead')
+            ->join('partners', 'partners.id', '=', 'programs.partner')
+            ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.name')
+            ->where('programs.id', '=', $id)
+            ->get();
 
         $members = DB::table('members')
-        ->join('programs', 'programs.id', '=', 'members.program')
-        ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
-        ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role', 'members_users.id as member_id')
-        ->where('members.program', '=', $id)
-        ->get();
+            ->join('programs', 'programs.id', '=', 'members.program')
+            ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
+            ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role', 'members_users.id as member_id')
+            ->where('members.program', '=', $id)
+            ->get();
 
 
-        $response['programs']=$programs;
-        $response['members']=$members;
+        $response['programs'] = $programs;
+        $response['members'] = $members;
 
         if (!$programs) {
             return response()->json(['message' => 'Program not found'], 404);
         }
 
-        return response()->json($response,200);
+        return response()->json($response, 200);
     }
 
-    public function displayTitleProgram (Request $request, $id) {
+    public function displayTitleProgram(Request $request, $id)
+    {
         $programs = DB::table('programs')
-        ->join('users as leads', 'leads.id', '=', 'programs.lead')
-        ->join('partners', 'partners.id', '=', 'programs.partner')
-        // ->join('members', 'members.program', '=', 'programs.id')
-        // ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
-        ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.name')
-        ->where('programs.id', '=', $id)
-        // ->groupBy('members.program')
-        ->get();
+            ->join('users as leads', 'leads.id', '=', 'programs.lead')
+            ->join('partners', 'partners.id', '=', 'programs.partner')
+            // ->join('members', 'members.program', '=', 'programs.id')
+            // ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
+            ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.name')
+            ->where('programs.id', '=', $id)
+            // ->groupBy('members.program')
+            ->get();
 
         $members = DB::table('members')
-        ->join('programs', 'programs.id', '=', 'members.program')
-        ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
-        ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role')
-        ->where('members.program', '=', $id)
-        ->get();
+            ->join('programs', 'programs.id', '=', 'members.program')
+            ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
+            ->select('members_users.first_name as member_first_name', 'members_users.last_name as member_last_name', 'members.role as member_role')
+            ->where('members.program', '=', $id)
+            ->get();
 
 
-        $response['programs']=$programs;
-        $response['members']=$members;
+        $response['programs'] = $programs;
+        $response['members'] = $members;
 
-        return response()->json($response,200);
-
-
+        return response()->json($response, 200);
     }
 
-    public function displayProgram (Request $request, $id) {
+    public function displayProgram(Request $request, $id)
+    {
         $programs = DB::table('programs')
-        ->join('users as leads', 'leads.id', '=', 'programs.lead')
-        ->join('partners', 'partners.id', '=', 'programs.partner')
-        ->join('members', 'members.program', '=', 'programs.id')
-        ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
-        ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.name', 'partners.id as partner')
-        ->where(function ($query) use ($id) {
-            $query->where('programs.lead', '=', $id) 
-                  ->orWhere('members.faculty', '=', $id);
-        })
-        ->where('programs.status', '!=', 'draft')
-        ->distinct()
-        ->get();
+            ->join('users as leads', 'leads.id', '=', 'programs.lead')
+            ->join('partners', 'partners.id', '=', 'programs.partner')
+            ->join('members', 'members.program', '=', 'programs.id')
+            ->join('users as members_users', 'members_users.id', '=', 'members.faculty')
+            ->select('programs.*', 'leads.first_name as lead_first_name', 'leads.last_name as lead_last_name', 'partners.name', 'partners.id as partner')
+            ->where(function ($query) use ($id) {
+                $query->where('programs.lead', '=', $id)
+                    ->orWhere('members.faculty', '=', $id);
+            })
+            ->where('programs.status', '!=', 'draft')
+            ->distinct()
+            ->get();
 
 
 
 
-        $response['programs']=$programs;
+        $response['programs'] = $programs;
 
-        return response()->json($response,200);
+        return response()->json($response, 200);
     }
 
     public function getExpiringPartners()
     {
         $endDate = Carbon::now()->addDays(30)->format('Y-m-d');
-        
+
         $partners = Partner::whereDate('end_date', '<=', $endDate)
             ->select('id', 'name', 'end_date')
             ->get();
@@ -339,4 +375,110 @@ class ProgramController extends Controller
         return response()->json($partners);
     }
 
+    public function reportMonthlyAccomplishment(Request $request) //json
+    {
+        $month = $request->input('month');
+        $year = $request->input('year');
+
+        $start_date = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        $end_date = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+
+        $programs = Program::where('end_date', '>=', $start_date)
+            ->where('end_date', '<=', $end_date)
+            ->where('status', 'completed')
+            ->get(['title', 'initiative', 'start_date', 'end_date']);
+
+        $data = [
+            'month' => $month,
+            'year' => $year,
+            'programs' => $programs
+        ];
+
+        $pdf = PDF::loadView('reports.monthly_accomplishment', $data);
+        return $pdf->stream();
+    }
+
+
+    function reportTerminal($id)
+    {
+        $program = Program::find($id);
+
+        if (!$program) {
+            return response()->json(['message' => 'Program not found.'], 404);
+        }
+
+        $lead = User::find($program->lead);
+
+        if (!$lead) {
+            return response()->json(['message' => 'Lead not found.'], 404);
+        }
+
+        $members = Members::where('program', $id)->get();
+        $dean = User::where('designation', 'Dean')
+            ->where('status', 'verified')
+            ->first();
+
+        if (!$dean) {
+            return response()->json(['message' => 'Dean not found.'], 404);
+        }
+
+        $facultyInvolved = collect();
+        $facultyInvolved->push([
+            'name' => $lead->first_name . ' ' . $lead->last_name,
+            'role' => 'Lead'
+        ]);
+
+        foreach ($members as $member) {
+            $faculty = User::find($member->faculty);
+
+            if (!$faculty) {
+                return response()->json(['message' => 'Faculty not found.'], 404);
+            }
+
+            $facultyInvolved->push([
+                'name' => $faculty->first_name . ' ' . $faculty->last_name,
+                'role' => $member->role
+            ]);
+        }
+
+        $data = [
+            'title' => $program->title,
+            'start_date' => $program->start_date,
+            'end_date' => $program->end_date,
+            'location' => $program->location,
+            'faculty_involved' => $facultyInvolved,
+            'participants' => $program->participants,
+            'details' => $program->details,
+            'flow' => $program->flow,
+            'additional_details' => $program->additional_details,
+            'dean' => $dean,
+        ];
+
+        $pdf = PDF::loadView('reports.terminal', $data);
+        return $pdf->stream();
+    }
+
+    public function getProgramsBySchoolYear(Request $schoolYear)
+    {
+        $startDate = $schoolYear . '-08-01';
+        $endDate = date('Y-m-d', strtotime($schoolYear . '-07-31 +1 year'));
+
+        $programs = Program::where(function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('start_date', [$startDate, $endDate])
+                ->orWhereBetween('end_date', [$startDate, $endDate])
+                ->orWhere(function ($query) use ($startDate, $endDate) {
+                    $query->where('start_date', '<', $startDate)
+                        ->where('end_date', '>', $endDate);
+                });
+        })->whereIn('status', ['ended', 'completed'])->get();
+
+        $data = [
+            'programs' => $programs,
+            'schoolYear' => $schoolYear
+        ];
+
+        $pdf = PDF::loadView('reports.annual_accomplishment', $data);
+
+        return $pdf->stream();
+    }
 }

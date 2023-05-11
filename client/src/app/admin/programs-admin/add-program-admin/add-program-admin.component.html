@@ -1,0 +1,170 @@
+<header class="w-full gradient">
+    <div class="h-16"></div>
+    <div class="container mx-auto p-8">
+        <div class="flex flex-row w-full justify-between items-end">
+            <div>
+                <p class="text-neutral-100 mt-1 opacity-75 tracking-widest">ADD PROGRAM</p>
+                <div class="flex items-center">
+                    <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">Program
+                    </h2>
+                </div>
+
+            </div>
+
+            <div class="flex gap-2">
+
+            </div>
+        </div>
+
+    </div>
+    <div class="h-16"></div>
+</header>
+
+<!-- Content area -->
+<main class="gap-4 container mx-auto px-8 -m-12">
+  <form (ngSubmit)="addProgram()" [formGroup]="form">
+    <section class="grid rounded-lg shadow grid-cols-4 p-8 bg-white gap-x-16 gap-y-8 h-fit">
+
+        <div>
+            <h4 class="font-semibold">Basic information</h4>
+            <p class="text-sm text-neutral-700">Use a permanent address where you can receive mail. </p>
+        </div>
+        <div class="col-span-3 grid grid-cols-2 gap-4">
+            <div>
+                <label>Program title</label>
+                <input type="text" id="title" formControlName="title"
+                [ngClass]="{'is-invalid' : submitForm && f['title'].errors}">
+                <div *ngIf="submitForm && f['title'].errors" class="form-validation-error">
+                  <div *ngIf="f['title'].errors['required']">Title is required.</div>
+                </div>
+            </div>
+            <div>
+                <label>Initiative</label>
+                <select id="initiative" name="initiative"  formControlName="initiative"
+                [ngClass]="{'is-invalid' : submitForm && f['initiative'].errors}">
+                    <option value="Activity">Activity</option>
+                    <option value="Project">Project</option>
+                    <option value="Training">Training</option>
+                </select>
+                <div *ngIf="submitForm && f['initiative'].errors" class="form-validation-error">
+                  <div *ngIf="f['initiative'].errors['required']">Initiative is required.</div>
+                </div>
+            </div>
+            <div>
+                <label>Location</label>
+                <input type="text" id="location" formControlName="location"
+                [ngClass]="{'is-invalid' : submitForm && f['location'].errors}">
+                <div *ngIf="submitForm && f['location'].errors" class="form-validation-error">
+                  <div *ngIf="f['location'].errors['required']">Location is required.</div>
+                </div>
+            </div>
+            <div>
+                <label>Partner</label>
+                <select id="partner" name="partner" formControlName="partner">
+                    <option value="{{partner.id}}" *ngFor="let partner of partnerArray">{{partner.name}}</option>
+                </select>
+            </div>
+            <div>
+                <label>Start date</label>
+                <input type="date" pattern="\d{4}-\d{2}-\d{2}" placeholder="MMMM dd yyyy" formControlName="startDate"
+                [ngClass]="{'is-invalid' : submitForm && f['startDate'].errors}">
+                <div *ngIf="submitForm && f['startDate'].errors" class="form-validation-error">
+                  <div *ngIf="f['startDate'].errors['required']">Start date is required.</div>
+                </div>
+            </div>
+            <div>
+                <label>End date</label>
+                <input type="date" pattern="\d{4}-\d{2}-\d{2}" placeholder="MMMM dd yyyy" formControlName="endDate"
+                [ngClass]="{'is-invalid' : submitForm && f['endDate'].errors}">
+                <div *ngIf="submitForm && f['endDate'].errors" class="form-validation-error">
+                  <div *ngIf="f['endDate'].errors['required']">End date is required.</div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="col-span-4">
+
+        <div>
+            <h4 class="font-semibold">Participation</h4>
+            <p class="text-sm text-neutral-700">Use a permanent address where you can receive mail. </p>
+        </div>
+        <div class="col-span-3 grid grid-cols-2 gap-4">
+            <div>
+                <label for="lead">Lead</label>
+                <select id="lead" name="lead" name="lead" formControlName="lead">
+                    <option value="{{user.id}}" *ngFor="let user of userArray">{{user.first_name + ' ' +
+                        user.last_name}}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label>Participants</label>
+                <editor class="" apiKey="4qvdze4hfsg5j6qd2qjml1dxk3nian82rs208uwpdcnld3oo" [init]="editorConfig" formControlName="participants"
+                [ngClass]="{'is-invalid' : submitForm && f['participants'].errors}"></editor>
+                <div *ngIf="submitForm && f['participants'].errors" class="form-validation-error">
+                  <div *ngIf="f['participants'].errors['required']">Paticipants is required.</div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="col-span-4">
+
+        <div>
+            <h4 class="font-semibold">Program detail</h4>
+            <p class="text-sm text-neutral-700">Use a permanent address where you can receive mail. </p>
+        </div>
+        <div class="col-span-3 flex flex-col gap-4">
+            <div>
+                <label>Details</label>
+                <editor class="" apiKey="4qvdze4hfsg5j6qd2qjml1dxk3nian82rs208uwpdcnld3oo" [init]="editorConfig" formControlName="details"
+                [ngClass]="{'is-invalid' : submitForm && f['details'].errors}"></editor>
+                <div *ngIf="submitForm && f['details'].errors" class="form-validation-error">
+                  <div *ngIf="f['details'].errors['required']">Details is required.</div>
+                </div>
+            </div>
+            <div>
+                <label>Flow</label>
+                <editor class="" apiKey="4qvdze4hfsg5j6qd2qjml1dxk3nian82rs208uwpdcnld3oo" [init]="editorConfig" formControlName="flow"
+                [ngClass]="{'is-invalid' : submitForm && f['flow'].errors}"></editor>
+                <div *ngIf="submitForm && f['flow'].errors" class="form-validation-error">
+                  <div *ngIf="f['flow'].errors['required']">Flow is required.</div>
+                </div>
+            </div>
+            <div>
+                <label>Additional detail</label>
+                <editor class="" apiKey="4qvdze4hfsg5j6qd2qjml1dxk3nian82rs208uwpdcnld3oo" [init]="editorConfig" formControlName="additionalDetails"
+                [ngClass]="{'is-invalid' : submitForm && f['additionalDetails'].errors}"></editor>
+                <div *ngIf="submitForm && f['additionalDetails'].errors" class="form-validation-error">
+                  <div *ngIf="f['additionalDetails'].errors['required']">Additional details is required.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-4 block col-span-4"></div>
+
+        <div class="col-span-4 flex flex-row-reverse gap-4">
+            <button type="submit" [disabled]="addLoading" class="btn-base btn-primary w-fit">
+              <ng-container *ngIf="!addLoading">Add program</ng-container>
+              <ng-container *ngIf="addLoading">
+                <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                  viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path opacity="0.4"
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="currentColor" />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentColor" />
+                </svg>
+                Adding...
+              </ng-container>
+            </button>
+            <button class="btn-base btn-secondary-outline w-fit" routerLink="./..">Discard</button>
+        </div>
+
+    </section>
+  </form>
+    <div class="h-16"></div>
+
+
+
+</main>

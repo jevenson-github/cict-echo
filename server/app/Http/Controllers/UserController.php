@@ -13,6 +13,9 @@ use App\Mail\sendResetPasswordLink;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Program;
+use App\Models\Partner;
+use App\Models\Members;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -24,57 +27,44 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Contracts\Mail\Mailable;
+use Dompdf\Dompdf;
+use PDF;
+
 
 class UserController extends Controller
 {
 
     public function signUp(Request $request)
     {
-        try {
-            // Validate input
-            $validatedData = $request->validate([
-                'id' => 'required|integer|unique:users,id',
-                'first_name' => 'required|string',
-                'last_name' => 'required|string',
-                'email' => 'required|string|unique:users,email',
-                'password' => 'required|string',
-                'department' => 'required|string',
-                'designation' => 'required|string',
-                'profile_image' => 'image',
-                'user_level' => 'required|in:admin,faculty',
-                'status' => 'required|in:verified,pending,rejected,deactivated',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'error' => $e->validator->errors(),
-                'message' => 'Validation failed',
-            ], 422);
-        }
-
         // Create user
         $user = new User();
-        $user->id = $validatedData['id'];
-        $user->first_name = $validatedData['first_name'];
-        $user->last_name = $validatedData['last_name'];
-        $user->email = $validatedData['email'];
-        $user->password = bcrypt($validatedData['password']);
-        $user->department = $validatedData['department'];
-        $user->designation = $validatedData['designation'];
-        $user->user_level = $validatedData['user_level'];
-        $user->status = $validatedData['status'];
-        $user->profile_image = 'default.webp'; // Default profile image
+        $user->id = $request['id'];
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->email = $request['email'];
+        $user->password = bcrypt($request['password']);
+        $user->department = $request['department'];
+        $user->designation = $request['designation'];
+        $user->user_level = 'faculty';
+        $user->status = 'pending';
 
-        if ($request->hasFile('profile_image')) {
-            $file = $request->file('profile_image');
-            $fileName = $user->id . '.webp';
+        if ($request->hasFile('profilePicture')) {
+            $file = $request->file('profilePicture');
+            $fileName = $request['id'] . '.webp';
             $file->move('users', $fileName);
-            $user->profile_image = $fileName;
+        }
+
+        if ($request->hasFile('idCard')) {
+            $file = $request->file('idCard');
+            $fileName = $request['id'] . '.webp';
+            $file->move('verification', $fileName);
         }
 
         $user->save();
 
         return response()->json([
             'message' => 'User created successfully',
+            'hi' => $request['id']
         ], 201);
     }
 
@@ -121,7 +111,7 @@ class UserController extends Controller
         return response()->json(['message' => 'User has been deactivated.']);
     }
 
-    public function rejectUser(Request $request, $id) ///
+    public function rejectUser(Request $request, $id)
     {
         // Find the user by ID
         $user = User::find($id);
@@ -131,13 +121,21 @@ class UserController extends Controller
             return response()->json(['error' => 'User not found.'], 404);
         }
 
-        // Update the user's status to "verified"
-        $user->status = 'rejected';
-        $user->save();
+        // Get the reason for rejecting the user from the request
+        $reason = $request->input('reason');
+
+        // Send an email to the user notifying them that their account has been rejected
+        Mail::to($user->email_address)->send(new UserRejected($user, $request->reason));
+
+        // Delete the user
+        $user->delete();
+
+
 
         // Return a response indicating success
         return response()->json(['message' => 'User has been rejected and email has been sent.']);
     }
+
 
     public function pendingUser(Request $request, $id) ///
     {
@@ -174,7 +172,7 @@ class UserController extends Controller
         return response()->json(['message' => 'User has been deleted and email has been sent.']);
     }
 
-    public function updateInfo(Request $request, $id) // ///
+    public function updateInfo(Request $request, $id)
     {
 
         // Find the user by ID
@@ -208,16 +206,7 @@ class UserController extends Controller
         // Update profile picture if it's provided
         if ($request->hasFile('profile_image')) {
             $file = $request->file('profile_image');
-
-            //$originalName = $file->getClientOriginalName();
             $fileName = $user->id . '.webp'; // Set filename to ID.webp
-
-            // // Convert and save image
-            // $image = Image::make($file);
-            // $image->encode(
-            //     'webp',
-            //     100
-            // );
             $file->move('users', $fileName);
         }
 
@@ -447,7 +436,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if ($user->status === 'deactivated' || $user->status === 'pending') {
-            $response['status'] = $user -> status;
+            $response['status'] = $user->status;
             return response()->json($response);
         }
 
@@ -489,20 +478,44 @@ class UserController extends Controller
     public function getAllVerifiedUser()
     {
         $users = DB::table('users')->where('status', '=', "verified")->get();
-        return response()->json($users, 200);
+
+        foreach ($users as $user) {
+            $user->full_name = $user->first_name . ' ' . $user->last_name;
+        }
+
+        $sorted_users = $users->sortBy('full_name')->values()->all();
+
+        return response()->json($sorted_users, 200);
     }
+
 
     public function getAllPendingUser()
     {
         $users = DB::table('users')->where('status', '=', "pending")->get();
-        return response()->json($users, 200);
+
+        foreach ($users as $user) {
+            $user->full_name = $user->first_name . ' ' . $user->last_name;
+        }
+
+        $sorted_users = $users->sortBy('full_name')->values()->all();
+
+        return response()->json($sorted_users, 200);
     }
+
 
     public function getAllResignedUser()
     {
         $users = DB::table('users')->where('status', '=', "deactivated")->get();
-        return response()->json($users, 200);
+
+        foreach ($users as $user) {
+            $user->full_name = $user->first_name . ' ' . $user->last_name;
+        }
+
+        $sorted_users = $users->sortBy('full_name')->values()->all();
+
+        return response()->json($sorted_users, 200);
     }
+
 
     public function getAllRejectedUser()
     {
@@ -608,5 +621,72 @@ class UserController extends Controller
         $response['status'] = 'Successful';
         $response['message'] = 'Password has been updated';
         return response()->json($response);
+    }
+
+    public function reportExtensionProgramsPerFaculty($userId)
+    {
+        $user = DB::table('users')->where('id', $userId)->first();
+
+        $upcomingPrograms = Program::where('status', 'upcoming')
+            ->whereExists(function ($query) use ($userId) {
+                $query->select(DB::raw(1))
+                    ->from('members')
+                    ->join('users', 'users.id', '=', 'members.faculty')
+                    ->where('members.program', '=', DB::raw('programs.id'))
+                    ->where('users.id', '=', $userId);
+            })
+            ->orderBy('start_date')
+            ->get(['title', 'partner', 'start_date', 'end_date']);
+
+        $ongoingPrograms = Program::where('status', 'ongoing')
+            ->whereExists(function ($query) use ($userId) {
+                $query->select(DB::raw(1))
+                    ->from('members')
+                    ->join('users', 'users.id', '=', 'members.faculty')
+                    ->where('members.program', '=', DB::raw('programs.id'))
+                    ->where('users.id', '=', $userId);
+            })
+            ->orderBy('start_date')
+            ->get(['title', 'partner', 'start_date', 'end_date']);
+
+        $completedPrograms = Program::whereIn('status', ['completed', 'ended'])
+            ->whereExists(function ($query) use ($userId) {
+                $query->select(DB::raw(1))
+                    ->from('members')
+                    ->join('users', 'users.id', '=', 'members.faculty')
+                    ->where('members.program', '=', DB::raw('programs.id'))
+                    ->where('users.id', '=', $userId);
+            })
+            ->orderBy('start_date')
+            ->get(['title', 'partner', 'start_date', 'end_date']);
+
+
+        $data = [
+            'user' => $user,
+            'upcomingPrograms' => $upcomingPrograms,
+            'ongoingPrograms' => $ongoingPrograms,
+            'completedPrograms' => $completedPrograms,
+        ];
+
+        $pdf = PDF::loadView('reports.list_per_faculty', $data);
+        return $pdf->stream();
+    }
+
+    public function credentialCheck(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|unique:users',
+            'email' => 'required|email|unique:users'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'email' => $validator->errors()->has('email') ? 'existing' : 'unique',
+                'id' => $validator->errors()->has('id') ? 'existing' : 'unique',
+            ]);
+        }
+
+        // If the validation passes, return a response with no additional data
+        return response()->json();
     }
 }
