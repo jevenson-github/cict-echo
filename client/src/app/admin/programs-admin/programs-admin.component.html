@@ -283,7 +283,7 @@
                       a different keyword or check your spelling. You can also browse all your partners by clicking the
                       button below.</p>
                     <div class="mt-4 space-x-2">
-                      <button (click)="clearSearch()" class="btn-small btn-secondary-outline">Clear search</button>
+                      <button (click)="clearSearch()" class="btn-small btn-secondary">Clear search</button>
                       <button class="btn-small btn-primary">
                         <svg class="inline w-4 h-4 mr-1 text-white" viewBox="0 0 24 24" fill="none"
                           xmlns="http://www.w3.org/2000/svg">
@@ -514,7 +514,7 @@
           </div>
           <a
             href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.attendance}}">
-            <button class="btn-small btn-secondary-outline">
+            <button class="btn-small btn-secondary">
               Download
             </button>
           </a>
@@ -543,7 +543,7 @@
           </div>
           <a
             href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.certificate}}">
-            <button class="btn-small btn-secondary-outline">
+            <button class="btn-small btn-secondary">
               Download
             </button>
           </a>
@@ -574,7 +574,7 @@
           </div>
           <a
             href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.invitation}}">
-            <button class="btn-small btn-secondary-outline">
+            <button class="btn-small btn-secondary">
               Download
             </button>
           </a>
@@ -678,7 +678,7 @@
 
 
         <div class="grid grid-cols-2 mt-6 space-x-3">
-          <button (click)="updateModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="updateModal = false" class="btn-small btn-secondary">Cancel</button>
           <button (click)="updateProgram()" [disabled]="updateLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!updateLoading">Update</ng-container>
             <ng-container *ngIf="updateLoading">
@@ -740,7 +740,7 @@
         cannot be undone.
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="deleteModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="deleteModal = false" class="btn-small btn-secondary">Cancel</button>
         <button (click)="deleteProgram()" [disabled]="deleteLoading" class="btn-small btn-solid-negative">
           <ng-container *ngIf="!deleteLoading">Delete</ng-container>
           <ng-container *ngIf="deleteLoading">
@@ -794,7 +794,7 @@
       <h4 class="mt-2 text-lg font-semibold text-center">Post program</h4>
       <p class="text-neutral-700 text-sm text-center mx-2">Are you sure you want to post this program?</p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="postModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="postModal = false" class="btn-small btn-secondary">Cancel</button>
         <button (click)="postProgram()" [disabled]="postLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!postLoading">Post</ng-container>
           <ng-container *ngIf="postLoading">
@@ -955,7 +955,7 @@
         </div>
 
         <div class="grid grid-cols-2 mt-8 space-x-3">
-          <button (click)="addModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="addModal = false" class="btn-small btn-secondary">Cancel</button>
           <button type="submit" [disabled]="addLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!addLoading">Add</ng-container>
             <ng-container *ngIf="addLoading">
@@ -1050,7 +1050,7 @@
         </div>
 
         <div class="mt-6 grid grid-cols-2 space-x-3">
-          <button (click)="markAsCompleteModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="markAsCompleteModal = false" class="btn-small btn-secondary">Cancel</button>
           <button type="submit" [disabled]="markAsCompleteLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!markAsCompleteLoading">Mark as complete</ng-container>
             <ng-container *ngIf="markAsCompleteLoading">
@@ -1131,7 +1131,7 @@
         </div>
 
         <div class="grid grid-cols-2 mt-6 space-x-3">
-          <button (click)="addMemberRoleModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="addMemberRoleModal = false" class="btn-small btn-secondary">Cancel</button>
           <button (click)="addMemberRoleProgram()" [disabled]="addMemberRoleLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!addMemberRoleLoading">Add</ng-container>
             <ng-container *ngIf="addMemberRoleLoading">

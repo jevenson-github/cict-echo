@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('department');
             $table->string('designation');
-            $table->enum('user_level', ['admin', 'faculty'])->default('faculty');
+            $table->enum('user_level', ['admin', 'faculty', 'successor'])->default('faculty');
             $table->enum('status', ['verified', 'pending', 'rejected', 'deactivated'])->default('pending');
             $table->timestamps();
         });

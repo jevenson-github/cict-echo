@@ -458,7 +458,7 @@ class UserController extends Controller
 
     public function getUser($id) ///
     {
-        $user = User::select('id', 'first_name', 'last_name', 'email', 'department', 'designation', 'profile_image', 'user_level', 'status')
+        $user = User::select('id', 'first_name', 'last_name', 'email', 'department', 'designation', 'user_level', 'status')
             ->where('id', $id)
             ->first();
 
@@ -466,7 +466,52 @@ class UserController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        return response()->json(['user' => $user], 200);
+        return response()->json($user, 200);
+    }
+
+    public function getSuccessor()
+    {
+        $users = DB::table('users')->where('user_level', '=', "successor")->get();
+
+
+        foreach ($users as $user) {
+            $user->full_name = $user->first_name . ' ' . $user->last_name;
+        }
+
+        $sorted_users = $users->sortBy('full_name')->values()->all();
+
+
+        return response()->json($sorted_users, 200);
+    }
+
+    public function makeSuccessor($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->user_level = 'successor';
+        $user->save();
+
+        return response()->json(['message' => 'User has been added as a successor.']);
+    }
+
+    public function removeSuccessor()
+    {
+        $users = User::where('user_level', 'successor')->get();
+
+        if ($users->isEmpty()) {
+            return response()->json(['message' => 'No users found with user_level = "successor"'], 404);
+        }
+
+        foreach ($users as $user) {
+            $user->user_level = 'faculty';
+            $user->save();
+        }
+
+        return response()->json(['message' => 'Users have been removed as successors and set as faculty.']);
     }
 
     public function indexUser() ///
@@ -623,54 +668,6 @@ class UserController extends Controller
         return response()->json($response);
     }
 
-    public function reportExtensionProgramsPerFaculty($userId)
-    {
-        $user = DB::table('users')->where('id', $userId)->first();
-
-        $upcomingPrograms = Program::where('status', 'upcoming')
-            ->whereExists(function ($query) use ($userId) {
-                $query->select(DB::raw(1))
-                    ->from('members')
-                    ->join('users', 'users.id', '=', 'members.faculty')
-                    ->where('members.program', '=', DB::raw('programs.id'))
-                    ->where('users.id', '=', $userId);
-            })
-            ->orderBy('start_date')
-            ->get(['title', 'partner', 'start_date', 'end_date']);
-
-        $ongoingPrograms = Program::where('status', 'ongoing')
-            ->whereExists(function ($query) use ($userId) {
-                $query->select(DB::raw(1))
-                    ->from('members')
-                    ->join('users', 'users.id', '=', 'members.faculty')
-                    ->where('members.program', '=', DB::raw('programs.id'))
-                    ->where('users.id', '=', $userId);
-            })
-            ->orderBy('start_date')
-            ->get(['title', 'partner', 'start_date', 'end_date']);
-
-        $completedPrograms = Program::whereIn('status', ['completed', 'ended'])
-            ->whereExists(function ($query) use ($userId) {
-                $query->select(DB::raw(1))
-                    ->from('members')
-                    ->join('users', 'users.id', '=', 'members.faculty')
-                    ->where('members.program', '=', DB::raw('programs.id'))
-                    ->where('users.id', '=', $userId);
-            })
-            ->orderBy('start_date')
-            ->get(['title', 'partner', 'start_date', 'end_date']);
-
-
-        $data = [
-            'user' => $user,
-            'upcomingPrograms' => $upcomingPrograms,
-            'ongoingPrograms' => $ongoingPrograms,
-            'completedPrograms' => $completedPrograms,
-        ];
-
-        $pdf = PDF::loadView('reports.list_per_faculty', $data);
-        return $pdf->stream();
-    }
 
     public function credentialCheck(Request $request)
     {
@@ -688,5 +685,74 @@ class UserController extends Controller
 
         // If the validation passes, return a response with no additional data
         return response()->json();
+    }
+
+    public function verifyPassword(Request $request)
+    {
+        $id = $request->input('id');
+        $password = $request->input('password');
+
+        // Retrieve the user from the database based on the provided ID
+        $user = User::find($id);
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Verify the password
+        if (Hash::check($password, $user->password)) {
+            $response['response'] = 'correct';
+            return response()->json($response);
+        } else {
+            $response['response'] = 'incorrect';
+            return response()->json($response);
+        }
+    }
+
+    public function acceptTransfer()
+    {
+        // Find the current admin
+        $currentAdmin = User::where('user_level', 'admin')->first();
+
+        // Find the successor
+        $successor = User::where('user_level', 'successor')->first();
+
+        if (!$currentAdmin || !$successor) {
+            return response()->json(['message' => 'Current admin or successor not found'], 404);
+        }
+
+        // Update user levels
+        $currentAdmin->user_level = 'faculty';
+        $successor->user_level = 'admin';
+
+        // Save the changes
+        $currentAdmin->save();
+        $successor->save();
+
+        return response()->json(['message' => 'Transfer of admin and successor completed successfully']);
+    }
+
+    public function rejectTransfer()
+    {
+        // Find the current admin
+        $currentAdmin = User::where('user_level', 'admin')->first();
+
+        // Find the successor
+        $successor = User::where('user_level', 'successor')->first();
+
+        if (!$currentAdmin || !$successor) {
+            return response()->json(['message' => 'Current admin or successor not found'], 404);
+        }
+
+        // Update user levels
+        $currentAdmin->user_level = 'admin';
+        $successor->user_level = 'faculty';
+
+        // Save the changes
+        $currentAdmin->save();
+        $successor->save();
+
+        return response()->json(['message' => 'Transfer of admin and successor completed successfully']);
     }
 }

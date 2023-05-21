@@ -5,10 +5,8 @@
             <div>
                 <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">Reports
                 </h2>
-                <p class="text-neutral-100 mt-1">View and manage the accounts of all faculty members and administrators,
-                    as well
-                    as
-                    filter and search for specific accounts.</p>
+                <p class="text-neutral-100 mt-1">Admin and faculty can generate and export customized reports with
+                    filters for date and section.</p>
             </div>
         </div>
 
@@ -20,10 +18,12 @@
 <main class="grid grid-cols-4 gap-4 container mx-auto px-8 -m-12">
 
     <section class="grid rounded-lg shadow col-span-4 p-8 bg-white gap-x-16 gap-y-8 h-fit">
+
         <div>
-            <h4 class="font-semibold">Essential reports</h4>
+            <h4 class="font-semibold text-xl">Essential reports</h4>
             <p class="text-sm text-neutral-700">Use a permanent address where you can receive mail. </p>
         </div>
+
         <div class="grid grid-cols-4 gap-4">
 
             <button (click)="terminalModal = true" class="btn-report-card">
@@ -112,164 +112,270 @@
     <div class="flex w-full h-full">
         <!-- Modal content -->
         <div class="modal max-w-md">
-            <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
-                <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path
-                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <title>Renew</title>
-                </svg>
-            </div>
-            <h4 class="mt-2 text-lg font-semibold">Terminal report</h4>
-            <p class="text-neutral-700 text-sm">Update the partner's contract.
-            </p>
+            <header>
+                <h4 class="text-xl font-semibold">Generate terminal report</h4>
+                <p class="text-neutral-700 text-sm mt-0.5">Please select the program you want to use to generate
+                    your report.</p>
+            </header>
 
-            <div class="mt-5 flex flex-col gap-y-4">
-
-                
-                <select id="partner" name="partner">
-                    <option value="{{partner.id}}" *ngFor="let partner of programArray">{{partner.name}}</option>
+            <main>
+                <select class="w-full" id="partner" name="partner">
+                    <option value="{{partner.id}}" *ngFor="let partner of programArray">{{partner.title}}</option>
                 </select>
+            </main>
 
-            </div>
-
-            <div class="grid grid-cols-2 mt-6 space-x-3">
-                <button (click)="terminalModal = false" class="btn-small btn-secondary-outline">Cancel</button>
-                <button (click)="terminalDownload()" type="submit" class="btn-small btn-primary">
-                    Download
+            <footer>
+                <button (click)="terminalGenerate()" [disabled]="terminalLoading" class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!terminalLoading">Generate report</ng-container>
+                    <ng-container *ngIf="terminalLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Generating report...
+                    </ng-container>
                 </button>
-            </div>
+                <button (click)="terminalModal = false" class="btn-small btn-secondary w-fit">Cancel</button>
+            </footer>
 
         </div>
     </div>
 </div>
 
-<!-- Monthly modal -->
+<!-- Monthly accomplishment modal -->
 <div *ngIf="monthlyModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="monthlyModal = false">
     <div class="flex w-full h-full">
         <!-- Modal content -->
         <div class="modal max-w-md">
-            <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
-                <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path
-                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <title>Renew</title>
-                </svg>
-            </div>
-            <h4 class="mt-2 text-lg font-semibold">Monthly accomplishment report</h4>
-            <p class="text-neutral-700 text-sm">Update the partner's contract.
-            </p>
+            <header>
+                <h4 class="text-xl font-semibold">Generate monthly accomplishmment report</h4>
+                <p class="text-neutral-700 text-sm mt-0.5">Please specify the month and year you want to generate your
+                    report for.</p>
+            </header>
 
-            <div class="mt-5 flex flex-col gap-y-4">
-                <select id="month" name="month" [(ngModel)]="selectedMonth">
-                    <option value="01">January</option>
-                    <option value="02">February</option>
-                    <option value="03">March</option>
-                    <option value="04">April</option>
-                    <option value="05">May</option>
-                    <option value="06">June</option>
-                    <option value="07">July</option>
-                    <option value="08">August</option>
-                    <option value="09">September</option>
-                    <option value="10">October</option>
-                    <option value="11">November</option>
-                    <option value="12">December</option>
-                </select>
-                <select id="year" name="year" [(ngModel)]="selectedYear">
-                    <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-                </select>
-        
-            </div>
-            
+            <main>
+                <div class="flex flex-row gap-3">
+                    <select id="month" name="month" [(ngModel)]="selectedMonth">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <select id="year" name="year" [(ngModel)]="selectedYear">
+                        <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+                    </select>
+                </div>
+            </main>
 
-            <div class="grid grid-cols-2 mt-6 space-x-3">
-                <button (click)="monthlyModal = false" class="btn-small btn-secondary-outline">Cancel</button>
-                <button (click)="monthlyDownload()" type="submit" class="btn-small btn-primary">
-                    Download
+            <footer>
+                <button (click)="monthlyDownload()" [disabled]="monthlyLoading" class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!monthlyLoading">Generate report</ng-container>
+                    <ng-container *ngIf="monthlyLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Generating report...
+                    </ng-container>
                 </button>
-            </div>
+                <button (click)="monthlyModal = false" class="btn-small btn-secondary w-fit">Cancel</button>
+            </footer>
 
         </div>
     </div>
 </div>
 
-<!-- Extension modal -->
-<div *ngIf="extensionModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="extensionModal = false">
-
-    <div class="flex w-full h-full">
-      <!-- Modal content -->
-      <div class="modal max-w-sm">
-        <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
-          <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path opacity="0.4"
-              d="M19.53 5.53L5.53 19.53C5.51 19.55 5.5 19.56 5.48 19.57C5.1 19.25 4.75 18.9 4.43 18.52C2.91 16.77 2 14.49 2 12C2 6.48 6.48 2 12 2C14.49 2 16.77 2.91 18.52 4.43C18.9 4.75 19.25 5.1 19.57 5.48C19.56 5.5 19.55 5.51 19.53 5.53Z"
-              fill="currentColor" />
-            <path opacity="0.4"
-              d="M21.9996 12.0001C21.9996 17.5201 17.5196 22.0001 11.9996 22.0001C10.0096 22.0001 8.15961 21.4201 6.59961 20.4001L20.3996 6.6001C21.4196 8.1601 21.9996 10.0101 21.9996 12.0001Z"
-              fill="currentColor" />
-            <path
-              d="M21.7709 2.22988C21.4709 1.92988 20.9809 1.92988 20.6809 2.22988L2.23086 20.6899C1.93086 20.9899 1.93086 21.4799 2.23086 21.7799C2.38086 21.9199 2.57086 21.9999 2.77086 21.9999C2.97086 21.9999 3.16086 21.9199 3.31086 21.7699L21.7709 3.30988C22.0809 3.00988 22.0809 2.52988 21.7709 2.22988Z"
-              fill="currentColor" />
-          </svg>
-  
-        </div>
-        <h4 class="mt-2 text-lg font-semibold text-center">List of extension partner</h4>
-        <p class="text-neutral-700 text-sm text-center mx-2">Do you want to generate list of extension partners report?
-        </p>
-        <div class="grid grid-cols-2 mt-6 space-x-3">
-          <button (click)="extensionModal = false" class="btn-small btn-secondary-outline">Cancel</button>
-          <button (click)="downloadExtensions()" class="btn-small btn-primary">
-            Download
-          </button>
-        </div>
-      </div>
-    </div>
-  
-  </div>
-
-  <!-- Faculty modal -->
-<div *ngIf="facultyModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="facultyModal = false">
+<!-- Extension List Modal -->
+<div *ngIf="extensionModal=== true" tabindex="-1" class="modal-bg" (keydown.escape)="extensionModal = false">
     <div class="flex w-full h-full">
         <!-- Modal content -->
         <div class="modal max-w-md">
-            <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
-                <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path
-                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <title>Renew</title>
-                </svg>
-            </div>
-            <h4 class="mt-2 text-lg font-semibold">Faculty report</h4>
-            <p class="text-neutral-700 text-sm">Update the partner's contract.
-            </p>
+            <header>
+                <h4 class="text-xl font-semibold">Generate list of extension partners</h4>
+                <p class="text-neutral-700 text-sm mt-0.5">Please select the status and date range of the extension
+                    partners you want to show in the report</p>
+            </header>
 
-            <div class="mt-5 flex flex-col gap-y-4">
+            <main class="flex flex-col gap-3">
 
-                
-                <select id="faculty" name="faculty">
-                    <option value="{{faculty.id}}" *ngFor="let faculty of facultyArray">{{faculty.first_name + ' ' + faculty.last_name}}</option>
-                </select>
+                <div class="grid grid-cols-2 gap-3 ">
+                    <div class="date-range-picker">
+                        <label>Start date</label>
+                        <input id="startDate" type="date" placeholder="Start Date">
+                    </div>
+                    <div>
+                        <label>End date</label>
+                        <input id="endDate" type="date" placeholder="End Date">
+                    </div>
+                </div>
+                <div>
+                    <label>Status</label>
+                    <select class="w-full" id="status" name="status">
+                        <option value="all">All</option>
+                        <option value="active">Active</option>
+                        <option value="archived">Archived</option>
+                        <option value="draft">Draft</option>
+                        <option value="expired">Expired</option>
+                        <option value="terminated">Terminated</option>
+                    </select>
+                </div>
+            </main>
 
-            </div>
-
-            <div class="grid grid-cols-2 mt-6 space-x-3">
-                <button (click)="facultyModal = false" class="btn-small btn-secondary-outline">Cancel</button>
-                <button (click)="facultyDownload()" type="submit" class="btn-small btn-primary">
-                    Download
+            <footer>
+                <button (click)="downloadExtensions()" [disabled]="extensionLoading"
+                    class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!extensionLoading">Generate report</ng-container>
+                    <ng-container *ngIf="extensionLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Generating report...
+                    </ng-container>
                 </button>
-            </div>
+                <button (click)="extensionModal = false" class="btn-small btn-secondary w-fit">Cancel</button>
+            </footer>
 
         </div>
     </div>
+</div>
+
+<!-- Extension List Modal -->
+<div *ngIf="facultyModal=== true" tabindex="-1" class="modal-bg" (keydown.escape)="facultyModal = false">
+    <div class="flex w-full h-full">
+        <!-- Modal content -->
+        <div class="modal max-w-md">
+            <header>
+                <h4 class="text-xl font-semibold">Generate list of extension partners</h4>
+                <p class="text-neutral-700 text-sm mt-0.5">Please select the status and date range of the extension
+                    partners you want to show in the report</p>
+            </header>
+
+            <main class="flex flex-col gap-3">
+
+                <div>
+                    <label>Faculty</label>
+                    <select id="faculty" name="faculty">
+                        <option value="{{faculty.id}}" *ngFor="let faculty of facultyArray">{{faculty.first_name + ' ' +
+                            faculty.last_name}}</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label>Start date</label>
+                        <input id="startDate" type="date" placeholder="Start Date">
+                    </div>
+                    <div>
+                        <label>End date</label>
+                        <input id="endDate" type="date" placeholder="End Date">
+                    </div>
+                </div>
+            </main>
+
+            <footer>
+                <button (click)="facultyDownload()" [disabled]="facultyLoading" class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!facultyLoading">Generate report</ng-container>
+                    <ng-container *ngIf="facultyLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Generating report...
+                    </ng-container>
+                </button>
+                <button (click)="facultyModal = false" class="btn-small btn-secondary w-fit">Cancel</button>
+            </footer>
+
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="container px-8 w-full mx-auto">
+
+    <!-- Terminal Toast -->
+    <div *ngIf="terminalToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Terminal report generated successfully.</div>
+    </div>
+
+    <!-- Montly Accomplishment Report Toast -->
+    <div *ngIf="monthlyToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Monthly accomplishment report generated successfully.</div>
+    </div>
+
+    <!-- Extension Partners List Report Toast -->
+    <div *ngIf="extensionToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">List of extension partners report generated successfully.</div>
+    </div>
+
+    <!-- Extension Program Per Faculty Report Toast -->
+    <div *ngIf="facultyToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">List of faculty's extension programs report generated successfully.</div>
+    </div>
+
 </div>

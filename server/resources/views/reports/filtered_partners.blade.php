@@ -65,31 +65,30 @@
         <img src="{{ public_path('reports/footer.png') }}">
     </footer>
 
-    <center><strong class="text-transform: uppercase">EXTENSION COMMUNITY INVOLVEMENT <br> MONTHLY ACCOMPLISHMENT REPORT FOR {{ strtoupper(date('F', strtotime($month))) }} {{ date('Y', strtotime($year)) }}</strong></center>
+    <center class="text-transform: uppercase"><strong>EXTENSION COMMUNITY INVOLVEMENT</strong><br>LIST OF {{ strtoupper($status) }} PARTNERS</center>
 
     <br>
 
     <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Initiative</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($programs as $program)
-                <tr>
-                    <td>{{ $program->title }}</td>
-                    <td align="center">{{ $program->initiative }}</td>
-                    <td align="center">{{ date('M d, Y', strtotime($program->start_date )) }}</td>
-                    <td align="center">{{ date('M d, Y', strtotime($program->end_date )) }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Contact Person</th>
+                <th>Validity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($partners as $partner)
+            <tr>
+                <td>{{ $partner['name'] }}</td>
+                <td>{{ $partner['address'] }}</td>
+                <td>{{ $partner['contact_person'] }} <br> {{ $partner['contact_number'] }}</td>
+                <td>{{ \Carbon\Carbon::parse($partner['start_date'])->format('F d, Y') }} - {{ \Carbon\Carbon::parse($partner['end_date'])->format('F d, Y') }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 
 </body>
 

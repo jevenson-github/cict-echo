@@ -29,6 +29,8 @@ import { EditProgramAdminComponent } from './admin/programs-admin/edit-program-a
 import { ViewPartnerAdminComponent } from './admin/partners-admin/view-partner-admin/view-partner-admin.component';
 import { EditPartnerAdminComponent } from './admin/partners-admin/edit-partner-admin/edit-partner-admin.component';
 import { AddProgramAdminComponent } from './admin/programs-admin/add-program-admin/add-program-admin.component';
+import { SettingsAdminComponent } from './admin/settings-admin/settings-admin.component';
+import { SuccessorTransferComponent } from './auth/successor-transfer/successor-transfer.component';
 
 
 
@@ -51,6 +53,7 @@ const routes: Routes = [
       { path: 'programs/edit', component: EditProgramAdminComponent},
       { path: 'programs/add', component: AddProgramAdminComponent},
       { path: 'reports', component: ReportsAdminComponent},
+      { path: 'settings', component: SettingsAdminComponent},
     ],
   },
 
@@ -78,6 +81,7 @@ const routes: Routes = [
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'sign-up', component: SignUpComponent },
       { path: 'reset-password', component: ResetPasswordComponent },
+      { path: 'successor-transfer', component: SuccessorTransferComponent}
     ],
   },
 

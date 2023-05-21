@@ -28,7 +28,6 @@ Route::prefix('auth')->group(function () {
     Route::post('/sign-in', 'App\Http\Controllers\UserController@signIn');
     Route::post('/send-reset-link', 'App\Http\Controllers\UserController@sendResetLink');
     Route::post('/credential-check', 'App\Http\Controllers\UserController@credentialCheck');
-
 });
 
 // User routes for user management
@@ -44,6 +43,8 @@ Route::prefix('user')->group(function () {
     Route::post('/update-position/{id}', 'App\Http\Controllers\UserController@updatePosition');
     Route::post('/make-admin/{id}', 'App\Http\Controllers\UserController@makeAdmin');
     Route::post('/make-faculty/{id}', 'App\Http\Controllers\UserController@makeFaculty');
+    Route::post('/make-successor/{id}', 'App\Http\Controllers\UserController@makeSuccessor');
+    Route::post('/remove-successor', 'App\Http\Controllers\UserController@removeSuccessor');
     Route::get('/get-user/{id}', 'App\Http\Controllers\UserController@getUser');
     Route::get('/index-user', 'App\Http\Controllers\UserController@indexUser');
     Route::get('/verified-user', 'App\Http\Controllers\UserController@getAllVerifiedUser');
@@ -53,7 +54,10 @@ Route::prefix('user')->group(function () {
     Route::get('/rejected-user', 'App\Http\Controllers\UserController@getAllRejectedUser');
     Route::get('/get-admin', 'App\Http\Controllers\UserController@getAllAdmins');
     Route::get('/get-faculty', 'App\Http\Controllers\UserController@getAllFaculty');
-
+    Route::get('/get-successor', 'App\Http\Controllers\UserController@getSuccessor');
+    Route::post('/verify-password', 'App\Http\Controllers\UserController@verifyPassword');
+    Route::post('/accept-transfer', 'App\Http\Controllers\UserController@acceptTransfer');
+    Route::post('/reject-transfer', 'App\Http\Controllers\UserController@rejectTransfer');
 });
 
 // Partner routes for partner management
@@ -68,7 +72,6 @@ Route::prefix('partner')->group(function () {
     Route::get('/get-moa-files/{id}', 'App\Http\Controllers\PartnerController@getMoaFiles');
     Route::get('/get-partner-active', 'App\Http\Controllers\PartnerController@activePartner');
     Route::get('/expiring-partners', 'App\Http\Controllers\PartnerController@getExpiringPartners');
-
 });
 
 Route::prefix('dashboard')->group(function () {
@@ -87,18 +90,14 @@ Route::prefix('program')->group(function () {
     Route::get('/get-program/{id}', 'App\Http\Controllers\ProgramController@getProgram');
     Route::get('/display-program/{id}', 'App\Http\Controllers\ProgramController@displayProgram');
     Route::get('/display-program-title/{id}', 'App\Http\Controllers\ProgramController@displayTitleProgram');
-    Route::get('/index', 'App\Http\Controllers\ProgramController@indexProgram');    
+    Route::get('/index', 'App\Http\Controllers\ProgramController@indexProgram');
     Route::post('/add-member-role', 'App\Http\Controllers\ProgramController@addMemberRoleProgram');
 });
 
 Route::prefix('report')->group(function () {
-   Route::get('/partners', 'App\Http\Controllers\PartnerController@reportPartners');
-   Route::post('/accomplishment-monthly', 'App\Http\Controllers\ProgramController@reportMonthlyAccomplishment');
-    Route::post('/accomplishment-annual', 'App\Http\Controllers\ProgramController@getProgramsBySchoolYear');
-   Route::get('/terminal/{id}', 'App\Http\Controllers\ProgramController@reportTerminal');
-   Route::get('/extension-faculty/{id}', 'App\Http\Controllers\UserController@reportExtensionProgramsPerFaculty');
-
+    Route::get('/terminal/{id}', 'App\Http\Controllers\ReportController@reportTerminal');
+    Route::post('/partners', 'App\Http\Controllers\ReportController@reportPartners');
+    Route::post('/accomplishment-monthly', 'App\Http\Controllers\ReportController@reportMonthly');
+    Route::post('/accomplishment-annual', 'App\Http\Controllers\ReportController@getProgramsBySchoolYear');
+    Route::post('/extension-faculty', 'App\Http\Controllers\ReportController@reportFaculty');
 });
-
-
-

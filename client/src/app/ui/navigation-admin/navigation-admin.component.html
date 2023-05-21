@@ -1,12 +1,11 @@
-<header class="w-full flex justify-center h-16 fixed top-0 z-50  bg-opacity-75  transition-all	duration-75	 "
+<header class="w-full items-center flex justify-center h-16 fixed top-0 z-50  bg-opacity-75  transition-all	duration-75	 "
   [class.border-b]="scrolled"
   [class.bg-white]="scrolled"
   [class.bg-saturate-200]="scrolled"
   [class.backdrop-blur]="scrolled">
-  <div class="container justify-between flex items-center w-full px-8">
-    <div class="flex items-center">
+  <div class="container grid grid-cols-4 items-center w-full mx-auto px-8">
       <img [src]="logoUrl" class="h-6 w-auto">
-      <nav class="ml-6 gap-x-2 flex">
+      <nav class="gap-x-2 flex col-span-2 mx-auto">
         <a routerLink="./home" class="nav-link" routerLinkActive="nav-link-active" [class.text-neutral-900]="scrolled">Home</a>
         <a routerLink="./dashboard" class="nav-link" routerLinkActive="nav-link-active" [class.text-neutral-900]="scrolled">Dashboard</a>
         <a routerLink="./programs" class="nav-link" routerLinkActive="nav-link-active" [class.text-neutral-900]="scrolled">Programs</a>
@@ -14,7 +13,6 @@
         <a routerLink="./faculty" class="nav-link" routerLinkActive="nav-link-active" [class.text-neutral-900]="scrolled">Faculty</a>
         <a routerLink="./reports" class="nav-link" routerLinkActive="nav-link-active" [class.text-neutral-900]="scrolled">Reports</a>
       </nav>
-    </div>
     <div class="justify-self-end flex flex-row gap-x-2">
 
       <!-- Account menu -->
@@ -37,7 +35,7 @@
             <div class="truncate text-xs">{{designation}}</div>
           </div>
           <div class="flex flex-col gap-y-1 pt-3">
-            <a class="nav-link text-black text-sm" (click)="settings()">
+            <a class="nav-link text-black text-sm" routerLink="./settings">
               Settings
             </a>
             <a routerLink="#" class="nav-link text-black text-sm" (click)="signOut()">
@@ -210,7 +208,7 @@
         </div>
 
         <div class="grid grid-cols-1 mt-6 space-x-3">
-          <button (click)="updateModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="updateModal = false" class="btn-small btn-secondary">Cancel</button>
         </div>
       </div>
     </div>

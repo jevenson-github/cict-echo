@@ -49,11 +49,13 @@ import { EditProgramAdminComponent } from './admin/programs-admin/edit-program-a
 import { ViewPartnerAdminComponent } from './admin/partners-admin/view-partner-admin/view-partner-admin.component';
 import { EditPartnerAdminComponent } from './admin/partners-admin/edit-partner-admin/edit-partner-admin.component';
 import { AddProgramAdminComponent } from './admin/programs-admin/add-program-admin/add-program-admin.component';
+import { SettingsAdminComponent } from './admin/settings-admin/settings-admin.component';
+import { SuccessorTransferComponent } from './auth/successor-transfer/successor-transfer.component';
 const avatarColors = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6"];
 
 
 @NgModule({
-  declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, ResetPasswordComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, FacultyAdminComponent, PartnersAdminComponent, ProgramsAdminComponent, ReportsAdminComponent, ProgramReportComponent, PartnerReportComponent, PartnersReportComponent, HomeAdminComponent, HeaderAdminComponent, ViewProgramAdminComponent, EditProgramAdminComponent, ViewPartnerAdminComponent, EditPartnerAdminComponent, AddProgramAdminComponent],
+  declarations: [AppComponent, AdminComponent, FacultyComponent, NavigationAdminComponent, DashboardAdminComponent, NotificationAdminComponent, AuthComponent, ResetPasswordComponent, SignInComponent, ForgotPasswordComponent, SignUpComponent, FacultyAdminComponent, PartnersAdminComponent, ProgramsAdminComponent, ReportsAdminComponent, ProgramReportComponent, PartnerReportComponent, PartnersReportComponent, HomeAdminComponent, HeaderAdminComponent, ViewProgramAdminComponent, EditProgramAdminComponent, ViewPartnerAdminComponent, EditPartnerAdminComponent, AddProgramAdminComponent, SettingsAdminComponent, SuccessorTransferComponent],
   imports: [BrowserModule, NgChartsModule, CommonModule, NgChartsModule, EditorModule, FormsModule, AvatarModule.forRoot({ colors: avatarColors }), AppRoutingModule, AppRoutingModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxPaginationModule, Ng2SearchPipeModule, RouterModule.forRoot([]),     NgxEchartsModule.forRoot({
     echarts: () => import('echarts')
   })],

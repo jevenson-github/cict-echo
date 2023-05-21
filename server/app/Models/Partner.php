@@ -15,4 +15,10 @@ class Partner extends Model
     protected $guarded = [];
 
     // Define any relationships or custom methods here
+
+    // In the Partner model
+    public function programs()
+    {
+        return $this->hasMany(Program::class, 'partner');
+    }
 }

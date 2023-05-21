@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormBuilder, Validators, FormControl, FormsModule, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';import { environment } from 'src/environments/environment';
+import { animate, style, transition, trigger } from '@angular/animations';
+
 
 
 @Component({
   selector: 'app-partners-admin',
   templateUrl: './partners-admin.component.html',
-  styleUrls: ['./partners-admin.component.css']
+  styleUrls: ['./partners-admin.component.css'],
 })
 
 export class PartnersAdminComponent implements OnInit {
@@ -151,7 +153,7 @@ export class PartnersAdminComponent implements OnInit {
   moaFile: any;
 
   renewPartnerModal(data: any) {
-    this.renewModal = true;
+    this.renewModal = !this.renewModal;
     this.partner = data.id;
 
     this.form2 = this.formBuilder2.group({

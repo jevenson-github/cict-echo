@@ -1,0 +1,371 @@
+<header class="w-full gradient">
+    <div class="h-16"></div>
+    <div class="container mx-auto p-8">
+        <div class="flex flex-row w-full gap-4">
+            <ngx-avatar class=" rounded-full object-cover object-top flex-none"
+                [src]="'http://127.0.0.1:8000/users/' + id + '.webp'"
+                [name]="first_name.charAt(0) + last_name.charAt(0)" [size]="64" [bgColor]>
+            </ngx-avatar>
+            <div>
+                <p class="text-neutral-100 mt-1 opacity-75 tracking-widest">SETTINGS</p>
+                <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">{{ first_name }} {{
+                    last_name }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="h-16"></div>
+</header>
+
+<!-- Content area -->
+<main class="grid grid-cols-4 gap-4 container mx-auto px-8 -m-12">
+
+    <nav class=" bg-white p-8 h-fit shadow rounded-lg w-full flex flex-col gap-y-1">
+        <ng-container *ngFor="let tab of tabs; let i = index">
+            <a class="tab-link" [class.tab-link-active]="activeTab === i" (click)="setActiveTab(i)">
+                {{ tab.label }}
+            </a>
+        </ng-container>
+    </nav>
+
+    <section class="col-span-3 p-8 gap-6 flex flex-col bg-white shadow rounded-lg w-full" *ngIf="activeTab === 0">
+
+        <!-- Avatar fieldset -->
+        <div class="fieldset">
+            <main class="flex justify-between">
+                <div>
+                    <h4 class="text-xl font-semibold text-neutral-950">Your avatar</h4>
+                    <p class="text-sm text-neutral-700 mt-1">This is your avatar. Click on the avatar to upload a custom
+                        one
+                        from your files.</p>
+                </div>
+                <label for="profile_picture">
+                    <ngx-avatar class="rounded-full flex-none"
+                        [src]=" avatarPreview ||  'http://127.0.0.1:8000/users/' + id + '.webp'"
+                        [name]="first_name.charAt(0) + ' ' + last_name.charAt(0) " [size]="128" [bgColor]>
+                    </ngx-avatar>
+                </label>
+                <input id="profile_picture" name="profile_picture" class="hidden" type="file" accept="image/*"
+                    #fileInput (change)="avatarSelected($event)">
+            </main>
+            <footer>
+                <p class="text-sm text-neutral-500">An avatar is optional but strongly recommended.</p>
+            </footer>
+        </div>
+
+        <!-- Name fieldset -->
+        <div class="fieldset">
+            <main>
+                <div>
+                    <h4 class="text-xl font-semibold text-neutral-950">Your name</h4>
+                    <p class="text-sm text-neutral-700 mt-1">Please enter your full name.</p>
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <div class="max-w-xs">
+                        <label for="first_name">First name</label>
+                        <input id="first_name" name="first_name" type="text" class="input input-bordered"
+                            [(ngModel)]="first_name">
+                    </div>
+
+                    <div class="max-w-xs">
+                        <label for="last_name">Last name</label>
+                        <input id="last_name" name="last_name" type="text" class="input input-bordered"
+                            [(ngModel)]="last_name">
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <p class="text-sm text-neutral-500"></p>
+                <button (click)="updateName()" [disabled]="updateNameLoading" class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!updateNameLoading">Save changes</ng-container>
+                    <ng-container *ngIf="updateNameLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Saving changes...
+                    </ng-container>
+                </button>
+            </footer>
+        </div>
+
+        <!-- Description fieldset -->
+        <div class="fieldset">
+            <main>
+                <div>
+                    <h4 class="text-xl font-semibold text-neutral-950">Your description</h4>
+                    <p class="text-sm text-neutral-700 mt-1">Please enter your department and designation.</p>
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <div class="max-w-xs">
+                        <label for="department">Department</label>
+                        <input id="department" name="department" type="text" class="input input-bordered"
+                            [(ngModel)]="department" disabled>
+                    </div>
+
+                    <div class="max-w-xs">
+                        <label for="designation">Designation</label>
+                        <input id="designation" name="designation" type="text" class="input input-bordered"
+                            [(ngModel)]="designation" disabled>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <p class="text-sm text-neutral-500">Description is automatically updated. You cannot edit it.</p>
+                <button class="btn-small btn-primary">Save changes</button>
+            </footer>
+        </div>
+
+    </section>
+
+    <section class="col-span-3 p-8 gap-6 flex flex-col bg-white shadow rounded-lg w-full" *ngIf="activeTab === 1">
+
+        <div class="fieldset">
+            <main>
+                <div>
+                    <h4 class="text-xl font-semibold text-neutral-950">Email address</h4>
+                    <p class="text-sm text-neutral-700 mt-1">Please enter the email address you want to use to log in with ECHO.</p>
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <div class="max-w-xs">
+                        <label for="new_email">New email address</label>
+                        <input id="new_email" name="new_email" type="email" [(ngModel)] = "email">
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <p class="text-sm text-neutral-500">We will email you to notify the change.</p>
+                <button (click)="updateEmail()" [disabled]="updateEmailLoading"
+                    class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!updateEmailLoading">Update email</ng-container>
+                    <ng-container *ngIf="updateEmailLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Updating email...
+                    </ng-container>
+                </button>
+            </footer>
+        </div>
+
+        <!-- Name fieldset -->
+        <div class="fieldset">
+            <main>
+                <div>
+                    <h4 class="text-xl font-semibold text-neutral-950">Password</h4>
+                    <p class="text-sm text-neutral-700 mt-1">Your password must be at least 8 characters long and
+                        include at least one upper and lower case letter, a number and a special character. Make sure
+                        your password matches the confirm password field.</p>
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <div class="max-w-xs">
+                        <label for="new_password">New password</label>
+                        <input id="new_password" name="new_password" type="password">
+                    </div>
+                    <div class="max-w-xs">
+                        <label for="confirm_password">Confirm new password</label>
+                        <input id="confirm_password" name="confirm_password" type="password">
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <p class="text-sm text-neutral-500">We will email you to notify the change.</p>
+                <button (click)="updatePassword()" [disabled]="updatePasswordLoading"
+                    class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!updatePasswordLoading">Update password</ng-container>
+                    <ng-container *ngIf="updatePasswordLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Updating password...
+                    </ng-container>
+                </button>
+            </footer>
+        </div>
+
+        <!-- Description fieldset -->
+        <div class="fieldset">
+            <main>
+                <div>
+                    <h4 class="text-xl font-semibold text-neutral-950">Successor</h4>
+                    <p class="text-sm text-neutral-700 mt-1">The current CESU head will be passing the administrative
+                        privileges to the selected successor. The successor will be responsible for all administrative
+                        tasks related to CESU.</p>
+                </div>
+                <div *ngIf="successorArray.length == 0" class="max-w-xs mt-4">
+                    <select id="successor" name="successor" name="successor" [(ngModel)]="selectedSuccessor">
+                        <option value="" disabled selected>Select a successor</option>
+                        <option value="{{faculty.id}}" *ngFor="let faculty of facultyArray">{{faculty.first_name + ' ' +
+                            faculty.last_name}}
+                        </option>
+                    </select>
+                </div>
+                <div *ngIf="successorArray.length == 1" class="max-w-xs mt-4">
+                    <div *ngFor="let successor of successorArray">
+                        <input id="successor" name="successor" type="text" class="input input-bordered"
+                            [(ngModel)]="successor.full_name" disabled>
+                    </div>
+                </div>
+
+            </main>
+            <footer>
+                <p class="text-sm text-neutral-500">You will no longer have access to administrative features after the
+                    successor accepts the role.</p>
+                <button (click)="assignSuccessor()" *ngIf="successorArray.length == 0" [disabled]="successorLoading"
+                    class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!successorLoading">Assign successor</ng-container>
+                    <ng-container *ngIf="successorLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Assigning successor...
+                    </ng-container>
+                </button>
+                <button (click)="removeSuccessor()" *ngIf="successorArray.length == 1" [disabled]="successorLoading"
+                    class="btn-small btn-primary w-fit">
+                    <ng-container *ngIf="!successorLoading">Remove successor</ng-container>
+                    <ng-container *ngIf="successorLoading">
+                        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                            viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.4"
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor" />
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentColor" />
+                        </svg>
+                        Removing successor...
+                    </ng-container>
+                </button>
+            </footer>
+        </div>
+
+    </section>
+    <div class="h-16"></div>
+</main>
+
+<!-- Toast Container -->
+<div class="container px-8 w-full mx-auto">
+
+    <!-- Update Avatar Success Toast -->
+    <div *ngIf="updateAvatarSuccess === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Avatar updated successfully!</div>
+    </div>
+
+    <!-- Update Avatar Failed Toast -->
+    <div *ngIf="updateAvatarFail === true" class="toast">
+        <svg class="h-8 w-8 text-red-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M13.4815 11.9983L16.696 8.78484C17.1013 8.37967 17.1013 7.70905 16.696 7.30388C16.2907 6.89871 15.6198 6.89871 15.2145 7.30388L12 10.5173L8.78546 7.30388C8.38015 6.89871 7.70929 6.89871 7.30398 7.30388C6.89867 7.70905 6.89867 8.37967 7.30398 8.78484L10.5185 11.9983L7.30398 15.2117C6.89867 15.6168 6.89867 16.2875 7.30398 16.6926C7.51363 16.9022 7.77918 17 8.04472 17C8.31027 17 8.57582 16.9022 8.78546 16.6926L12 13.4792L15.2145 16.6926C15.4242 16.9022 15.6897 17 15.9553 17C16.2208 17 16.4864 16.9022 16.696 16.6926C17.1013 16.2875 17.1013 15.6168 16.696 15.2117L13.4815 11.9983Z"
+                fill="#f87171" />
+        </svg>
+        <div class="pl-3 self-center">Failed to update image. The file upload is not an image file type.</div>
+    </div>
+
+    <!-- Update Name Toast -->
+    <div *ngIf="updateNameToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Name updated successfully!</div>
+    </div>
+
+    <!-- Update Password Toast -->
+    <div *ngIf="updatePasswordToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Password updated successfully!</div>
+    </div>
+
+    <!-- Update Password Toast -->
+    <div *ngIf="assignSuccessorToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Successor added successfully!</div>
+    </div>
+
+    <!-- Update Password Toast -->
+    <div *ngIf="removeSuccessorToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Successor removed successfully!</div>
+    </div>
+
+    <!-- Update Password Toast -->
+    <div *ngIf="updateEmailToast === true" class="toast">
+        <svg class="h-8 w-8 text-green-300 saturate-200 flex-none" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path opacity="0.4"
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                fill="currentColor" />
+            <path
+                d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+                fill="currentColor" />
+        </svg>
+        <div class="pl-3 self-center">Email address updated successfully!</div>
+    </div>
+
+
+</div>

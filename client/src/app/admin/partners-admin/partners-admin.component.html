@@ -3,7 +3,7 @@
   <div class="container mx-auto p-8">
     <div class="flex flex-row w-full justify-between">
       <div>
-        <h2 class="font-semibold truncate text-3xl tracking-tight text-white opacity-95">Partners
+        <h2 class="truncate text-3xl tracking-tight text-white opacity-95">Partners
         </h2>
         <p class="text-neutral-100 mt-1">View and manage the accounts of all faculty members and administrators, as well
           as
@@ -272,7 +272,7 @@
                       a different keyword or check your spelling. You can also browse all your partners by clicking the
                       button below.</p>
                     <div class="mt-4 space-x-2">
-                      <button (click)="clearSearch()" class="btn-small btn-secondary-outline">Clear search</button>
+                      <button (click)="clearSearch()" class="btn-small btn-secondary">Clear search</button>
                       <button class="btn-small btn-primary">
                         <svg class="inline w-4 h-4 mr-1 text-white" viewBox="0 0 24 24" fill="none"
                           xmlns="http://www.w3.org/2000/svg">
@@ -327,7 +327,7 @@
         cannot be undone?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="deleteModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="deleteModal = false" class="btn-small btn-secondary">Cancel</button>
         <button (click)="deletePartner()" [disabled]="deleteLoading" class="btn-small btn-solid-negative">
           <ng-container *ngIf="!deleteLoading">Delete</ng-container>
           <ng-container *ngIf="deleteLoading">
@@ -384,7 +384,7 @@
       <p class="text-neutral-700 text-sm text-center mx-2">Are you sure you want to terminate this partner?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="terminateModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="terminateModal = false" class="btn-small btn-secondary">Cancel</button>
         <button (click)="terminatePartner()" [disabled]="terminateLoading" class="btn-small btn-solid-negative">
           <ng-container *ngIf="!terminateLoading">Terminate</ng-container>
           <ng-container *ngIf="terminateLoading">
@@ -419,7 +419,7 @@
 </div>
 
 <!-- Renew modal -->
-<div *ngIf="renewModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="renewModal = false">
+<div *ngIf="renewModal === true" tabindex="-1" class="modal-bg " (keydown.escape)="renewModal = false">
   <div class="flex w-full h-full">
     <!-- Modal content -->
     <div class="modal max-w-md">
@@ -480,7 +480,7 @@
         </div>
 
         <div class="grid grid-cols-2 mt-6 space-x-3">
-          <button (click)="renewModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="renewModal = false" class="btn-small btn-secondary">Cancel</button>
           <button type="submit" [disabled]="renewLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!renewLoading">Renew</ng-container>
             <ng-container *ngIf="renewLoading">
@@ -601,7 +601,7 @@
 
 
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="updateModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="updateModal = false" class="btn-small btn-secondary">Cancel</button>
         <button (click)="updatePartner()" [disabled]="updateLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!updateLoading">Update</ng-container>
           <ng-container *ngIf="updateLoading">
@@ -745,7 +745,7 @@
 
 
         <div class="grid grid-cols-2 mt-6 space-x-3">
-          <button (click)="addModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+          <button (click)="addModal = false" class="btn-small btn-secondary">Cancel</button>
           <button type="submit" [disabled]="addLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!addLoading">Add</ng-container>
             <ng-container *ngIf="addLoading">
@@ -915,7 +915,7 @@
 
                     </div>
                     <a href="{{file.location}}">
-                      <button class="btn-small btn-secondary-outline">
+                      <button class="btn-small btn-secondary">
                         Download
                       </button>
                     </a>

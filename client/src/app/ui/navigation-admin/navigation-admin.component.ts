@@ -13,22 +13,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./navigation-admin.component.css']
 })
 export class NavigationAdminComponent implements OnInit {
-  scrolled: boolean = false;
-
-  logoUrl: string = 'assets/logo/echo-full-white.svg';
-
-
-
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    if (window.pageYOffset > 64) {
-      this.scrolled = true;
-      this.logoUrl = 'assets/logo/echo-full-colored.svg';
-    } else {
-      this.scrolled = false;
-      this.logoUrl = 'assets/logo/echo-full-white.svg';
-    }
-  }
 
   isMenuOpen = false;
   isNotificationOpen = false;
@@ -47,18 +31,42 @@ export class NavigationAdminComponent implements OnInit {
   constructor(private elementRef: ElementRef, private router: Router, private http: HttpClient, private fb: FormBuilder, private fb2: FormBuilder) {
     this.token = localStorage.getItem('token');
     this.userData = jwt_decode(this.token);
-    this.first_name = this.userData.firstName;
-    this.last_name = this.userData.lastName;
-    this.designation = this.userData.designation;
-    this.profile_image = this.userData.profileImage;
-    this.email = this.userData.emailAddress;
     this.id = this.userData.id;
   }
 
 
   ngOnInit(): void {
+    const userId = this.userData.id;
+    
+    this.http.get(environment.apiUrl + "/user/get-user/" + userId ).subscribe((resultData: any) => {
+      this.last_name = resultData.last_name;
+      this.first_name = resultData.first_name;
+      this.designation = resultData.designation;
+    });
+
     this.createPasswordForm();
   }
+
+  scrolled: boolean = false;
+
+  logoUrl: string = 'assets/logo/echo-full-white.svg';
+
+
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (window.pageYOffset > 64) {
+      this.scrolled = true;
+      this.logoUrl = 'assets/logo/echo-full-colored.svg';
+    } else {
+      this.scrolled = false;
+      this.logoUrl = 'assets/logo/echo-full-white.svg';
+    }
+  }
+
+
+
+
 
 
   @HostListener('document:click', ['$event'])

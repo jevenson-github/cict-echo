@@ -1,18 +1,81 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Extension Programs Per Faculty</title>
-    </head>
-    <body>
-        <h1>Extension Programs Per Faculty</h1>
-        <h2>User Details:</h2>
-        <p>
-            <strong>First Name:</strong> {{ $user->first_name }}<br>
-            <strong>Last Name:</strong> {{ $user->last_name }}<br>
-            <strong>Department:</strong> {{ $user->department }}<br>
-            <strong>Designation:</strong> {{ $user->designation }}
-        </p>
-        <h2>Upcoming Programs:</h2>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        @page {
+            size: Letter;
+            margin-top: 245px;
+            margin-bottom: 147px;
+            margin-left: 98px;
+            margin-right: 98px;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.5;
+        }
+
+        img {
+            width: 816px;
+        }
+
+        header {
+            position: fixed;
+            margin-top: -245px;
+            margin-left: -98px;
+            top: 0;
+        }
+
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            margin-bottom: -147px;
+            margin-left: -98px;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            padding: 2px 4px;
+        }
+        
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <img src="{{ public_path('reports/header.png') }}">
+    </header>
+
+    <footer>
+        <img src="{{ public_path('reports/footer.png') }}">
+    </footer>
+
+    <center><strong>EXTENSION COMMUNITY INVOLVEMENT FACULTY REPORT</strong></center>
+
+    <br>
+
+    <strong>Faculty name:</strong> {{ $user->first_name }} {{ $user->last_name }}
+    <br>
+    <strong>Description:</strong> {{ $user->department}} {{ $user->designation }}
+    <br><br>
+
+    <strong>Upcoming Programs:</strong>
         @if ($upcomingPrograms->count() > 0)
             <table>
                 <thead>
@@ -35,9 +98,12 @@
                 </tbody>
             </table>
         @else
-            <p>No upcoming programs found.</p>
+            No upcoming programs found.
         @endif
-        <h2>Ongoing Programs:</h2>
+
+        <br><br>
+
+        <strong>Ongoing Programs:</strong>
         @if ($ongoingPrograms->count() > 0)
             <table>
                 <thead>
@@ -60,9 +126,12 @@
                 </tbody>
             </table>
         @else
-            <p>No ongoing programs found.</p>
+            No ongoing programs found.
         @endif
-        <h2>Completed Programs:</h2>
+
+        <br><br>
+
+        <strong>Completed Programs:</strong>
         @if ($completedPrograms->count() > 0)
             <table>
                 <thead>
@@ -87,7 +156,8 @@
                 </tbody>
             </table>
         @else
-            <p>No completed programs found.</p>
+            No completed programs found.
         @endif
-    </body>
+</body>
+
 </html>

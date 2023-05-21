@@ -91,7 +91,7 @@
                   </th>
                   <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
                     <button (click)="openResignModal(faculty)" class="btn-small btn-negative">Deactivate</button>
-                    <button (click)="openUpdateModal(faculty)" class="btn-small btn-action">Update</button>
+                    <button (click)="openUpdateModal(faculty)" class="btn-small btn-primary">Update</button>
                   </td>
                 </tr>
               </ng-container>
@@ -228,7 +228,7 @@
                     </div>
                   </th>
                   <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
-                    <button (click)="openReactivateModal(faculty)" class="btn-small btn-positive">Reactivate</button>
+                    <button (click)="openReactivateModal(faculty)" class="btn-small btn-primary">Reactivate</button>
                   </td>
                 </tr>
               </ng-container>
@@ -366,7 +366,7 @@
                   </th>
                   <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
                     <button (click)="openRejectModal(faculty)" class="btn-small btn-negative">Reject</button>
-                    <button (click)="openAcceptModal(faculty)" class="btn-small btn-positive">Accept</button>
+                    <button (click)="openAcceptModal(faculty)" class="btn-small btn-primary">Accept</button>
                   </td>
                 </tr>
               </ng-container>
@@ -503,7 +503,7 @@
                   </th>
                   <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
                     <button (click)="openDeleteModal(faculty)" class="btn-small btn-negative">Delete</button>
-                    <button (click)="openUndoModal(faculty)" class="btn-small btn-action">Undo</button>
+                    <button (click)="openUndoModal(faculty)" class="btn-small btn-primary">Undo</button>
                   </td>
                 </tr>
               </ng-container>
@@ -754,9 +754,9 @@
           ({{modalId}})</span>?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="closeResignModal()" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="closeResignModal()" class="btn-small btn-secondary">Cancel</button>
         <button (click)="deactivateVerifiedFaculty()" [disabled]="deactivateLoading"
-          class="btn-small btn-solid-negative">
+          class="btn-small btn-negative">
           <ng-container *ngIf="!deactivateLoading">Deactivate</ng-container>
           <ng-container *ngIf="deactivateLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -850,7 +850,7 @@
       </div>
 
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="updateModal = false" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="updateModal = false" class="btn-small btn-secondary">Cancel</button>
         <button (click)="updateInfoVerifiedFaculty()" [disabled]="updateLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!updateLoading">Update</ng-container>
           <ng-container *ngIf="updateLoading">
@@ -912,7 +912,7 @@
           ({{modalId}})</span>?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="closeReactivateModal()" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="closeReactivateModal()" class="btn-small btn-secondary">Cancel</button>
         <button (click)="reactivateResignedFaculty()" [disabled]="reactivateLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!reactivateLoading">Reactivate</ng-container>
           <ng-container *ngIf="reactivateLoading">
@@ -971,8 +971,8 @@
         <textarea #reasonInput class="mt-3" name="reason" formControlName="reason" placeholder="Reason for the rejection..."></textarea>
       </div>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="closeRejectModal()" class="btn-small btn-secondary-outline">Cancel</button>
-        <button (click)="rejectPendingFaculty()" [disabled]="rejectLoading" class="btn-small btn-solid-negative">
+        <button (click)="closeRejectModal()" class="btn-small btn-secondary">Cancel</button>
+        <button (click)="rejectPendingFaculty()" [disabled]="rejectLoading" class="btn-small btn-negative">
           <ng-container *ngIf="!rejectLoading">Reject</ng-container>
           <ng-container *ngIf="rejectLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -1030,8 +1030,8 @@
           ({{modalId}})</span>?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="closeAcceptModal()" class="btn-small btn-secondary-outline">Cancel</button>
-        <button (click)="acceptPendingFaculty()" [disabled]="acceptLoading" class="btn-small btn-positive">
+        <button (click)="closeAcceptModal()" class="btn-small btn-secondary">Cancel</button>
+        <button (click)="acceptPendingFaculty()" [disabled]="acceptLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!acceptLoading">Accept</ng-container>
           <ng-container *ngIf="acceptLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -1088,8 +1088,8 @@
           ({{modalId}})</span>?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="closeDeleteModal()" class="btn-small btn-secondary-outline">Cancel</button>
-        <button (click)="deleteRejectedFaculty()" [disabled]="deleteLoading" class="btn-small btn-solid-negative">
+        <button (click)="closeDeleteModal()" class="btn-small btn-secondary">Cancel</button>
+        <button (click)="deleteRejectedFaculty()" [disabled]="deleteLoading" class="btn-small btn-negative">
           <ng-container *ngIf="!deleteLoading">Delete</ng-container>
           <ng-container *ngIf="deleteLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -1147,7 +1147,7 @@
           ({{modalId}})</span> account pending again?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="closeUndoModal()" class="btn-small btn-secondary-outline">Cancel</button>
+        <button (click)="closeUndoModal()" class="btn-small btn-secondary">Cancel</button>
         <button (click)="undoRejectedFaculty()" [disabled]="undoLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!undoLoading">Undo</ng-container>
           <ng-container *ngIf="undoLoading">
@@ -1207,8 +1207,8 @@
           ({{modalId}})</span> as an admin?
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="closeRemoveModal()" class="btn-small btn-secondary-outline">Cancel</button>
-        <button (click)="makeFaculty()" [disabled]="removeLoading" class="btn-small btn-solid-negative">
+        <button (click)="closeRemoveModal()" class="btn-small btn-secondary">Cancel</button>
+        <button (click)="makeFaculty()" [disabled]="removeLoading" class="btn-small btn-negative">
           <ng-container *ngIf="!removeLoading">Remove</ng-container>
           <ng-container *ngIf="removeLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -1292,7 +1292,7 @@
         </table>
       </div>
       <div class="mt-6 space-x-3">
-        <button (click)="addAdminModal = false" class="btn-small w-full btn-secondary-outline">Cancel</button>
+        <button (click)="addAdminModal = false" class="btn-small w-full btn-secondary">Cancel</button>
       </div>
     </div>
 

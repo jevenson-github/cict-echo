@@ -311,31 +311,4 @@ class PartnerController extends Controller
         return response()->json($partners);
     }
 
-    public function reportPartners()
-    {
-        $partners = Partner::orderBy('name')->get();
-        $partnerList = [];
-
-        foreach ($partners as $partner) {
-            $startDate = $partner->start_date ? Carbon::parse($partner->start_date)->format('F d, Y') : '';
-            $endDate = $partner->end_date ? Carbon::parse($partner->end_date)->format('F d, Y') : '';
-
-            $partnerList[] = [
-                'name' => $partner->name,
-                'address' => $partner->address ?? '-',
-                'contact_person' => $partner->contact_person ?? '-',
-                'contact_number' => $partner->contact_number ?? '-',
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'status' => $partner->status ?? '-',
-            ];
-        }
-
-        $data = [
-            'partners' => $partnerList,
-        ];
-
-        $pdf = PDF::loadView('reports.active_partners', $data);
-        return $pdf->download('active_partners.pdf');
-    }
 }

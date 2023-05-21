@@ -4,13 +4,13 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
 
-
 @Component({
   selector: 'app-home-admin',
   templateUrl: './home-admin.component.html',
   styleUrls: ['./home-admin.component.css']
 })
 export class HomeAdminComponent {
+
 
   userData:any;
   token:any;
