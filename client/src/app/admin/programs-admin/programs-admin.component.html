@@ -102,7 +102,7 @@
                 <th scope="row" class="px-6 py-4 text-neutral-900">
                   <div class="flex items-center">
                     <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                      [src]="'http://127.0.0.1:8000/partners/' + program.partner + '/logo.webp'"
+                      [src]="'http://localhost:8000/partners/' + program.partner + '/logo.webp'"
                       [name]="program.name.charAt(0)" [size]="40" [bgColor]>
                     </ngx-avatar>
                     <div class="pl-3">
@@ -128,8 +128,7 @@
                   </svg>
 
                   <svg routerLink="/management/programs/edit" [queryParams]="{ programID: program.id }"
-                    class="action-icon-action"
-                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    class="action-icon-action" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M13.26 3.59997L5.04997 12.29C4.73997 12.62 4.43997 13.27 4.37997 13.72L4.00997 16.96C3.87997 18.13 4.71997 18.93 5.87997 18.73L9.09997 18.18C9.54997 18.1 10.18 17.77 10.49 17.43L18.7 8.73997C20.12 7.23997 20.76 5.52997 18.55 3.43997C16.35 1.36997 14.68 2.09997 13.26 3.59997Z"
                       stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
@@ -437,7 +436,7 @@
             <h5 class="info-label">Partner</h5>
             <div class="flex flex-row">
               <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                [src]="'http://127.0.0.1:8000/partners/' + details.partner + '/logo.webp'"
+                [src]="'http://localhost:8000/partners/' + details.partner + '/logo.webp'"
                 [name]="details.name.charAt(0)" [size]="40" [bgColor]>
               </ngx-avatar>
               <div class="flex flex-col ml-2 h-fit my-auto">
@@ -451,7 +450,7 @@
             <h5 class="info-label mt-2">Members</h5>
             <div class="flex flex-row">
               <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                [src]="'http://127.0.0.1:8000/users/' + details.lead + '.webp'"
+                [src]="'http://localhost:8000/users/' + details.lead + '.webp'"
                 [name]="details.lead_first_name.charAt(0) + details.lead_last_name.charAt(0)" [size]="40" [bgColor]>
               </ngx-avatar>
               <div class="flex flex-col ml-2 h-fit my-auto">
@@ -467,7 +466,7 @@
 
             <div class="flex flex-row" *ngFor="let members of membersArray">
               <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                [src]="'http://127.0.0.1:8000/users/' + members.faculty + '.webp'"
+                [src]="'http://localhost:8000/users/' + members.faculty + '.webp'"
                 [name]="members.member_first_name.charAt(0) + members.member_last_name.charAt(0)" [size]="40" [bgColor]>
               </ngx-avatar>
               <div class="flex flex-col ml-2 h-fit my-auto">
@@ -700,24 +699,11 @@
   </div>
 </div>
 
-<!-- Update toast -->
-<div *ngIf="updateToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4"
-      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-      fill="currentColor" />
-    <path
-      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3">Partner updated successfully.</div>
-</div>
-
 <!-- Delete modal -->
 <div *ngIf="deleteModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="deleteModal = false">
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -741,7 +727,7 @@
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
         <button (click)="deleteModal = false" class="btn-small btn-secondary">Cancel</button>
-        <button (click)="deleteProgram()" [disabled]="deleteLoading" class="btn-small btn-solid-negative">
+        <button (click)="deleteProgram()" [disabled]="deleteLoading" class="btn-small btn-negative">
           <ng-container *ngIf="!deleteLoading">Delete</ng-container>
           <ng-container *ngIf="deleteLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -761,24 +747,11 @@
   </div>
 </div>
 
-<!-- Delete toast -->
-<div *ngIf="deleteToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4"
-      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-      fill="currentColor" />
-    <path
-      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3">Program deleted successfully.</div>
-</div>
-
 <!-- Post modal -->
 <div *ngIf="postModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="postModal = false">
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -813,19 +786,6 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- Post toast -->
-<div *ngIf="postToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4"
-      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-      fill="currentColor" />
-    <path
-      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3">Program posted successfully.</div>
 </div>
 
 <!-- Add modal -->
@@ -978,42 +938,18 @@
   </div>
 </div>
 
-
-<!-- Add toast -->
-<div *ngIf="addToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4"
-      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-      fill="currentColor" />
-    <path
-      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3">Program added successfully.</div>
-</div>
-
-
 <!-- Mark as complete modal-->
 <div *ngIf="markAsCompleteModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="markAsCompleteModal = false">
   <div class="flex h-full w-full">
     <!-- Modal content -->
     <div class="modal max-w-md">
-      <div class="flex w-fit flex-col rounded-full border-8 border-orange-50 bg-orange-100 p-2">
-        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M12.1999 11.8L10.7899 13.21C10.0099 13.99 10.0099 15.26 10.7899 16.04C11.5699 16.82 12.8399 16.82 13.6199 16.04L15.8399 13.82C17.3999 12.26 17.3999 9.72999 15.8399 8.15999C14.2799 6.59999 11.7499 6.59999 10.1799 8.15999L7.75988 10.58C6.41988 11.92 6.41988 14.09 7.75988 15.43"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <path
-            d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-          <title>Mark as complete</title>
-        </svg>
-      </div>
-      <h4 class="mt-2 text-lg font-semibold">Mark as complete</h4>
-      <p class="text-sm text-neutral-700">Mark as complete program.</p>
+      <header>
+        <h4 class="text-xl font-semibold">Mark as complete</h4>
+        <p class="text-neutral-700 text-sm mt-0.5">Mark as complete program.</p>
+      </header>
 
       <form (ngSubmit)="markAsCompleteProgram()" [formGroup]="form2">
-        <div class="mt-5 flex flex-col gap-y-4">
+        <main class="flex flex-col gap-3 p-6">
 
           <div>
             <label>Attendance file:</label>
@@ -1047,10 +983,9 @@
               <div *ngIf="u['invitation_file'].errors['required']">Invitation file is required</div>
             </div>
           </div>
-        </div>
+        </main>
 
-        <div class="mt-6 grid grid-cols-2 space-x-3">
-          <button (click)="markAsCompleteModal = false" class="btn-small btn-secondary">Cancel</button>
+        <footer class="flex flex-row-reverse gap-3 border-t bg-neutral-50 px-6 py-3 rounded-b-lg">
           <button type="submit" [disabled]="markAsCompleteLoading" class="btn-small btn-primary">
             <ng-container *ngIf="!markAsCompleteLoading">Mark as complete</ng-container>
             <ng-container *ngIf="markAsCompleteLoading">
@@ -1066,23 +1001,11 @@
               Processing...
             </ng-container>
           </button>
-        </div>
+          <button (click)="markAsCompleteModal = false" class="btn-small btn-secondary">Cancel</button>
+        </footer>
       </form>
     </div>
   </div>
-</div>
-
-<!-- Marl as complete toast -->
-<div *ngIf="markAsCompleteToast=== true" class="toast">
-  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4"
-      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-      fill="currentColor" />
-    <path
-      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3">Program Completed successfully.</div>
 </div>
 
 <!-- Add Members and Role Modal -->
@@ -1090,24 +1013,12 @@
   <div class="flex w-full h-full">
     <!-- Modal content -->
     <div class="modal max-w-md">
-      <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
-        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M12 2C9.38 2 7.25 4.13 7.25 6.75C7.25 9.32 9.26 11.4 11.88 11.49C11.96 11.48 12.04 11.48 12.1 11.49C12.12 11.49 12.13 11.49 12.15 11.49C12.16 11.49 12.16 11.49 12.17 11.49C14.73 11.4 16.74 9.32 16.75 6.75C16.75 4.13 14.62 2 12 2Z"
-            fill="currentColor" />
-          <path opacity="0.4"
-            d="M17.0809 14.1499C14.2909 12.2899 9.74094 12.2899 6.93094 14.1499C5.66094 14.9999 4.96094 16.1499 4.96094 17.3799C4.96094 18.6099 5.66094 19.7499 6.92094 20.5899C8.32094 21.5299 10.1609 21.9999 12.0009 21.9999C13.8409 21.9999 15.6809 21.5299 17.0809 20.5899C18.3409 19.7399 19.0409 18.5999 19.0409 17.3599C19.0309 16.1299 18.3409 14.9899 17.0809 14.1499Z"
-            fill="currentColor" />
-          <path
-            d="M14 16.6299H12.75V15.3799C12.75 14.9699 12.41 14.6299 12 14.6299C11.59 14.6299 11.25 14.9699 11.25 15.3799V16.6299H10C9.59 16.6299 9.25 16.9699 9.25 17.3799C9.25 17.7899 9.59 18.1299 10 18.1299H11.25V19.3799C11.25 19.7899 11.59 20.1299 12 20.1299C12.41 20.1299 12.75 19.7899 12.75 19.3799V18.1299H14C14.41 18.1299 14.75 17.7899 14.75 17.3799C14.75 16.9699 14.41 16.6299 14 16.6299Z"
-            fill="currentColor" />
-        </svg>
+      <header>
+        <h4 class="text-xl font-semibold">Add members and role</h4>
+        <p class="text-neutral-700 text-sm mt-0.5">Add members and role's details</p>
+      </header>
 
-      </div>
-      <h4 class="mt-2 text-lg font-semibold">Add members and role</h4>
-      <p class="text-neutral-700 text-sm ">Add members and role's details</p>
-
-      <div class="flex flex-col gap-4 mt-5">
+      <main class="flex flex-col gap-3">
 
         <div>
           <label for="addProgramMember">Select program member</label>
@@ -1129,39 +1040,110 @@
             <option value="Report">Report</option>
           </select>
         </div>
+      </main>
+      <footer>
+        <button (click)="addMemberRoleProgram()" [disabled]="addMemberRoleLoading" class="btn-small btn-primary">
+          <ng-container *ngIf="!addMemberRoleLoading">Add</ng-container>
+          <ng-container *ngIf="addMemberRoleLoading">
+            <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+              viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path opacity="0.4"
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor" />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentColor" />
+            </svg>
+            Adding...
+          </ng-container>
+        </button>
+        <button (click)="addMemberRoleModal = false" class="btn-small btn-secondary">Cancel</button>
+      </footer>
 
-        <div class="grid grid-cols-2 mt-6 space-x-3">
-          <button (click)="addMemberRoleModal = false" class="btn-small btn-secondary">Cancel</button>
-          <button (click)="addMemberRoleProgram()" [disabled]="addMemberRoleLoading" class="btn-small btn-primary">
-            <ng-container *ngIf="!addMemberRoleLoading">Add</ng-container>
-            <ng-container *ngIf="addMemberRoleLoading">
-              <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
-                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path opacity="0.4"
-                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                  fill="currentColor" />
-                <path
-                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                  fill="currentColor" />
-              </svg>
-              Adding...
-            </ng-container>
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </div>
 
-<!-- Add Members and Role toast -->
-<div *ngIf="addMemberRoleToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4"
-      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-      fill="currentColor" />
-    <path
-      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3">Member Added successfully.</div>
+<!-- Toast Container -->
+<div class="container px-8 w-full mx-auto">
+
+  <!-- Update toast -->
+  <div *ngIf="updateToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path opacity="0.4"
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        fill="currentColor" />
+      <path
+        d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center">Partner updated successfully.</div>
+  </div>
+
+  <!-- Delete toast -->
+  <div *ngIf="deleteToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path opacity="0.4"
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        fill="currentColor" />
+      <path
+        d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center">Program deleted successfully.</div>
+  </div>
+
+  <!-- Post toast -->
+  <div *ngIf="postToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path opacity="0.4"
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        fill="currentColor" />
+      <path
+        d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center">Program posted successfully.</div>
+  </div>
+
+  <!-- Add toast -->
+  <div *ngIf="addToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path opacity="0.4"
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        fill="currentColor" />
+      <path
+        d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center">Program added successfully.</div>
+  </div>
+
+
+  <!-- Marl as complete toast -->
+  <div *ngIf="markAsCompleteToast=== true" class="toast">
+    <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path opacity="0.4"
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        fill="currentColor" />
+      <path
+        d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center">Program Completed successfully.</div>
+  </div>
+
+  <!-- Add Members and Role toast -->
+  <div *ngIf="addMemberRoleToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path opacity="0.4"
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        fill="currentColor" />
+      <path
+        d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center">Member Added successfully.</div>
+  </div>
+
 </div>

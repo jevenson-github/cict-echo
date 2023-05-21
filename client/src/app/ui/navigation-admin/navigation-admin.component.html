@@ -22,7 +22,7 @@
             class="flex rounded-full bg-neutral-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-800">
             <span class="sr-only">Open user menu</span>
             <ngx-avatar class="h-8 w-8 rounded-full object-cover object-top flex-none"
-              [src]="'http://127.0.0.1:8000/users/' + id + '.webp'" [name]="first_name.charAt(0) + last_name.charAt(0)"
+              [src]="'http://localhost:8000/users/' + id + '.webp'" [name]="initials"
               [size]="32" [bgColor]>
             </ngx-avatar>
           </button>
@@ -73,7 +73,7 @@
         <div>
           <div class="flex w-full justify-between space-x-3">
             <ngx-avatar class=" rounded-full object-cover object-top flex-none"
-              [src]=" imagePreview ||  'http://127.0.0.1:8000/users/' + id + '.webp'"
+              [src]=" imagePreview ||  'http://localhost:8000/users/' + id + '.webp'"
               [name]="first_name.charAt(0) + ' ' + last_name.charAt(0) " [size]="64" [bgColor]>
             </ngx-avatar>
 

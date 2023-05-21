@@ -73,7 +73,7 @@
                   <th scope="row" class="px-6 py-4 text-neutral-900">
                     <div class="flex items-center">
                       <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                        [src]="'http://127.0.0.1:8000/users/' + faculty.id + '.webp'"
+                        [src]="'http://localhost:8000/users/' + faculty.id + '.webp'"
                         [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)" [size]="40" [bgColor]>
                       </ngx-avatar>
                       <div class="pl-3">
@@ -90,7 +90,7 @@
                     </div>
                   </th>
                   <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
-                    <button (click)="openResignModal(faculty)" class="btn-small btn-negative">Deactivate</button>
+                    <button (click)="openResignModal(faculty)" class="btn-small btn-secondary">Deactivate</button>
                     <button (click)="openUpdateModal(faculty)" class="btn-small btn-primary">Update</button>
                   </td>
                 </tr>
@@ -211,7 +211,7 @@
                   <th scope="row" class="px-6 py-4 text-neutral-900">
                     <div class="flex items-center">
                       <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                        [src]="'http://127.0.0.1:8000/users/' + faculty.id + '.webp'"
+                        [src]="'http://localhost:8000/users/' + faculty.id + '.webp'"
                         [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)" [size]="40" [bgColor]>
                       </ngx-avatar>
                       <div class="pl-3">
@@ -348,12 +348,12 @@
                   <th scope="row" class="px-6 py-4 text-neutral-900">
                     <div class="flex items-center">
                       <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                        [src]="'http://127.0.0.1:8000/users/' + faculty.id + '.webp'"
+                        [src]="'http://localhost:8000/users/' + faculty.id + '.webp'"
                         [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)" [size]="40" [bgColor]>
                       </ngx-avatar>
                       <div class="pl-3">
                         <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
-                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
+                        <div class="font-normal text-neutral-500">{{ faculty.id }}</div>
                         <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
                       </div>
                     </div>
@@ -365,8 +365,10 @@
                     </div>
                   </th>
                   <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
-                    <button (click)="openRejectModal(faculty)" class="btn-small btn-negative">Reject</button>
-                    <button (click)="openAcceptModal(faculty)" class="btn-small btn-primary">Accept</button>
+                    <button (click)="openRejectModal(faculty)" class="btn-small btn-secondary">Reject</button>
+                    <button (click)="openAcceptModal(faculty)" class="btn-small btn-secondary">Accept</button>
+                    <a href="http://localhost:8000/verification/{{faculty.id}}.webp"
+                      class="btn-small btn-primary">Review</a>
                   </td>
                 </tr>
               </ng-container>
@@ -441,298 +443,14 @@
 
   </section>
 
-  <section id="faculty-section-rejected" class="col-span-3 p-8 bg-white shadow rounded-lg w-full"
-    *ngIf="activeTab === 4">
-    <div class="flex flex-row justify-between">
-      <div class="flex flex-col gap-0.5">
-        <h3 class="text-xl font-semibold text-neutral-950">Rejected accounts</h3>
-        <p class="text-sm text-neutral-700">These accounts are rejected and cannot use any of the services. </p>
-      </div>
-      <div class="">
-        <div class="relative mt-1">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-5 h-5 text-neutral-500" aria-hidden="true" fill="white" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-
-          </div>
-          <input type="search" id="search-faculty-rejected" placeholder="Search for items"
-            [(ngModel)]="filteredRejectedFaculty">
-        </div>
-      </div>
-    </div>
-
-    <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-      <table class="w-full text-left text-sm text-neutral-500">
-        <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
-          <tr>
-            <th scope="col" class="px-6 py-3 font-medium">Name</th>
-            <th scope="col" class="px-6 py-3 font-medium">Position</th>
-            <th scope="col" class="px-6 py-3 font-medium"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngIf="rejectedFaculty && rejectedFaculty.length > 0; else noFaculty">
-            <ng-container *ngIf="(rejectedFaculty | filter: filteredRejectedFaculty) as filteredResults">
-              <ng-container *ngIf="filteredResults.length > 0; else noData">
-                <tr class="border-b bg-white hover:bg-neutral-50"
-                  *ngFor="let faculty of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}">
-                  <th scope="row" class="px-6 py-4 text-neutral-900">
-                    <div class="flex items-center">
-                      <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                        [src]="'http://127.0.0.1:8000/users/' + faculty.id + '.webp'"
-                        [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)" [size]="40" [bgColor]>
-                      </ngx-avatar>
-                      <div class="pl-3">
-                        <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
-                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
-                        <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
-                      </div>
-                    </div>
-                  </th>
-                  <th scope="row" class="px-6 py-4 text-neutral-900">
-                    <div class="flex flex-col items-start">
-                      <div class="font-medium">{{ faculty.designation }}</div>
-                      <div class="font-normal text-neutral-500">{{ faculty.department }}</div>
-                    </div>
-                  </th>
-                  <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
-                    <button (click)="openDeleteModal(faculty)" class="btn-small btn-negative">Delete</button>
-                    <button (click)="openUndoModal(faculty)" class="btn-small btn-primary">Undo</button>
-                  </td>
-                </tr>
-              </ng-container>
-            </ng-container>
-          </ng-container>
-          <ng-template #noFaculty>
-            <tr>
-              <td colspan="5" class="">
-                <div
-                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
-                  <div class="h-fit my-auto">
-                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
-                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
-                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
-                          stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </div>
-                    <div class="max-w-sm">
-                      <h4 class="text-lg font-semibold mt-4">No rejected accounts found</h4>
-                      <p class="my-auto text-sm mt-1">There are no accounts that are rejected and cannot use any of
-                        the services or reapply for verification.</p>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template #noData>
-            <tr>
-              <td colspan="5" class="">
-                <div
-                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
-                  <div class="h-fit my-auto">
-                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
-                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
-                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
-                          stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </div>
-                    <div class="max-w-sm">
-                      <h4 class="text-lg font-semibold mt-4 line-clamp-2">No rejected accounts found for
-                        "{{filteredRejectedFaculty}}"</h4>
-                      <p class="my-auto text-sm mt-1">There are no accounts that are rejected and cannot use any of
-                        the services or reapply for verification.</p>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </tbody>
-        <tfoot *ngIf="rejectedFaculty.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
-          <span></span>
-          <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
-        </tfoot>
-      </table>
-    </div>
-
-  </section>
-
-  <section id="faculty-section-administrators" class="col-span-3 p-8 bg-white shadow rounded-lg w-full"
-    *ngIf="activeTab === 3">
-    <div class="flex flex-row justify-between">
-      <div class="flex flex-col gap-0.5">
-        <h3 class="text-xl font-semibold text-neutral-950">Administrators</h3>
-        <p class="text-sm text-neutral-700">These accounts have the permission to view and manage all the services
-          without any
-          restrictions. </p>
-      </div>
-      <div class="flex gap-3 items-center">
-        <button (click)="openAddAdminModal()" class="btn-base btn-primary">Add</button>
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-5 h-5 text-neutral-500" aria-hidden="true" fill="white" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
-                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-
-          </div>
-          <input type="search" id="search-faculty-administrators" placeholder="Search for items"
-            [(ngModel)]="filteredAdministrators">
-
-        </div>
-      </div>
-    </div>
-
-    <div class=" overflow-x-auto border sm:rounded-lg mt-4">
-      <table class="w-full text-left text-sm text-neutral-500">
-        <thead class="border-b bg-neutral-50 text-sm text-neutral-700">
-          <tr>
-            <th scope="col" class="px-6 py-3 font-medium">Name</th>
-            <th scope="col" class="px-6 py-3 font-medium">Position</th>
-            <th scope="col" class="px-6 py-3 font-medium"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngIf="administrators && administrators.length > 0; else noFaculty">
-            <ng-container *ngIf="(administrators | filter: filteredAdministrators) as filteredResults">
-              <ng-container *ngIf="filteredResults.length > 0; else noData">
-                <tr class="border-b bg-white hover:bg-neutral-50"
-                  *ngFor="let faculty of filteredResults | paginate: {itemsPerPage: 10, currentPage: p}">
-                  <th scope="row" class="px-6 py-4 text-neutral-900">
-                    <div class="flex items-center">
-                      <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                        [src]="'http://127.0.0.1:8000/users/' + faculty.id + '.webp'"
-                        [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)" [size]="40" [bgColor]>
-                      </ngx-avatar>
-                      <div class="pl-3">
-                        <div class="font-semibold">{{ faculty.first_name + " " + faculty.last_name}}</div>
-                        <div class="font-normal text-neutral-500">{{ faculty.email }}</div>
-                        <div class="font-normal text-neutral-500 hidden">{{ faculty.id }}</div>
-                      </div>
-                    </div>
-                  </th>
-                  <th scope="row" class="px-6 py-4 text-neutral-900">
-                    <div class="flex flex-col items-start">
-                      <div class="font-medium">{{ faculty.designation }}</div>
-                      <div class="font-normal text-neutral-500">{{ faculty.department }}</div>
-                    </div>
-                  </th>
-                  <td class="space-x-2 space-y-2 px-6 py-4 text-right w-fit">
-                    <button (click)="openRemoveModal(faculty)" class="btn-small btn-negative">Remove</button>
-                  </td>
-                </tr>
-              </ng-container>
-            </ng-container>
-          </ng-container>
-          <ng-template #noFaculty>
-            <tr>
-              <td colspan="5" class="">
-                <div
-                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
-                  <div class="h-fit my-auto">
-                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
-                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
-                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
-                          stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </div>
-                    <div class="max-w-sm">
-                      <h4 class="text-lg font-semibold mt-4">No administrators found</h4>
-                      <p class="my-auto text-sm mt-1">There are no accounts that have the permission to view
-                        and manage all the services and change the settings of the system.</p>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template #noData>
-            <tr>
-              <td colspan="5" class="">
-                <div
-                  class="border-b bg-white text-center flex flex-col items-center px-6 py-4 text-neutral-900 h-96 w-full">
-                  <div class="h-fit my-auto">
-                    <div class="bg-orange-50 p-4 w-fit rounded-full mx-auto">
-                      <svg class="w-8 h-8 text-orange-500" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path opacity="0.4" d="M14 5H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path opacity="0.4" d="M14 8H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                          stroke-linejoin="round" />
-                        <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2"
-                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path opacity="0.4" d="M22 22L20 20" stroke="currentColor" stroke-width="1.5"
-                          stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </div>
-                    <div class="max-w-sm">
-                      <h4 class="text-lg font-semibold mt-4 line-clamp-2">No administrators found for
-                        "{{filteredAdministrators}}"</h4>
-                      <p class="my-auto text-sm mt-1">There are no accounts that have the permission to view
-                        and manage all the services and change the settings of the system.</p>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </tbody>
-        <tfoot *ngIf="administrators.length > 0" class="flex flex-row justify-between py-2 px-4 bg-neutral-50">
-          <span></span>
-          <pagination-controls previousLabel="" nextLabel="" (pageChange)="p = $event"></pagination-controls>
-        </tfoot>
-      </table>
-    </div>
-
-  </section>
-
-</main>
-
-<main class="flex flex-row w-full gap-x-10 mt-10">
-
-
-
-
-
+  <div class="h-16"></div>
 </main>
 
 <!-- Resign modal -->
 <div *ngIf="deactivateModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeResignModal()">
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -755,8 +473,7 @@
       </p>
       <div class="grid grid-cols-2 mt-6 space-x-3">
         <button (click)="closeResignModal()" class="btn-small btn-secondary">Cancel</button>
-        <button (click)="deactivateVerifiedFaculty()" [disabled]="deactivateLoading"
-          class="btn-small btn-negative">
+        <button (click)="deactivateVerifiedFaculty()" [disabled]="deactivateLoading" class="btn-small btn-negative">
           <ng-container *ngIf="!deactivateLoading">Deactivate</ng-container>
           <ng-container *ngIf="deactivateLoading">
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
@@ -792,25 +509,15 @@
   <div class="flex w-full h-full">
     <!-- Modal content -->
     <div class="modal max-w-lg">
-      <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col">
-        <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M13.26 3.59997L5.04997 12.29C4.73997 12.62 4.43997 13.27 4.37997 13.72L4.00997 16.96C3.87997 18.13 4.71997 18.93 5.87997 18.73L9.09997 18.18C9.54997 18.1 10.18 17.77 10.49 17.43L18.7 8.73997C20.12 7.23997 20.76 5.52997 18.55 3.43997C16.35 1.36997 14.68 2.09997 13.26 3.59997Z"
-            stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-            stroke-linejoin="round" />
-          <path d="M11.89 5.05005C12.32 7.81005 14.56 9.92005 17.34 10.2" stroke="currentColor" stroke-width="1.5"
-            stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M3 22H21" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </div>
-      <h4 class="mt-2 text-lg font-semibold">Update details</h4>
-      <p class="text-neutral-700 text-sm"><span class="font-medium">{{modalFirstName + " " +
-          modalLastName}}
-          ({{modalId}})</span> details.
-      </p>
+      <header>
+        <h4 class="text-xl font-semibold">Update details</h4>
+        <p class="text-neutral-700 text-sm mt-0.5"><span class="font-medium">{{modalFirstName + " " +
+            modalLastName}}
+            ({{modalId}})</span> details.</p>
+      </header>
 
-      <div class="flex flex-col gap-4 mt-5">
+      <main class="flex flex-col gap-3">
+
         <div>
           <label for="">Department</label>
           <select id="" name="department" [(ngModel)]="editDepartment" required>
@@ -847,10 +554,8 @@
           </select>
         </div>
 
-      </div>
-
-      <div class="grid grid-cols-2 mt-6 space-x-3">
-        <button (click)="updateModal = false" class="btn-small btn-secondary">Cancel</button>
+      </main>
+      <footer>
         <button (click)="updateInfoVerifiedFaculty()" [disabled]="updateLoading" class="btn-small btn-primary">
           <ng-container *ngIf="!updateLoading">Update</ng-container>
           <ng-container *ngIf="updateLoading">
@@ -866,31 +571,21 @@
             Updating...
           </ng-container>
         </button>
-      </div>
+        <button (click)="updateModal = false" class="btn-small btn-secondary">Cancel</button>
+      </footer>
 
     </div>
   </div>
 </div>
 
-<!-- Update toast -->
-<div *ngIf="updateToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path opacity="0.4"
-      d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-      fill="currentColor" />
-    <path
-      d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3">Faculty information updated successfully.</div>
-</div>
+
 
 <!-- Reactivate modal -->
 <div *ngIf="reactivateModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeReactivateModal()">
 
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -934,21 +629,11 @@
 
 </div>
 
-<!-- Reactivate toast -->
-<div *ngIf="reactivateToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3 ">User reactivated successfully.</div>
-</div>
-
 <!-- Reject modal -->
 <div *ngIf="rejectModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeRejectModal()">
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -965,10 +650,12 @@
       </div>
       <h4 class="mt-2 text-lg font-semibold text-center">Reject pending account</h4>
       <p class="text-neutral-700 text-sm text-center mx-2">Please confirm that you want to reject <span
-          class="font-medium">{{modalFirstName + " " + modalLastName}} ({{modalId}})</span> and provide the reason for your decision.
+          class="font-medium">{{modalFirstName + " " + modalLastName}} ({{modalId}})</span> and provide the reason for
+        your decision.
       </p>
       <div>
-        <textarea #reasonInput class="mt-3" name="reason" formControlName="reason" placeholder="Reason for the rejection..."></textarea>
+        <textarea #reasonInput class="mt-3" name="reason" formControlName="reason"
+          placeholder="Reason for the rejection..."></textarea>
       </div>
       <div class="grid grid-cols-2 mt-6 space-x-3">
         <button (click)="closeRejectModal()" class="btn-small btn-secondary">Cancel</button>
@@ -993,22 +680,12 @@
 
 </div>
 
-<!-- Reject toast -->
-<div *ngIf="rejectToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3 ">User rejected successfully.</div>
-</div>
-
 <!-- Accept modal -->
 <div *ngIf="acceptModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeAcceptModal()">
 
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -1051,22 +728,12 @@
   </div>
 </div>
 
-<!-- Accept toast -->
-<div *ngIf="acceptToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3 ">User accepted successfully.</div>
-</div>
-
 <!-- Delete modal -->
 <div *ngIf="deleteModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeDeleteModal()">
 
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -1110,22 +777,12 @@
 
 </div>
 
-<!-- Delete toast -->
-<div *ngIf="deleteToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3 ">User deleted successfully.</div>
-</div>
-
 <!-- Undo modal -->
 <div *ngIf="undoModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeUndoModal()">
 
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-orange-100 border-orange-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-orange-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -1170,22 +827,12 @@
 
 </div>
 
-<!-- Undo toast -->
-<div *ngIf="undoToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3 ">Undo changes successfully.</div>
-</div>
-
 <!-- Remove modal -->
 <div *ngIf="removeModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeRemoveModal()">
 
   <div class="flex w-full h-full">
     <!-- Modal content -->
-    <div class="modal max-w-sm">
+    <div class="modal max-w-sm p-6">
       <div class="p-2 w-fit bg-red-100 border-red-50 border-8 rounded-full flex flex-col mx-auto">
         <svg class="h-6 w-6 text-red-700" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path opacity="0.4"
@@ -1229,16 +876,6 @@
 
 </div>
 
-<!-- Remove toast -->
-<div *ngIf="removeToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3 ">User removed successfully.</div>
-</div>
-
 <!-- Add Admin Modal -->
 <div *ngIf="addAdminModal" tabindex="-1" class="modal-bg" (keydown.escape)="closeAddAdminModal()">
 
@@ -1273,7 +910,7 @@
             <tr *ngFor="let faculty of noneAdminFaculty | filter: filteredAddAdminModal" class="">
               <td class="flex py-1.5">
                 <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                  [src]="'http://127.0.0.1:8000/users/' + faculty.id + '.webp'"
+                  [src]="'http://localhost:8000/users/' + faculty.id + '.webp'"
                   [name]="faculty.first_name.charAt(0) + ' ' + faculty.last_name.charAt(0)" [size]="40" [bgColor]>
                 </ngx-avatar>
                 <div class="ml-3">
@@ -1300,13 +937,90 @@
 
 </div>
 
-<!-- Add toast -->
-<div *ngIf="addToast === true" class="toast">
-  <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
-      fill="currentColor" />
-  </svg>
-  <div class="pl-3 ">User added successfully.</div>
-</div>
+<!-- Toast Container -->
+<div class="container px-8 w-full mx-auto">
 
+  <!-- Update toast -->
+  <div *ngIf="updateToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300 saturate-200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path opacity="0.4"
+        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+        fill="currentColor" />
+      <path
+        d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center">Faculty information updated successfully.</div>
+  </div>
+
+  <!-- Reactivate toast -->
+  <div *ngIf="reactivateToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3  self-center">User reactivated successfully.</div>
+  </div>
+
+  <!-- Reject toast -->
+  <div *ngIf="rejectToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3  self-center">User rejected successfully.</div>
+  </div>
+
+  <!-- Accept toast -->
+  <div *ngIf="acceptToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3  self-center">User accepted successfully.</div>
+  </div>
+
+  <!-- Delete toast -->
+  <div *ngIf="deleteToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center ">User deleted successfully.</div>
+  </div>
+
+  <!-- Undo toast -->
+  <div *ngIf="undoToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center ">Undo changes successfully.</div>
+  </div>
+
+  <!-- Remove toast -->
+  <div *ngIf="removeToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center ">User removed successfully.</div>
+  </div>
+
+  <!-- Add toast -->
+  <div *ngIf="addToast === true" class="toast">
+    <svg class="h-8 w-8 text-green-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16.78 9.7L11.11 15.37C10.97 15.51 10.78 15.59 10.58 15.59C10.38 15.59 10.19 15.51 10.05 15.37L7.22 12.54C6.93 12.25 6.93 11.77 7.22 11.48C7.51 11.19 7.99 11.19 8.28 11.48L10.58 13.78L15.72 8.64C16.01 8.35 16.49 8.35 16.78 8.64C17.07 8.93 17.07 9.4 16.78 9.7Z"
+        fill="currentColor" />
+    </svg>
+    <div class="pl-3 self-center ">User added successfully.</div>
+  </div>
+
+</div>

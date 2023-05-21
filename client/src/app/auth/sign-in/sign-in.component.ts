@@ -12,7 +12,9 @@ import { environment } from 'src/environments/environment';
 export class SignInComponent implements OnInit {
 
   signUpResponse: string | undefined;
+  transferResponse: string | undefined;
   forgotPasswordResponse: string | undefined;
+  resetResponse: string | undefined;
   email: string | undefined;
   emailForgot: string | undefined;
 
@@ -28,6 +30,12 @@ export class SignInComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.signUpResponse = params['signUpResponse'];
       this.email = params['email'];
+    });
+    this.route.queryParams.subscribe(params => {
+      this.transferResponse = params['transferResponse'];
+    });
+    this.route.queryParams.subscribe(params => {
+      this.resetResponse = params['resetResponse'];
     });
     this.formSignIn = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],

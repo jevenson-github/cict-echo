@@ -76,7 +76,6 @@ export class FacultyAdminComponent implements OnInit {
     { label: 'Verified accounts', badge: this.verifiedFacultyCount },
     { label: 'Deactivated accounts', badge: this.deactivateedFaculty.length },
     { label: 'Pending accounts', badge: this.pendingFaculty.length },
-    { label: 'Administrators', badge: this.administrators.length },
   ];
   sections = ['faculty-section-verified', 'faculty-section-deactivateed', 'faculty-section-pending', 'faculty-section-administrators'];
 
@@ -537,11 +536,6 @@ export class FacultyAdminComponent implements OnInit {
   imagePreview: any;
 
   onFileSelected(event: any) {
-    // const file: File = event.target.files[0];
-    // if (file) {
-    //   this.fileToUpload = file;
-    //   this.imageUrl = URL.createObjectURL(file);
-    // }
 
     this.imageToUpdate = event.target.files[0];
     console.log(this.imageToUpdate);

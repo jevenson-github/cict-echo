@@ -23,7 +23,7 @@ export class ResetPasswordComponent implements OnInit {
   // form!: FormGroup;
   formReset!: FormGroup;
   messageHolder: any;
-
+  loading: boolean = false;
 
 
   ngOnInit(): void {
@@ -51,18 +51,21 @@ export class ResetPasswordComponent implements OnInit {
 
   resetPassword() {
     this.submitted = true;
-
+    this.loading = true;
 
     if (this.formReset.invalid) {
       return;
     }
     this.http.post(environment.apiUrl + '/user/reset-password' + '/' + this.email, this.formReset.value).subscribe(response => {
+      this.loading = true;
       console.log(response);
       this.messageHolder = response;
 
       if (this.messageHolder.status == 'Successful') {
-        alert(this.messageHolder.message);
-        this.router.navigate(['auth']);
+        const queryParams = {
+          'resetResponse': 'success',
+        };
+        this.router.navigate(['auth'], { queryParams: queryParams });
       }
       else if (this.messageHolder.status == 'Error') {
         alert(this.messageHolder.message);
@@ -70,9 +73,7 @@ export class ResetPasswordComponent implements OnInit {
     });
     this.submitted = false;
     this.formReset.reset();
-
-
-
+    this.loading = false;
   }
 
 }

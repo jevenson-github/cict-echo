@@ -73,7 +73,7 @@
                     <p class="text-xs text-neutral-500">{{detail.partner}}</p>
                 </div>
                 <ngx-avatar class="h-12 w-12 rounded-full object-cover object-top flex-none"
-                    [src]="'http://127.0.0.1:8000/partners/' + detail.partner + '/logo.webp'"
+                    [src]="'http://localhost:8000/partners/' + detail.partner + '/logo.webp'"
                     [name]="detail.name.charAt(0)" [size]="48" [bgColor]>
                 </ngx-avatar>
             </div>
@@ -122,7 +122,7 @@
             <h5 class="font-medium">Members</h5>
             <div class="flex flex-row">
                 <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                    [src]="'http://127.0.0.1:8000/users/' + detail.lead + '.webp'"
+                    [src]="'http://localhost:8000/users/' + detail.lead + '.webp'"
                     [name]="detail.lead_first_name.charAt(0) + detail.lead_last_name.charAt(0)" [size]="40" [bgColor]>
                 </ngx-avatar>
                 <div class="flex flex-col ml-4 h-fit my-auto">
@@ -137,7 +137,7 @@
             <div class="flex flex-col gap-2 -mt-2">
                 <div class="flex flex-row" *ngFor="let members of membersArray">
                     <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                        [src]="'http://127.0.0.1:8000/users/' + members.member_id + '.webp'"
+                        [src]="'http://localhost:8000/users/' + members.member_id + '.webp'"
                         [name]="members.member_first_name.charAt(0) + members.member_last_name.charAt(0)" [size]="40"
                         [bgColor]>
                     </ngx-avatar>
@@ -166,11 +166,11 @@
                                 stroke-linejoin="round" />
                         </svg>
                         <a
-                            href="https://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/attendance/{{detail.attendance}}">
+                            href="http://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/attendance/{{detail.attendance}}">
                             Attendance</a>
                     </div>
                     <a class="link-primary font-semibold"
-                        href="https://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/attendance/{{detail.attendance}}">
+                        href="http://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/attendance/{{detail.attendance}}">
                         Download</a>
                 </div>
                 <div class="flex justify-between items-center pt-2">
@@ -184,11 +184,11 @@
                         </svg>
 
                         <a
-                            href="https://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/certificate/{{detail.certificate}}">
+                            href="http://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/certificate/{{detail.certificate}}">
                             Certificate</a>
                     </div>
                     <a class="link-primary font-semibold"
-                        href="https://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/certificate/{{detail.certificate}}">
+                        href="https//localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/certificate/{{detail.certificate}}">
                         Download</a>
                 </div>
                 <div class="flex justify-between items-center pt-2">
@@ -202,11 +202,11 @@
                         </svg>
 
                         <a
-                            href="https://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/invitation/{{detail.invitation}}">
+                            href="http://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/invitation/{{detail.invitation}}">
                             Invitation</a>
                     </div>
                     <a class="link-primary font-semibold"
-                        href="https://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/invitation/{{detail.invitation}}">
+                        href="http://localhost:8000/partners/{{detail.partner}}/programs/{{detail.id}}/invitation/{{detail.invitation}}">
                         Download</a>
                 </div>
             </div>

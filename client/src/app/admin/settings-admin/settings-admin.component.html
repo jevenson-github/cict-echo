@@ -3,7 +3,7 @@
     <div class="container mx-auto p-8">
         <div class="flex flex-row w-full gap-4">
             <ngx-avatar class=" rounded-full object-cover object-top flex-none"
-                [src]="'http://127.0.0.1:8000/users/' + id + '.webp'"
+                [src]="'http://localhost:8000/users/' + id + '.webp'"
                 [name]="first_name.charAt(0) + last_name.charAt(0)" [size]="64" [bgColor]>
             </ngx-avatar>
             <div>
@@ -40,7 +40,7 @@
                 </div>
                 <label for="profile_picture">
                     <ngx-avatar class="rounded-full flex-none"
-                        [src]=" avatarPreview ||  'http://127.0.0.1:8000/users/' + id + '.webp'"
+                        [src]=" avatarPreview ||  'http://localhost:8000/users/' + id + '.webp'"
                         [name]="first_name.charAt(0) + ' ' + last_name.charAt(0) " [size]="128" [bgColor]>
                     </ngx-avatar>
                 </label>

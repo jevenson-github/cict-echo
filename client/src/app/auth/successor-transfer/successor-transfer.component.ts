@@ -25,13 +25,15 @@ export class SuccessorTransferComponent {
 
   loading: boolean = false;
 
+
+
   ngOnInit(): void {
     this.http.get(environment.apiUrl + "/user/get-admin").subscribe((resultData: any) => {
       this.adminArray = resultData;
       this.adminId = this.adminArray[0].id;
       this.adminFirstName = this.adminArray[0].first_name;
       this.adminLastName = this.adminArray[0].last_name;
-      
+
     });
 
     this.http.get(environment.apiUrl + "/user/get-successor").subscribe((resultData: any) => {
@@ -43,9 +45,25 @@ export class SuccessorTransferComponent {
   }
 
   acceptTransfer() {
-    this.http.post(environment.apiUrl + "/user/accept-transer", '').subscribe((resultData: any) => {
+    const queryParams = {
+      'transferResponse': 'accepted',
+    };
+    this.loading = true;
+    this.http.post(environment.apiUrl + "/user/accept-transfer", '').subscribe((resultData: any) => {
+      this.loading = false;
+      this.router.navigate(['/auth'], { queryParams: queryParams });
     });
+  }
 
+  rejectTransfer() {
+    const queryParams = {
+      'transferResponse': 'rejected',
+    };
+    this.loading = true;
+    this.http.post(environment.apiUrl + "/user/reject-transfer", '').subscribe((resultData: any) => {
+      this.loading = false;
+      this.router.navigate(['/auth'], { queryParams: queryParams });
+    });
   }
 
 }

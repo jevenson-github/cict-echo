@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { MustMatch } from './confirmed.validator';
 import { environment } from 'src/environments/environment';
 
-
 @Component({
   selector: 'app-navigation-admin',
   templateUrl: './navigation-admin.component.html',
@@ -23,6 +22,7 @@ export class NavigationAdminComponent implements OnInit {
   first_name: any;
   designation: any;
   profile_image: any;
+  initials: any;
   email: any;
   password: any;
   comfirmPassword: any;
@@ -42,9 +42,11 @@ export class NavigationAdminComponent implements OnInit {
       this.last_name = resultData.last_name;
       this.first_name = resultData.first_name;
       this.designation = resultData.designation;
+      this.initials = resultData.first_name.charAt(0) + resultData.last_name.charAt(0);
     });
 
     this.createPasswordForm();
+    
   }
 
   scrolled: boolean = false;

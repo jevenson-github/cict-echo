@@ -12,9 +12,9 @@
                         class="flex rounded-full bg-neutral-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-neutral-800">
                         <span class="sr-only">Open user menu</span>
                         <ngx-avatar class="h-8 w-8 rounded-full object-cover object-top flex-none"
-                        [src]="'http://127.0.0.1:8000/users/' + faculty+ '.webp'" [name]="first_name.charAt(0) + last_name.charAt(0)"
-                        [size]="32" [bgColor]>
-                      </ngx-avatar>
+                            [src]="'http://localhost:8000/users/' + id + '.webp'"
+                            [name]="initials" [size]="32" [bgColor]>
+                        </ngx-avatar>
                     </button>
                 </div>
                 <!-- MENU DROPDOWN -->
@@ -25,12 +25,12 @@
                         <div class="truncate text-xs">{{designation}}</div>
                     </div>
                     <div class="flex flex-col gap-y-1 pt-3">
-                        <a routerLink="#" class="nav-link text-black text-sm">
+                        <a (click)="updateModal = true" class="nav-link text-black text-sm">
 
                             Settings
                         </a>
                         <a routerLink="#" class="nav-link text-black text-sm" (click)="signOut()">
-                          
+
                             Sign out
                         </a>
                     </div>
@@ -45,7 +45,7 @@
         <div class="border rounded-lg p-4" *ngFor="let program of programArray" (click)="viewProgramDetails(program)">
             <div class="flex justify-between">
                 <ngx-avatar class="h-16 w-16 rounded-full object-cover object-top flex-none"
-                    [src]="'http://127.0.0.1:8000/partners/' + program.partner + '/logo.webp'"
+                    [src]="'http://localhost:8000/partners/' + program.partner + '/logo.webp'"
                     [name]="program.name.charAt(0)" [size]="64" [bgColor]>
                 </ngx-avatar>
                 <span *ngIf="program.status === 'upcoming'"
@@ -83,7 +83,7 @@
         <div class="modal max-w-5xl" *ngFor="let details of detailsHolder">
 
             <!-- Header -->
-            <div class="max-w-5xl  bg-gradient-to-br from-orange-500 to-orange-400 rounded-t-lg -m-6 p-6">
+            <header class="max-w-5xl p-6 w-full gradient rounded-t-lg">
 
                 <div class="flex flex-row justify-between text-neutral-50 text-xs tracking-widest">
                     <h6 class="opacity-75">{{details.id}}</h6>
@@ -172,13 +172,13 @@
                     </div>
                 </div>
 
-            </div>
+            </header>
 
             <!-- Body -->
-            <div class="mt-6 pt-6 ">
+            <div class="p-6 gap-6">
 
                 <div class="flex ">
-                    <div class="grow flex flex-col gap-y-2">
+                    <div class="w-full flex flex-col gap-y-2 pr-12">
                         <div>
                             <h5 class="info-label">Details</h5>
                             <p class="text-sm text-neutral-700" [innerHTML]="details.details"></p>
@@ -196,7 +196,7 @@
                         <h5 class="info-label">Partner</h5>
                         <div class="flex flex-row">
                             <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                                [src]="'http://127.0.0.1:8000/partners/' + details.partner + '/logo.webp'"
+                                [src]="'http://localhost:8000/partners/' + details.partner + '/logo.webp'"
                                 [name]="details.name.charAt(0)" [size]="40" [bgColor]>
                             </ngx-avatar>
                             <div class="flex flex-col ml-2 h-fit my-auto">
@@ -210,7 +210,7 @@
                         <h5 class="info-label mt-2">Members</h5>
                         <div class="flex flex-row">
                             <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                                [src]="'http://127.0.0.1:8000/users/' + details.lead + '.webp'"
+                                [src]="'http://localhost:8000/users/' + details.lead + '.webp'"
                                 [name]="details.lead_first_name.charAt(0) + details.lead_last_name.charAt(0)"
                                 [size]="40" [bgColor]>
                             </ngx-avatar>
@@ -227,7 +227,7 @@
 
                         <div class="flex flex-row" *ngFor="let members of membersHolder">
                             <ngx-avatar class="h-10 w-10 rounded-full object-cover object-top flex-none"
-                                [src]="'http://127.0.0.1:8000/users/' + members.faculty + '.webp'"
+                                [src]="'http://localhost:8000/users/' + members.faculty + '.webp'"
                                 [name]="members.member_first_name.charAt(0) + members.member_last_name.charAt(0)"
                                 [size]="40" [bgColor]>
                             </ngx-avatar>
@@ -248,7 +248,7 @@
             </div>
 
             <!-- Footer -->
-            <div *ngIf="details.status === 'completed'" class="gap-x-4 grid grid-cols-3 mt-5">
+            <div *ngIf="details.status === 'completed'" class="gap-x-4 grid grid-cols-3 p-6">
                 <div class="p-4 text-neutral-900 flex flex-row justify-between border rounded-lg">
                     <div class="flex items-center">
                         <div class="bg-blue-100 p-2 w-fit rounded-full mx-auto">
@@ -265,7 +265,7 @@
                             <div
                                 class="font-semibold text-sm hover:underline underline-offset-2 decoration-neutral-500  flex flex-row items-center">
                                 <a
-                                    href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.attendance}}">
+                                    href="http://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.attendance}}">
                                     Attendance</a>
                             </div>
                             <div class="font-normal text-neutral-500 text-xs">
@@ -275,7 +275,7 @@
 
                     </div>
                     <a
-                        href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.attendance}}">
+                        href="http://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.attendance}}">
                         <button class="btn-small btn-secondary">
                             Download
                         </button>
@@ -297,7 +297,7 @@
                             <div
                                 class="font-semibold text-sm hover:underline underline-offset-2 decoration-neutral-500  flex flex-row items-center">
                                 <a
-                                    href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.certificate}}">
+                                    href="http://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.certificate}}">
                                     Certificate</a>
                             </div>
                             <div class="font-normal text-neutral-500 text-xs">
@@ -305,7 +305,7 @@
                         </div>
                     </div>
                     <a
-                        href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.certificate}}">
+                        href="http://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.certificate}}">
                         <button class="btn-small btn-secondary">
                             Download
                         </button>
@@ -327,7 +327,7 @@
                             <div
                                 class="font-semibold text-sm hover:underline underline-offset-2 decoration-neutral-500  flex flex-row items-center">
                                 <a
-                                    href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.invitation}}">
+                                    href="http://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.invitation}}">
                                     Invitation</a>
                             </div>
                             <div class="font-normal text-neutral-500 text-xs">
@@ -337,7 +337,7 @@
 
                     </div>
                     <a
-                        href="https://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.invitation}}">
+                        href="http://localhost:8000/partners/{{details.partner}}/programs/{{details.id}}/attendance/{{details.invitation}}">
                         <button class="btn-small btn-secondary">
                             Download
                         </button>
@@ -349,3 +349,159 @@
     </div>
 </div>
 
+<!-- Update modal -->
+<div *ngIf="updateModal === true" tabindex="-1" class="modal-bg" (keydown.escape)="updateModal = false">
+    <div class="flex w-full h-full">
+      <!-- Modal content -->
+      <div class="modal max-w-lg">
+        <header>
+            <h4 class="text-xl font-semibold">Update profile</h4>
+            <p class="text-neutral-700 text-sm mt-0.5">Update the profile's details</p>
+        </header>
+  
+        <main class="flex flex-col gap-3">
+  
+          <div>
+            <div class="flex w-full justify-between space-x-3">
+              <ngx-avatar class=" rounded-full object-cover object-top flex-none"
+                [src]=" imagePreview ||  'http://localhost:8000/users/' + id + '.webp'"
+                [name]="first_name.charAt(0) + ' ' + last_name.charAt(0) " [size]="64" [bgColor]>
+              </ngx-avatar>
+  
+              <div class="flex items-center justify-center w-full">
+                <label for="profile_picture"
+                  class="flex flex-col items-center justify-center w-full h-32 border-2 border-neutral-300 border-dashed rounded-lg cursor-pointer bg-neutral-50">
+                  <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <p class="mb-2 text-sm text-neutral-500 dark:text-neutral-400"><span class="font-semibold">Click to
+                        upload</span> or drag and drop</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400">SVG, PNG, JPG or GIF</p>
+                  </div>
+                  <input id="profile_picture" name="logo" class="hidden" type="file" #fileInput
+                    (change)="onFileSelected($event)">
+                </label>
+              </div>
+            </div>
+  
+            <div class="grid grid-cols-2 space-x-3">
+              <div>
+                <label for="">First name</label>
+                <input id="" type="text" [(ngModel)]="first_name" />
+              </div>
+  
+              <div>
+                <label for="">Last name</label>
+                <input id="" type="text" [(ngModel)]="last_name" />
+              </div>
+            </div>
+  
+            <div class="grid grid-cols-1 mt-6 space-x-3">
+              <button (click)="updateInfo()" type="sunbmit" [disabled]="updateInfoLoading" class="btn-small btn-primary">
+                <ng-container *ngIf="!updateInfoLoading">Update info</ng-container>
+                <ng-container *ngIf="updateInfoLoading">
+                  <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.4"
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor" />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentColor" />
+                  </svg>
+                  Updating...
+                </ng-container>
+              </button>
+            </div>
+  
+          </div>
+  
+          <div>
+            <div>
+              <label>Email</label>
+              <input type="email" [(ngModel)]="email">
+            </div>
+  
+            <div class="grid grid-cols-1 mt-6 space-x-3">
+              <button (click)="updateEmail()" type="sunbmit" [disabled]="updateEmailLoading"
+                class="btn-small btn-primary">
+                <ng-container *ngIf="!updateEmailLoading">Update email</ng-container>
+                <ng-container *ngIf="updateEmailLoading">
+                  <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                    viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.4"
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor" />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentColor" />
+                  </svg>
+                  Updating...
+                </ng-container>
+              </button>
+            </div>
+          </div>
+  
+          <div>
+            <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+              <!-- Password  -->
+              <div>
+                <label for="password">Password * </label>
+                <input type="password" formControlName="password" name="password" id="password"
+                  [ngClass]="{'is-invalid' : submitted && f['password'].errors}" >
+                <!-- error block  -->
+                <div *ngIf="submitted && f['password'].errors">
+                  <div *ngIf="f['password'].errors['required']">
+                    Password is required
+                  </div>
+                  <div *ngIf="f['password'].errors['minlength']">
+                    Password must be aleast 8 characters
+                  </div>
+                </div>
+              </div>
+  
+  
+              <!-- Confirm Password  -->
+              <div class="mb-3 mt-3">
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" formControlName="confirmPassword" name="confirm_password" id="confirmPassword"
+                  [ngClass]="{'is-invalid' : submitted && f['confirmPassword'].errors}">
+  
+                <!-- error block  -->
+                <div *ngIf="submitted && f['confirmPassword'].errors">
+                  <div *ngIf="f['confirmPassword'].errors['required']">
+                    Confirm Password is required
+                  </div>
+  
+                  <div *ngIf="f['confirmPassword'].errors['mustMatch']">
+                    Password must match
+                  </div>
+                </div>
+              </div>
+  
+              <div class="grid grid-cols-1 mt-6 space-x-3">
+                <button type="submit" [disabled]="updatePassLoading" class="btn-small btn-primary">
+                  <ng-container *ngIf="!updatePassLoading">Update password</ng-container>
+                  <ng-container *ngIf="updatePassLoading">
+                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-1 text-white animate-spin"
+                      viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path opacity="0.4"
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor" />
+                      <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="currentColor" />
+                    </svg>
+                    Updating...
+                  </ng-container>
+                </button>
+              </div>
+  
+            </form>
+          </div>
+  
+          <div class="grid grid-cols-1 mt-6 space-x-3">
+            <button (click)="updateModal = false" class="btn-small btn-secondary">Cancel</button>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>

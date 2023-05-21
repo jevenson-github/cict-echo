@@ -8,7 +8,7 @@
 <!-- BODY -->
 <section class="flex flex-col gap-y-4">
     <div class="flex gap-x-3 items-center justify-center">
-        <ngx-avatar [src]="'http://127.0.0.1:8000/users/' + adminId + '.webp'"
+        <ngx-avatar [src]="'http://localhost:8000/users/' + adminId + '.webp'"
             [name]="adminFirstName.charAt(0) + adminLastName.charAt(0)" [size]="64" [bgColor]>
         </ngx-avatar>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -18,7 +18,7 @@
                 stroke-linejoin="round" />
         </svg>
 
-        <ngx-avatar [src]="'http://127.0.0.1:8000/users/' + successorId + '.webp'"
+        <ngx-avatar [src]="'http://localhost:8000/users/' + successorId + '.webp'"
             [name]="successorFirstName.charAt(0) + successorLastName.charAt(0)" [size]="64" [bgColor]>
         </ngx-avatar>
 
@@ -41,7 +41,7 @@
     </button>
 
 
-    <a class="link-secondary text-sm mx-auto" routerLink="../">Reject transfer</a>
+    <a (click)="rejectTransfer()" class="link-secondary text-sm mx-auto">Reject transfer</a>
 
 
 
