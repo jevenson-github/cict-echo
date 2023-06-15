@@ -9,6 +9,7 @@ use App\Mail\EmailAddressUpdated;
 use App\Mail\PositionUpdated;
 use App\Mail\MakeAdmin;
 use App\Mail\MakeFaculty;
+use App\Mail\MakeSuccessor;
 use App\Mail\sendResetPasswordLink;
 
 use Illuminate\Http\Request;
