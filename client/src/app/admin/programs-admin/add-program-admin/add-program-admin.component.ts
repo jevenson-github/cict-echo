@@ -70,6 +70,7 @@ export class AddProgramAdminComponent implements OnInit {
 
   // //validate form
   validateAddProgram() {
+    
     this.form = this.formBuilder.group({
       title: [null, Validators.required],
       initiative: [null, Validators.required],

@@ -298,7 +298,7 @@ class UserController extends Controller
 
         // Send an email notification to the user
         Mail::to($user->email)->send(new PasswordUpdated($user));
-
+        
         // Return a response indicating success
         return response()->json(['message' => 'Password has been updated and email sent.']);
     }

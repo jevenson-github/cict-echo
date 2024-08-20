@@ -205,7 +205,7 @@ class ProgramController extends Controller
 
         // Check if the program is in draft status
         if ($program->status == 'draft') {
-
+                
             // Delete program folder
             $programFolderPath = storage_path('app/public/partners/' . $program->partner . '/programs/' . $id);
             if (File::exists($programFolderPath)) {
